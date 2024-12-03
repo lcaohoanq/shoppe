@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Welcome to Koi Auction</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<table id="Send-Otp-Page">
+  <tr>
+    <td class="container">
+      <div class="content">
+        <table>
+          <tr>
+            <td>
+              <p class="brand"><span style="color:#19b719;">Koi Auction</span> Corporation</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="border" id="border-success">
+              <h1 class="title" id="title-success">WELCOME TO KOI AUCTION!</h1>
+              <p>Dear <strong th:text="${name}"></strong>,</p>
+              <p>Thank you for joining Koi Auction! We're excited to have you on board. Please verify your email address to complete your registration.</p>
+              <p>Your OTP is: <strong style="color:#19b719;" th:text="${otp}"></strong></p>
+              <p>Use the OTP to verify your account and enjoy our fully services!</p>
+              <p>If you have any questions, feel free to contact our support team at support@example.com.</p>
+              <p>Happy shopping and bidding!</p>
+              <p>Best regards,</p>
+              <p>The Koi Auction Team</p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Koi Auction Corporation - 0123 456 789 - support@example.com
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,106 @@
+server:
+  port: ${PORT:8080}
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: shoppe
+  output:
+    ansi:
+      enabled: ALWAYS
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shoppe
+    username: ${POSTGRES_USER:PROD_DB_DEV_USER}
+    password: ${POSTGRES_PASSWORD:PROD_DB_DEV_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_OAUTH2_CLIENT_ID}
+            clientSecret: ${GOOGLE_OAUTH2_CLIENT_SECRET}
+
+  data:
+    redis:
+      #spring.data.redis.use-redis-cache
+      use-redis-cache: false
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  graphql:
+    graphiql:
+      enabled: true
+      path: ${api.prefix}/graphiql
+    path: ${api.prefix}/graphql
+    schema:
+      printer:
+        enabled: true
+    cors:
+      allowed-origins: "*"
+      allowed-methods: GET,POST,PUT,DELETE,PATCH,OPTIONS
+      allowed-headers: "*"
+
+alert:
+  manager:
+    emails: ${ALERT_MANAGER_EMAILS}
+
+jwt:
+  expiration: ${JWT_EXPIRATION}
+  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN}
+  secretKey: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+  file:
+    path: ${LOG_PATH:logs}
+    name: ${LOG_PATH:logs}/application.log
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: ${api.prefix}/swagger-ui.html
+    url: ${api.prefix}/api-docs
+    config-url: ${api.prefix}/api-docs/swagger-config
+    disable-swagger-default-url: true
+  api-docs:
+    path: ${api.prefix}/api-docs
+  show-actuator: true
+  paths-to-match: ${api.prefix}/**
+
+#health check
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/actuator
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true

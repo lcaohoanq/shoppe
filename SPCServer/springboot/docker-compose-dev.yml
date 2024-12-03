@@ -1,0 +1,77 @@
+networks:
+  shoppe_network:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_shoppe
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Iloveyou123!
+      POSTGRES_DB: shoppe
+    networks:
+      - shoppe_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_shoppe
+    environment:
+      PGADMIN_DEFAULT_EMAIL: hoangclw@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - shoppe_network
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+
+  redis-container:
+    image: docker.io/redis:7.2.3
+    container_name: redis-container-shoppe
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data # Mount a volume for Redis data persistence
+    networks:
+      - shoppe_network
+
+#  prometheus:
+#    image: prom/prometheus
+#    container_name: prometheus_shoppe
+#    ports:
+#      - "9090:9090"
+#    restart: unless-stopped
+#    volumes:
+#      - ./config/prometheus:/etc/prometheus
+#    networks:
+#      - shoppe_network
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#
+#  # connection Prometheus server URL
+#  # http://prometheus:9090(prometheus is the service name)
+#  # not use localhost because localhost refer to grafana itself
+#  grafana:
+#    image: grafana/grafana
+#    container_name: grafana_shoppe
+#    ports:
+#      - "3001:3000"
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=sysadmin
+#      - GF_SECURITY_ADMIN_PASSWORD=sysadmin
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#    networks:
+#      - shoppe_network
+
+volumes:
+  postgres_data:
+    driver: local
+#  grafana_data:
+#    driver: local
