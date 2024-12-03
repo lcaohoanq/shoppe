@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
-import com.lcaohoanq.shoppe.dtos.OrderDetailDTO;
+import com.lcaohoanq.shoppe.dtos.request.OrderDetailDTO;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.dtos.responses.OrderDetailResponse;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders_details")
 @RequiredArgsConstructor
-public class OrderDetailController {
+public class OrderDetailController implements DTOConverter{
 
     private final IOrderDetailService orderDetailService;
     private final LocalizationUtils localizationUtils;
@@ -39,7 +39,7 @@ public class OrderDetailController {
         @Valid @RequestBody OrderDetailDTO orderDetailDTO) {
         try {
             OrderDetail newOrderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
-            return ResponseEntity.ok().body(DTOConverter.fromOrderDetail(newOrderDetail));
+            return ResponseEntity.ok().body(this.fromOrderDetail(newOrderDetail));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -51,7 +51,7 @@ public class OrderDetailController {
     public ResponseEntity<?> getOrderDetail(
         @Valid @PathVariable("id") Long id) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
-        return ResponseEntity.ok().body(DTOConverter.fromOrderDetail(orderDetail));
+        return ResponseEntity.ok().body(this.fromOrderDetail(orderDetail));
     }
 
     @GetMapping("/order/{orderId}")
@@ -62,7 +62,7 @@ public class OrderDetailController {
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
         List<OrderDetailResponse> orderDetailResponses = orderDetails
             .stream()
-            .map(DTOConverter::fromOrderDetail)
+            .map(this::fromOrderDetail)
             .toList();
         return ResponseEntity.ok(orderDetailResponses);
     }

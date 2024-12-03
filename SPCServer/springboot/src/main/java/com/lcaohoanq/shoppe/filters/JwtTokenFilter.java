@@ -43,25 +43,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain) throws ServletException, IOException {
-        
+        @NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain filterChain) throws ServletException, IOException {
+
         try {
-            if (request.getServletPath().equals("/error") || 
-                isPublicEndpoint(request.getServletPath()) ||
+            if (request.getServletPath().equals("/error") ||
+                isPublicEndpoint(request.getServletPath(), request) ||
                 isSwaggerEndpoint(request.getServletPath())) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             String token = extractToken(request);
-            
+
             // Check if endpoint requires authentication
-            if (!isPublicEndpoint(request.getServletPath())) {
+            if (!isPublicEndpoint(request.getServletPath(), request)) {
                 if (token == null) {
-                    sendErrorResponse(response, "No authentication token provided", 
-                        HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                    sendErrorResponse(response, "No authentication token provided",
+                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
                     return;
                 }
 
@@ -81,17 +81,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         }
                     }
                 } catch (JwtAuthenticationException e) {
-                    sendErrorResponse(response, e.getMessage(), 
-                        HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                    sendErrorResponse(response, e.getMessage(),
+                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
                     return;
                 } catch (MalformedJwtException | IllegalArgumentException e) {
                     // Explicitly catch malformed token exceptions
-                    sendErrorResponse(response, "Malformed authentication token", 
-                        HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                    sendErrorResponse(response, "Malformed authentication token",
+                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
                     return;
                 } catch (ExpiredJwtException e) {
-                    sendErrorResponse(response, "Token has expired", 
-                        HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                    sendErrorResponse(response, "Token has expired",
+                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
                     return;
                 }
             }
@@ -99,22 +99,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             // Continue to Spring Security's role checking
             filterChain.doFilter(request, response);
         } catch (AccessDeniedException e) {
-            sendErrorResponse(response, "Access denied - Insufficient privileges", 
-                HttpStatus.FORBIDDEN, request.getRequestURI());
+            sendErrorResponse(response, "Access denied - Insufficient privileges",
+                              HttpStatus.FORBIDDEN, request.getRequestURI());
         } catch (Exception e) {
             log.error("Error processing request", e);
-            sendErrorResponse(response, "Authentication failed", 
-                HttpStatus.UNAUTHORIZED, request.getRequestURI());
+            sendErrorResponse(response, "Authentication failed",
+                              HttpStatus.UNAUTHORIZED, request.getRequestURI());
         } finally {
             SecurityContextHolder.clearContext();
         }
     }
 
-    private void sendErrorResponse(HttpServletResponse response, String message, 
-        HttpStatus status, String path) throws IOException {
+    private void sendErrorResponse(HttpServletResponse response, String message,
+                                   HttpStatus status, String path) throws IOException {
         response.setContentType("application/json");
         response.setStatus(status.value());
-        
+
         ApiError<Object> errorResponse = ApiError.errorBuilder()
             .message(message)
             .statusCode(status.value())
@@ -124,7 +124,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 "path", path
             ))
             .build();
-        
+
         new ObjectMapper().writeValue(response.getOutputStream(), errorResponse);
     }
 
@@ -144,17 +144,28 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return auth;
     }
 
-    private boolean isPublicEndpoint(String path) {
-        return path.equals(apiPrefix + "/auth/login") ||
-               path.equals(apiPrefix + "/auth/register") ||
-               path.equals(apiPrefix + "/roles") ||
-               path.equals(apiPrefix + "/users") ||
-               path.equals("/error");
+    private boolean isPublicEndpoint(String path, HttpServletRequest request) {
+        // Allow all HTTP methods for these endpoints
+        if (path.equals(apiPrefix + "/auth/login") ||
+            path.equals(apiPrefix + "/auth/register") ||
+            path.equals(apiPrefix + "/roles") ||
+            path.equals(apiPrefix + "/users") ||
+            path.equals(apiPrefix + "/forgot-password") ||
+            path.equals("/error")) {
+            return true;
+        }
+
+        // Only allow GET requests for categories
+        if (path.startsWith(apiPrefix + "/categories")) {
+            return request.getMethod().equals("GET");
+        }
+
+        return false;
     }
 
     private boolean isSwaggerEndpoint(String path) {
-        return path.contains("/swagger-ui") || 
-               path.contains("/api-docs") || 
-               path.contains("/swagger-resources");
+        return path.contains("/swagger-ui") ||
+            path.contains("/api-docs") ||
+            path.contains("/swagger-resources");
     }
 }

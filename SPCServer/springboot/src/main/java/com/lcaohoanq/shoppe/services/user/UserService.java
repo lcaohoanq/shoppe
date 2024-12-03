@@ -2,16 +2,14 @@ package com.lcaohoanq.shoppe.services.user;
 
 import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
-import com.lcaohoanq.shoppe.constants.BusinessNumber;
-import com.lcaohoanq.shoppe.dtos.UpdatePasswordDTO;
-import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdatePasswordDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdateUserDTO;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.enums.ProviderName;
 import com.lcaohoanq.shoppe.enums.UserRole;
 import com.lcaohoanq.shoppe.enums.UserStatus;
-import com.lcaohoanq.shoppe.exceptions.BiddingRuleException;
 import com.lcaohoanq.shoppe.exceptions.EmailAlreadyUsedException;
 import com.lcaohoanq.shoppe.exceptions.MalformBehaviourException;
 import com.lcaohoanq.shoppe.exceptions.MalformDataException;
@@ -19,7 +17,6 @@ import com.lcaohoanq.shoppe.exceptions.PermissionDeniedException;
 import com.lcaohoanq.shoppe.exceptions.PhoneAlreadyUsedException;
 import com.lcaohoanq.shoppe.exceptions.UpdateEmailException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
-import com.lcaohoanq.shoppe.metadata.PaginationMeta;
 import com.lcaohoanq.shoppe.models.Otp;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.SocialAccount;
@@ -44,7 +41,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,11 +49,10 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserService implements IUserService, PaginationConverter<User>, DTOConverter {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final JwtTokenUtils jwtTokenUtils;
     private final RoleRepository roleRepository;
     private final SocialAccountRepository socialAccountRepository;
@@ -65,7 +60,6 @@ public class UserService implements IUserService {
     private final IMailService mailService;
     private final OtpService otpService;
     private final RoleService roleService;
-    private final PaginationConverter<User> paginationConverter;
 
     @Override
     public PageResponse<UserResponse> fetchUser(Pageable pageable) {
@@ -73,14 +67,14 @@ public class UserService implements IUserService {
         Page<User> usersPage = userRepository.findAll(pageable);
 
         List<UserResponse> userResponses = usersPage.getContent().stream()
-            .map(DTOConverter::toUserResponse)
+            .map(this::toUserResponse)
             .toList();
 
         return PageResponse.<UserResponse>pageBuilder()
             .message("Users fetched successfully")
             .statusCode(HttpStatus.OK.value())
             .isSuccess(true)
-            .pagination(paginationConverter.toPaginationMeta(usersPage, pageable))
+            .pagination(toPaginationMeta(usersPage, pageable))
             .data(userResponses)
             .build();
     }
@@ -118,14 +112,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User getUserById(long id) throws DataNotFoundException {
+    public User findUserById(long id) throws DataNotFoundException {
         return userRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException(
                 localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)));
     }
 
     @Override
-    public User getUserByEmail(String email) throws DataNotFoundException {
+    public User findUserByEmail(String email) throws DataNotFoundException {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new DataNotFoundException("User not found: " + email));
     }
@@ -323,7 +317,7 @@ public class UserService implements IUserService {
     @Transactional
     @Override
     public void verifyOtpIsCorrect(Long userId, String otp) throws Exception {
-        User user = getUserById(userId);
+        User user = findUserById(userId);
 
         Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
 
@@ -397,7 +391,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void softDeleteUser(Long userId) throws DataNotFoundException {
-        User existingUser = getUserById(userId);
+        User existingUser = findUserById(userId);
         if (!existingUser.isActive()) {
             throw new MalformDataException("User is already deleted");
         }
@@ -407,7 +401,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void restoreUser(Long userId) throws DataNotFoundException {
-        User existingUser = getUserById(userId);
+        User existingUser = findUserById(userId);
         if (existingUser.isActive()) {
             throw new MalformDataException("User is already active");
         }
@@ -418,7 +412,7 @@ public class UserService implements IUserService {
     @Override
     @Transactional
     public void updateRole(long id, long roleId) throws DataNotFoundException {
-        getUserById(id);
+        findUserById(id);
         roleService.getRoleById(roleId);
         userRepository.updateRole(id, roleId);
     }

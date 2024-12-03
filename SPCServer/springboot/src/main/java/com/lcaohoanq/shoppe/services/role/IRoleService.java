@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.services.role;
 
-import com.lcaohoanq.shoppe.dtos.RoleDTO;
+import com.lcaohoanq.shoppe.dtos.request.RoleDTO;
 import com.lcaohoanq.shoppe.dtos.responses.RoleResponse;
 import java.util.List;
 

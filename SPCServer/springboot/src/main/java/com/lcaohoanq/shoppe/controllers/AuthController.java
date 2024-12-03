@@ -1,8 +1,8 @@
 package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
-import com.lcaohoanq.shoppe.dtos.UserLoginDTO;
-import com.lcaohoanq.shoppe.dtos.UserRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.request.UserLoginDTO;
+import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.models.Token;
 import com.lcaohoanq.shoppe.models.User;
@@ -13,6 +13,7 @@ import com.lcaohoanq.shoppe.services.auth.AuthService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.services.user.IUserService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
+import com.lcaohoanq.shoppe.utils.Identifiable;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthController {
+public class AuthController implements Identifiable, DTOConverter {
 
     private final IUserService userService;
     private final LocalizationUtils localizationUtils;
@@ -49,7 +50,7 @@ public class AuthController {
         extraTags = {"uri", "/api/v1/users/login"},
         description = "Track login request count")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
         @RequestBody @Valid UserLoginDTO userLoginDTO,
         BindingResult result,
         HttpServletRequest request
@@ -63,26 +64,27 @@ public class AuthController {
         String userAgent = request.getHeader("User-Agent");
         User userDetail = authService.getUserDetailsFromToken(token);
         Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
+
         log.info("User logged in successfully");
-        return ResponseEntity.ok(LoginResponse.builder()
+
+        LoginResponse response = new LoginResponse(
+            jwtToken.getToken(),
+            jwtToken.getRefreshToken(),
+            jwtToken.getTokenType() == null ? "Bearer" : jwtToken.getTokenType(),
+            userDetail.getId(),
+            userDetail.getUsername(),
+            userDetail.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList()
+        );
+
+        return ResponseEntity.ok(ApiResponse.<LoginResponse>builder()
                                      .message(localizationUtils.getLocalizedMessage(
                                          MessageKey.LOGIN_SUCCESSFULLY))
-                                     .token(jwtToken.getToken())
-                                     .tokenType(jwtToken.getTokenType())
-                                     .refreshToken(jwtToken.getRefreshToken())
-                                     .username(userDetail.getUsername())
-                                     .roles(userDetail.getAuthorities().stream()
-                                                .map(GrantedAuthority::getAuthority).toList())
-//                                     .id(userDetail.getId())
+                                     .statusCode(HttpStatus.OK.value())
+                                     .isSuccess(true)
+                                     .data(response)
                                      .build());
-    }
-
-    private boolean isMobileDevice(String userAgent) {
-        // Kiểm tra User-Agent header để xác định thiết bị di động
-        if (userAgent == null) {
-            return false;
-        }
-        return userAgent.toLowerCase().contains("mobile");
     }
 
     @Timed(
@@ -107,7 +109,7 @@ public class AuthController {
                     localizationUtils.getLocalizedMessage(MessageKey.REGISTER_SUCCESSFULLY))
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)
-                .data(DTOConverter.toUserResponse(user))
+                .data(toUserResponse(user))
                 .build());
     }
 

@@ -1,4 +1,4 @@
-package com.lcaohoanq.shoppe.dtos;
+package com.lcaohoanq.shoppe.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.UserRole;

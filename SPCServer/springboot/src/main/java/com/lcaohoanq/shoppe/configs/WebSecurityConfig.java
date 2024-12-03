@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.configs;
 
 import java.util.Arrays;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +52,8 @@ public class WebSecurityConfig {
                     String.format("%s/auth/register", apiPrefix),
                     String.format("%s/roles", apiPrefix),
                     String.format("%s/users", apiPrefix),
+                    String.format("%s/forgot-password", apiPrefix),
+                    String.format("%s/categories/**", apiPrefix),
                     "/error"
                 ).permitAll()
                 // Swagger UI with basic auth
@@ -77,10 +80,10 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(List.of("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setExposedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

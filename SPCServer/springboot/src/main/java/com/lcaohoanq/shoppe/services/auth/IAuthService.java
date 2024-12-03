@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.services.auth;
 
-import com.lcaohoanq.shoppe.dtos.UserRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
 import com.lcaohoanq.shoppe.models.User;
 
 public interface IAuthService {

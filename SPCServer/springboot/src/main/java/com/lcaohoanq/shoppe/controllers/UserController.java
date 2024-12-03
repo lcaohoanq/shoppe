@@ -2,12 +2,12 @@ package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
-import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
+import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.models.User;
-import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
-import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.services.user.IUserService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class UserController implements DTOConverter{
 
     private final IUserService userService;
     private final LocalizationUtils localizationUtils;
@@ -59,7 +59,7 @@ public class UserController {
     public ResponseEntity<UserResponse> getUserById(
         @PathVariable Long id
     ) {
-        return ResponseEntity.ok(DTOConverter.toUserResponse(userService.getUserById(id)));
+        return ResponseEntity.ok(toUserResponse(userService.findUserById(id)));
     }
 
     @PostMapping("/details")
@@ -68,7 +68,7 @@ public class UserController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         return ResponseEntity.ok(
-            DTOConverter.toUserResponse(userService.findByUsername(userDetails.getUsername())));
+            toUserResponse(userService.findByUsername(userDetails.getUsername())));
     }
 
     // PUT: localhost:4000/api/v1/users/4/deposit/100
@@ -115,7 +115,7 @@ public class UserController {
         return ResponseEntity.ok(
             ApiResponse.<UserResponse>builder()
                 .message(MessageKey.UPDATE_USER_SUCCESSFULLY)
-                .data(DTOConverter.toUserResponse(userService.updateUser(userId, updatedUserDTO)))
+                .data(toUserResponse(userService.updateUser(userId, updatedUserDTO)))
                 .isSuccess(true)
                 .statusCode(HttpStatus.OK.value())
                 .build());

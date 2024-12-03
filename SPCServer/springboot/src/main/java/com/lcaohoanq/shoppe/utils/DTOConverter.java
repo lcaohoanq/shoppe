@@ -12,14 +12,10 @@ import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.models.Product;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
-@Component
-public class DTOConverter {
+public interface DTOConverter {
 
-    public static UserResponse toUserResponse(User user) {
+    default UserResponse toUserResponse(User user) {
         return new UserResponse(
             user.getId(),
             user.getEmail(),
@@ -35,7 +31,7 @@ public class DTOConverter {
         );
     }
 
-    public CategoryResponse toCategoryResponse(Category category) {
+    default CategoryResponse toCategoryResponse(Category category) {
         return new CategoryResponse(
             category.getId(),
             category.getName(),
@@ -44,7 +40,7 @@ public class DTOConverter {
         );
     }
 
-    public static RoleResponse toRoleResponse(Role role) {
+    default RoleResponse toRoleResponse(Role role) {
         return new RoleResponse(
             role.getId(),
             role.getUserRole(),
@@ -53,30 +49,30 @@ public class DTOConverter {
         );
     }
 
-    public static OrderResponse toOrderResponse(Order order) {
+    default OrderResponse toOrderResponse(Order order) {
         return OrderResponse.builder()
-                .id(order.getId())
-                .user(DTOConverter.toUserResponse(order.getUser()))
-                .firstName(order.getFirstName())
-                .lastName(order.getLastName())
-                .phoneNumber(order.getPhoneNumber())
-                .email(order.getEmail())
-                .address(order.getAddress())
-                .note(order.getNote())
-                .orderDate(order.getOrderDate())
-                .status(String.valueOf(order.getStatus()))
-                .totalMoney(order.getTotalMoney())
-                .shippingMethod(order.getShippingMethod())
-                .shippingAddress(order.getShippingAddress())
-                .shippingDate(order.getShippingDate())
-                .paymentMethod(order.getPaymentMethod())
-                .orderDetails(order.getOrderDetails())
-                .createdAt(order.getCreatedAt())
-                .updatedAt(order.getUpdatedAt())
-                .build();
+            .id(order.getId())
+            .user(toUserResponse(order.getUser()))
+            .firstName(order.getFirstName())
+            .lastName(order.getLastName())
+            .phoneNumber(order.getPhoneNumber())
+            .email(order.getEmail())
+            .address(order.getAddress())
+            .note(order.getNote())
+            .orderDate(order.getOrderDate())
+            .status(String.valueOf(order.getStatus()))
+            .totalMoney(order.getTotalMoney())
+            .shippingMethod(order.getShippingMethod())
+            .shippingAddress(order.getShippingAddress())
+            .shippingDate(order.getShippingDate())
+            .paymentMethod(order.getPaymentMethod())
+            .orderDetails(order.getOrderDetails())
+            .createdAt(order.getCreatedAt())
+            .updatedAt(order.getUpdatedAt())
+            .build();
     }
 
-    public static ProductResponse toProductResponse(Product product) {
+    default ProductResponse toProductResponse(Product product) {
         return new ProductResponse(
             product.getId(),
             product.getName(),
@@ -90,16 +86,16 @@ public class DTOConverter {
         );
     }
 
-    public static OrderDetailResponse fromOrderDetail(OrderDetail orderDetail) {
+    default OrderDetailResponse fromOrderDetail(OrderDetail orderDetail) {
         return OrderDetailResponse
-                .builder()
-                .id(orderDetail.getId())
-                .orderId(orderDetail.getOrder().getId())
-                .productId(DTOConverter.toProductResponse(orderDetail.getProduct()))
-                .price(orderDetail.getPrice())
-                .numberOfProducts(orderDetail.getNumberOfProducts())
-                .totalMoney(orderDetail.getTotalMoney())
-                .build();
+            .builder()
+            .id(orderDetail.getId())
+            .orderId(orderDetail.getOrder().getId())
+            .productId(toProductResponse(orderDetail.getProduct()))
+            .price(orderDetail.getPrice())
+            .numberOfProducts(orderDetail.getNumberOfProducts())
+            .totalMoney(orderDetail.getTotalMoney())
+            .build();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.services.user;
 
-import com.lcaohoanq.shoppe.dtos.UpdatePasswordDTO;
-import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdatePasswordDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdateUserDTO;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
@@ -17,9 +17,9 @@ public interface IUserService {
 
     String loginOrRegisterGoogle(String email, String name, String googleId, String avatarUrl) throws Exception;
 
-    User getUserById(long id) throws DataNotFoundException;
+    User findUserById(long id) throws DataNotFoundException;
 
-    User getUserByEmail(String email) throws DataNotFoundException;
+    User findUserByEmail(String email) throws DataNotFoundException;
 
     List<User> getAllUsers();
 

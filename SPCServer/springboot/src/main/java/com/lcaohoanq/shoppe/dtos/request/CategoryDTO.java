@@ -1,4 +1,4 @@
-package com.lcaohoanq.shoppe.dtos;
+package com.lcaohoanq.shoppe.dtos.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

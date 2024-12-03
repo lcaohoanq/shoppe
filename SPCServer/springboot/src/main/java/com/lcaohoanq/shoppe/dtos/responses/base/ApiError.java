@@ -1,7 +1,15 @@
 package com.lcaohoanq.shoppe.dtos.responses.base;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 
+@JsonPropertyOrder({
+    "message",
+    "status_code",
+    "is_success",
+    "reason",
+    "data"
+})
 @NoArgsConstructor
 public class ApiError<T> extends ApiResponse<T> {
 

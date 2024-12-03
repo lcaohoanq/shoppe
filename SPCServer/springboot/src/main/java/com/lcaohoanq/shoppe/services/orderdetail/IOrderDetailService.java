@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.services.orderdetail;
 
-import com.lcaohoanq.shoppe.dtos.OrderDetailDTO;
+import com.lcaohoanq.shoppe.dtos.request.OrderDetailDTO;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import java.util.List;

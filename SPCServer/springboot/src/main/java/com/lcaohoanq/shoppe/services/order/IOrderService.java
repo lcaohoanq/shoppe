@@ -1,10 +1,9 @@
 package com.lcaohoanq.shoppe.services.order;
 
-import com.lcaohoanq.shoppe.dtos.OrderDTO;
+import com.lcaohoanq.shoppe.dtos.request.OrderDTO;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Order;
-import com.lcaohoanq.shoppe.models.User;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,16 +1,16 @@
 package com.lcaohoanq.shoppe.services.category;
 
-import com.lcaohoanq.shoppe.dtos.CategoryDTO;
+import com.lcaohoanq.shoppe.dtos.request.CategoryDTO;
+import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
+import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.CategoryAlreadyExistException;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exceptions.base.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
-import com.lcaohoanq.shoppe.metadata.PaginationMeta;
 import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.repositories.CategoryRepository;
-import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
-import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
+import com.lcaohoanq.shoppe.utils.PaginationConverter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService{
+public class CategoryService implements ICategoryService, DTOConverter,
+    PaginationConverter<Category> {
 
     private final CategoryRepository categoryRepository;
-    private final DTOConverter dtoConverter;
 
     @Override
-    public Category createCategory(CategoryDTO category) throws DataAlreadyExistException {
+    public CategoryResponse createCategory(CategoryDTO category) throws DataAlreadyExistException {
 
         categoryRepository.findByName(category.name()).ifPresent(c -> {
             throw new CategoryAlreadyExistException("Category already exist");
@@ -36,12 +36,15 @@ public class CategoryService implements ICategoryService{
             .name(category.name())
             .build();
 
-        return categoryRepository.save(newCategory);
+        return toCategoryResponse(categoryRepository.save(newCategory));
     }
 
     @Override
-    public Category getById(long id) throws DataNotFoundException {
-        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category not found"));
+    public CategoryResponse getById(long id) throws DataNotFoundException {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
+
+        return toCategoryResponse(category);
     }
 
     @Override
@@ -49,17 +52,12 @@ public class CategoryService implements ICategoryService{
         Page<Category> categoriesPage = categoryRepository.findAll(pageRequest);
 
         List<CategoryResponse> categoryResponses = categoriesPage.getContent().stream()
-            .map(dtoConverter::toCategoryResponse)
+            .map(this::toCategoryResponse)
             .collect(Collectors.toList());
 
         return PageResponse.<CategoryResponse>pageBuilder()
             .data(categoryResponses)
-            .pagination(PaginationMeta.builder()
-                            .totalPages(categoriesPage.getTotalPages())
-                            .totalItems(categoriesPage.getTotalElements())
-                            .currentPage(pageRequest.getPageNumber())
-                            .pageSize(pageRequest.getPageSize())
-                            .build())
+            .pagination(toPaginationMeta(categoriesPage, pageRequest))
             .statusCode(200)
             .isSuccess(true)
             .message("Categories fetched successfully")
@@ -70,15 +68,19 @@ public class CategoryService implements ICategoryService{
     public void update(long categoryId, CategoryDTO category)
         throws DataNotFoundException {
 
-        Category existingCategory = getById(categoryId);
+        Category existingCategory = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
         existingCategory.setName(category.name());
         categoryRepository.save(existingCategory);
     }
 
     @Override
     public void delete(long id) {
+        Category category = categoryRepository.findById(id)
+            .orElseThrow(() -> new CategoryNotFoundException(
+                String.format("Category with id: %d not found", id)
+            ));
 
-        categoryRepository.deleteById(id);
-
+        categoryRepository.delete(category);
     }
 }

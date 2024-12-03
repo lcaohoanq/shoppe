@@ -2,8 +2,8 @@ package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
-import com.lcaohoanq.shoppe.dtos.OrderDTO;
-import com.lcaohoanq.shoppe.dtos.UpdateOrderStatusDTO;
+import com.lcaohoanq.shoppe.dtos.request.OrderDTO;
+import com.lcaohoanq.shoppe.dtos.request.UpdateOrderStatusDTO;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.exceptions.InvalidApiPathVariableException;
 import com.lcaohoanq.shoppe.exceptions.MalformDataException;
@@ -42,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
-public class OrderController {
+public class OrderController implements DTOConverter{
 
     private final IOrderService orderService;
     private final LocalizationUtils localizationUtils;
@@ -59,7 +59,7 @@ public class OrderController {
         }
         try {
             Order newOrder = orderService.createOrder(orderDTO);
-            return ResponseEntity.ok(DTOConverter.toOrderResponse(newOrder));
+            return ResponseEntity.ok(toOrderResponse(newOrder));
         } catch (Exception e) {
             BaseResponse<Object> response = new BaseResponse<>();
             response.setMessage("Create order failed");
@@ -76,7 +76,7 @@ public class OrderController {
         @RequestParam(defaultValue = "10") int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit);
         Page<OrderResponse> orders = orderService.findByUserId(userId, pageRequest)
-            .map(DTOConverter::toOrderResponse);
+            .map(this::toOrderResponse);
         OrderPaginationResponse response = new OrderPaginationResponse();
         response.setTotalPage(orders.getTotalPages());
         response.setTotalItem(orders.getTotalElements());
@@ -99,7 +99,7 @@ public class OrderController {
         PageRequest pageRequest = PageRequest.of(page, limit);
         Page<OrderResponse> orders = orderService.searchUserOrders(keyword, user.getId(),
                                                                    pageRequest)
-            .map(DTOConverter::toOrderResponse);
+            .map(this::toOrderResponse);
         OrderPaginationResponse response = new OrderPaginationResponse();
         response.setTotalPage(orders.getTotalPages());
         response.setTotalItem(orders.getTotalElements());
@@ -114,7 +114,7 @@ public class OrderController {
         @Valid @PathVariable("id") Long orderId) {
         try {
             Order existingOrder = orderService.getOrder(orderId);
-            OrderResponse orderResponse = DTOConverter.toOrderResponse(existingOrder);
+            OrderResponse orderResponse = toOrderResponse(existingOrder);
             return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
             BaseResponse<Object> response = new BaseResponse<>();
@@ -142,7 +142,7 @@ public class OrderController {
         try {
             Order order;
             order = orderService.updateOrder(id, orderDTO);
-            return ResponseEntity.ok(DTOConverter.toOrderResponse(order));
+            return ResponseEntity.ok(toOrderResponse(order));
         } catch (MalformDataException e) {
             response.setMessage("Update order failed");
             response.setReason(e.getMessage());
@@ -201,11 +201,11 @@ public class OrderController {
 
         if (String.valueOf(status).equals("ALL")) {
             orders = orderService.getOrderByKeyword(keyword, pageRequest)
-                .map(DTOConverter::toOrderResponse);
+                .map(this::toOrderResponse);
         } else {
             orders = orderService
                 .getOrdersByKeywordAndStatus(keyword, status, pageRequest)
-                .map(DTOConverter::toOrderResponse);
+                .map(this::toOrderResponse);
         }
 
         response.setItem(orders.getContent());
@@ -231,12 +231,12 @@ public class OrderController {
         OrderPaginationResponse response = new OrderPaginationResponse();
 
         if (String.valueOf(keyword).equals("ALL")) {
-            orders = orderService.findByUserId(userId, pageRequest).map(DTOConverter::toOrderResponse);
+            orders = orderService.findByUserId(userId, pageRequest).map(this::toOrderResponse);
 
         } else {
             orders = orderService
                 .getOrdersByStatus(userId, keyword, pageRequest)
-                .map(DTOConverter::toOrderResponse);
+                .map(this::toOrderResponse);
         }
 
         response.setItem(orders.getContent());
@@ -253,7 +253,7 @@ public class OrderController {
             Order updatedOrder = orderService.updateOrderStatus(id,
                                                                 OrderStatus.valueOf(
                                                                     updateOrderStatusDTO.getStatus()));
-            return ResponseEntity.ok(DTOConverter.toOrderResponse(updatedOrder));
+            return ResponseEntity.ok(toOrderResponse(updatedOrder));
         } catch (Exception e) {
             BaseResponse response = new BaseResponse();
             response.setReason(e.getMessage());

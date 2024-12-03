@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.services.role;
 
-import com.lcaohoanq.shoppe.dtos.RoleDTO;
+import com.lcaohoanq.shoppe.dtos.request.RoleDTO;
 import com.lcaohoanq.shoppe.exceptions.base.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Role;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RoleService implements IRoleService{
+public class RoleService implements IRoleService, DTOConverter {
 
     private final RoleRepository roleRepository;
 
@@ -21,7 +21,7 @@ public class RoleService implements IRoleService{
     public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll()
             .stream()
-            .map(DTOConverter::toRoleResponse)
+            .map(this::toRoleResponse)
             .toList();
     }
 
@@ -35,7 +35,7 @@ public class RoleService implements IRoleService{
             .userRole(roleDTO.userRole())
             .build();
 
-        return DTOConverter.toRoleResponse(roleRepository.save(newRole));
+        return toRoleResponse(roleRepository.save(newRole));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RoleService implements IRoleService{
         Role existingRole = roleRepository.findById(id)
             .orElseThrow(() -> new DataNotFoundException("Role with id " + id + " not found"));
         existingRole.setUserRole(roleDTO.userRole());
-        return DTOConverter.toRoleResponse(roleRepository.save(existingRole));
+        return toRoleResponse(roleRepository.save(existingRole));
     }
 
     @Override
@@ -56,7 +56,7 @@ public class RoleService implements IRoleService{
     @Override
     public RoleResponse getRoleById(Long id) {
         return roleRepository.findById(id)
-            .map(DTOConverter::toRoleResponse)
+            .map(this::toRoleResponse)
             .orElseThrow(() -> new DataNotFoundException("Role with id " + id + " not found"));
     }
 }
