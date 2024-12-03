@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "categories_seq", sequenceName = "categories_id_seq", allocationSize = 1)

@@ -1,9 +1,11 @@
 package com.lcaohoanq.shoppe.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -68,4 +70,11 @@ public class OrderResponse {
     @JsonProperty("order_details")
 //    @JsonIgnore
     private List<OrderDetail> orderDetails;
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    LocalDateTime createdAt;
+    @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    LocalDateTime updatedAt;
 }

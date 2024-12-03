@@ -1,10 +1,18 @@
 package com.lcaohoanq.shoppe.dtos.responses.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.metadata.PaginationMeta;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
+@JsonPropertyOrder({
+    "message",
+    "status_code",
+    "is_success",
+    "pagination",
+    "data"
+})
 @NoArgsConstructor
 public class PageResponse<T> extends ApiResponse<List<T>> {
     @JsonProperty("pagination")

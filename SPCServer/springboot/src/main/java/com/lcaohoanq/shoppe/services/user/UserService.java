@@ -5,6 +5,8 @@ import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.constants.BusinessNumber;
 import com.lcaohoanq.shoppe.dtos.UpdatePasswordDTO;
 import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
+import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.enums.ProviderName;
 import com.lcaohoanq.shoppe.enums.UserRole;
@@ -17,6 +19,7 @@ import com.lcaohoanq.shoppe.exceptions.PermissionDeniedException;
 import com.lcaohoanq.shoppe.exceptions.PhoneAlreadyUsedException;
 import com.lcaohoanq.shoppe.exceptions.UpdateEmailException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
+import com.lcaohoanq.shoppe.metadata.PaginationMeta;
 import com.lcaohoanq.shoppe.models.Otp;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.SocialAccount;
@@ -27,7 +30,9 @@ import com.lcaohoanq.shoppe.repositories.UserRepository;
 import com.lcaohoanq.shoppe.services.mail.IMailService;
 import com.lcaohoanq.shoppe.services.otp.OtpService;
 import com.lcaohoanq.shoppe.services.role.RoleService;
+import com.lcaohoanq.shoppe.utils.DTOConverter;
 import com.lcaohoanq.shoppe.utils.MessageKey;
+import com.lcaohoanq.shoppe.utils.PaginationConverter;
 import jakarta.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,9 +65,29 @@ public class UserService implements IUserService {
     private final IMailService mailService;
     private final OtpService otpService;
     private final RoleService roleService;
+    private final PaginationConverter<User> paginationConverter;
 
     @Override
-    public String loginOrRegisterGoogle(String email, String name, String googleId, String avatarUrl) throws Exception {
+    public PageResponse<UserResponse> fetchUser(Pageable pageable) {
+
+        Page<User> usersPage = userRepository.findAll(pageable);
+
+        List<UserResponse> userResponses = usersPage.getContent().stream()
+            .map(DTOConverter::toUserResponse)
+            .toList();
+
+        return PageResponse.<UserResponse>pageBuilder()
+            .message("Users fetched successfully")
+            .statusCode(HttpStatus.OK.value())
+            .isSuccess(true)
+            .pagination(paginationConverter.toPaginationMeta(usersPage, pageable))
+            .data(userResponses)
+            .build();
+    }
+
+    @Override
+    public String loginOrRegisterGoogle(String email, String name, String googleId,
+                                        String avatarUrl) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         User user = null;
         SocialAccount socialAccount;
@@ -69,21 +95,20 @@ public class UserService implements IUserService {
         if (optionalUser.isEmpty()) {
             // Register new user
             Role memberRole = roleRepository.findByUserRole(UserRole.MEMBER)
-                    .orElseThrow(() -> new DataNotFoundException("Default MEMBER role not found"));
+                .orElseThrow(() -> new DataNotFoundException("Default MEMBER role not found"));
 
             User newUser = User.builder()
-                    .name(name)
-                    .email(email)
-                    .avatar(avatarUrl)
-                    .role(memberRole)
-                    .build();
+                .name(name)
+                .email(email)
+                .avatar(avatarUrl)
+                .role(memberRole)
+                .build();
 
             SocialAccount newSocialAccount = SocialAccount.builder()
-                    .providerName(ProviderName.GOOGLE)
-                    .name(name)
-                    .email(email)
-                    .build();
-
+                .providerName(ProviderName.GOOGLE)
+                .name(name)
+                .email(email)
+                .build();
 
             user = userRepository.save(newUser);
             socialAccountRepository.save(newSocialAccount);
@@ -95,14 +120,14 @@ public class UserService implements IUserService {
     @Override
     public User getUserById(long id) throws DataNotFoundException {
         return userRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException(
-                    localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)));
     }
 
     @Override
     public User getUserByEmail(String email) throws DataNotFoundException {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new DataNotFoundException("User not found: " + email));
+            .orElseThrow(() -> new DataNotFoundException("User not found: " + email));
     }
 
     @Override
@@ -113,9 +138,9 @@ public class UserService implements IUserService {
     @Override
     public User findByUsername(String username) throws DataNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
     }
 
     @Transactional
@@ -123,9 +148,9 @@ public class UserService implements IUserService {
     public User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception {
         // Find the existing user by userId
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
 
         // Check if the email is being changed and if it already exists for another user
         String newEmail = updatedUserDTO.email();
@@ -136,7 +161,9 @@ public class UserService implements IUserService {
                 // Check if the new email is already in use by another user
                 Optional<User> userWithNewEmail = userRepository.findByEmail(newEmail);
 
-                if (userWithNewEmail.isPresent()) throw new EmailAlreadyUsedException("This email address is already registered");
+                if (userWithNewEmail.isPresent()) {
+                    throw new EmailAlreadyUsedException("This email address is already registered");
+                }
 
                 // If not, update the current user's email
                 existingUser.setEmail(newEmail);
@@ -153,9 +180,13 @@ public class UserService implements IUserService {
             // Check if the new phoneNumber number is different from the current user's phoneNumber number
             if (!newPhoneNumber.equals(existingUser.getPhoneNumber())) {
                 // Check if the new phoneNumber number is already in use by another user
-                Optional<User> userWithNewPhoneNumber = userRepository.findByPhoneNumber(newPhoneNumber);
+                Optional<User> userWithNewPhoneNumber = userRepository.findByPhoneNumber(
+                    newPhoneNumber);
 
-                if (userWithNewPhoneNumber.isPresent()) throw new PhoneAlreadyUsedException("This phoneNumber number is already registered");
+                if (userWithNewPhoneNumber.isPresent()) {
+                    throw new PhoneAlreadyUsedException(
+                        "This phoneNumber number is already registered");
+                }
 
                 // If not, update the current user's phoneNumber number
                 existingUser.setPhoneNumber(newPhoneNumber);
@@ -184,7 +215,7 @@ public class UserService implements IUserService {
 
         // Update the password if it is provided in the DTO
         if (updatedUserDTO.password() != null
-                && !updatedUserDTO.password().isEmpty()) {
+            && !updatedUserDTO.password().isEmpty()) {
             if (!updatedUserDTO.password().equals(updatedUserDTO.confirmPassword())) {
                 throw new DataNotFoundException("Password and confirm password must be the same");
             }
@@ -217,7 +248,7 @@ public class UserService implements IUserService {
 
     @Transactional
     @Retryable(
-        retryFor = { MessagingException.class },  // Retry only for specific exceptions
+        retryFor = {MessagingException.class},  // Retry only for specific exceptions
         maxAttempts = 3,                       // Maximum retry attempts
         backoff = @Backoff(delay = 2000)       // 2 seconds delay between retries
     )
@@ -254,13 +285,13 @@ public class UserService implements IUserService {
     @Override
     public void verifyOtpToVerifyUser(Long userId, String otp) throws Exception {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
 
         if (user.getStatus() == UserStatus.VERIFIED) {
             throw new DataNotFoundException(
-                    localizationUtils.getLocalizedMessage(MessageKey.USER_ALREADY_VERIFIED)
+                localizationUtils.getLocalizedMessage(MessageKey.USER_ALREADY_VERIFIED)
             );
         }
 
@@ -275,11 +306,13 @@ public class UserService implements IUserService {
             otpEntity.setExpired(true);
             otpService.disableOtp(otpEntity.getId());
             throw new DataNotFoundException(
-                    localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
+                localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
             );
         }
 
-        if (!otpEntity.getOtp().equals(String.valueOf(otp))) throw new DataNotFoundException("Invalid OTP");
+        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
+            throw new DataNotFoundException("Invalid OTP");
+        }
 
         otpEntity.setUsed(true);
         otpService.disableOtp(otpEntity.getId());
@@ -303,7 +336,9 @@ public class UserService implements IUserService {
             );
         }
 
-        if (!otpEntity.getOtp().equals(String.valueOf(otp))) throw new DataNotFoundException("Invalid OTP");
+        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
+            throw new DataNotFoundException("Invalid OTP");
+        }
 
         otpEntity.setUsed(true);
         otpService.disableOtp(otpEntity.getId());
@@ -311,15 +346,16 @@ public class UserService implements IUserService {
 
     private Otp getOtpByEmailOtp(String email, String otp) {
         return otpService.getOtpByEmailOtp(email, otp)
-            .orElseThrow(() -> new DataNotFoundException("OTP is not correct, please try again later"));
+            .orElseThrow(
+                () -> new DataNotFoundException("OTP is not correct, please try again later"));
     }
 
     @Override
     public void bannedUser(Long userId) throws DataNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
 
         user.setStatus(UserStatus.BANNED);
         userRepository.save(user);
@@ -329,29 +365,29 @@ public class UserService implements IUserService {
     @Transactional
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO) throws Exception {
         User existingUser = userRepository.findByEmail(updatePasswordDTO.email())
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
 
-        if(!existingUser.isActive()){
+        if (!existingUser.isActive()) {
             throw new MalformBehaviourException(MessageKey.USER_NOT_FOUND);
         }
 
-        if(existingUser.getStatus() != UserStatus.VERIFIED){
+        if (existingUser.getStatus() != UserStatus.VERIFIED) {
             throw new MalformBehaviourException("User do not verified their account");
         }
 
-        if(existingUser.getRole().getId() == 4){
+        if (existingUser.getRole().getId() == 4) {
             throw new PermissionDeniedException("Cannot change password for this account");
         }
 
         existingUser.setPassword(passwordEncoder.encode(updatePasswordDTO.newPassword()));
 
         mailService.sendMail(
-                existingUser.getEmail(),
-                "Password updated successfully",
-                EmailCategoriesEnum.RESET_PASSWORD.getType(),
-                new Context()
+            existingUser.getEmail(),
+            "Password updated successfully",
+            EmailCategoriesEnum.RESET_PASSWORD.getType(),
+            new Context()
         );
 
         userRepository.save(existingUser);
@@ -362,7 +398,9 @@ public class UserService implements IUserService {
     @Transactional
     public void softDeleteUser(Long userId) throws DataNotFoundException {
         User existingUser = getUserById(userId);
-        if(!existingUser.isActive()) throw new MalformDataException("User is already deleted");
+        if (!existingUser.isActive()) {
+            throw new MalformDataException("User is already deleted");
+        }
         userRepository.softDeleteUser(userId);
     }
 
@@ -370,7 +408,9 @@ public class UserService implements IUserService {
     @Transactional
     public void restoreUser(Long userId) throws DataNotFoundException {
         User existingUser = getUserById(userId);
-        if(existingUser.isActive()) throw new MalformDataException("User is already active");
+        if (existingUser.isActive()) {
+            throw new MalformDataException("User is already active");
+        }
         userRepository.restoreUser(userId);
     }
 
@@ -392,9 +432,9 @@ public class UserService implements IUserService {
     @Transactional
     public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException {
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new DataNotFoundException(
-                        localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-                ));
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
         existingUser.setActive(active);
         userRepository.save(existingUser);
     }

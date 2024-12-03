@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.models;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
+import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,7 +34,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "orders_seq", sequenceName = "orders_id_seq", allocationSize = 1)

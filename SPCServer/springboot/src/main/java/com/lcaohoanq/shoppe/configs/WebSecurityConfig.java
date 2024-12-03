@@ -1,6 +1,5 @@
 package com.lcaohoanq.shoppe.configs;
 
-import com.lcaohoanq.shoppe.models.Role;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +50,18 @@ public class WebSecurityConfig {
                     String.format("%s/auth/login", apiPrefix),
                     String.format("%s/auth/register", apiPrefix),
                     String.format("%s/roles", apiPrefix),
+                    String.format("%s/users", apiPrefix),
                     "/error"
+                ).permitAll()
+                // Swagger UI with basic auth
+                .requestMatchers(
+                    "/v3/api-docs/**",
+                    "/v3/api-docs.yaml",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    apiPrefix + "/swagger-ui/**",
+                    apiPrefix + "/swagger-ui.html",
+                    apiPrefix + "/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )

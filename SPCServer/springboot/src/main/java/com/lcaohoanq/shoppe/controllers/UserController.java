@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.controllers;
 import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.models.User;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,6 +44,16 @@ public class UserController {
     private final TokenService tokenService;
     private final HttpServletRequest request;
     private final JwtTokenUtils jwtTokenUtils;
+
+    @GetMapping("")
+    //@PreAuthorize("permitAll()")
+    //can use or not but must implement on both WebSecurityConfig and JwtTokenFilter
+    public ResponseEntity<PageResponse<UserResponse>> fetchUser(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int limit
+    ) {
+        return ResponseEntity.ok(userService.fetchUser(PageRequest.of(page, limit)));
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(

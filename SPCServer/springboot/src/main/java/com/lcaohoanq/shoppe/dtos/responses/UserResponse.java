@@ -1,7 +1,9 @@
 package com.lcaohoanq.shoppe.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDateTime;
 
 public record UserResponse(
     @JsonProperty("id") Long id,
@@ -13,6 +15,11 @@ public record UserResponse(
     @JsonProperty("address") String address,
     @JsonProperty("avatar") String avatar,
     @JsonProperty("role_name") String roleName,
-    @JsonProperty("created_at") String createdAt,
-    @JsonProperty("updated_at") String updatedAt
+
+    @JsonProperty("created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    LocalDateTime createdAt,
+    @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    LocalDateTime updatedAt
 ) {}

@@ -48,7 +48,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain) throws ServletException, IOException {
         
         try {
-            if (request.getServletPath().equals("/error")) {
+            if (request.getServletPath().equals("/error") || 
+                isPublicEndpoint(request.getServletPath()) ||
+                isSwaggerEndpoint(request.getServletPath())) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -145,7 +147,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private boolean isPublicEndpoint(String path) {
         return path.equals(apiPrefix + "/auth/login") ||
                path.equals(apiPrefix + "/auth/register") ||
-               path.equals(apiPrefix + "/roles") ||  // Only GET /roles is public
+               path.equals(apiPrefix + "/roles") ||
+               path.equals(apiPrefix + "/users") ||
                path.equals("/error");
+    }
+
+    private boolean isSwaggerEndpoint(String path) {
+        return path.contains("/swagger-ui") || 
+               path.contains("/api-docs") || 
+               path.contains("/swagger-resources");
     }
 }

@@ -2,6 +2,8 @@ package com.lcaohoanq.shoppe.services.user;
 
 import com.lcaohoanq.shoppe.dtos.UpdatePasswordDTO;
 import com.lcaohoanq.shoppe.dtos.UpdateUserDTO;
+import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
+import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.User;
 import java.util.List;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface IUserService {
+
+    PageResponse<UserResponse> fetchUser(Pageable pageable);
 
     String loginOrRegisterGoogle(String email, String name, String googleId, String avatarUrl) throws Exception;
 

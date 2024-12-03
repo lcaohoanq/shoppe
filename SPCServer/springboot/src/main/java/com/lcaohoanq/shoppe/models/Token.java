@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "tokens")
-public class Token {
+public class Token extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "tokens_seq", sequenceName = "tokens_id_seq", allocationSize = 1)

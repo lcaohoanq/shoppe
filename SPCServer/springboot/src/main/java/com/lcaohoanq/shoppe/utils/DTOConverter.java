@@ -12,7 +12,6 @@ import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.models.Product;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.User;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,22 +30,31 @@ public class DTOConverter {
             user.getAddress(),
             user.getAvatar(),
             user.getRole() != null ? user.getRole().getUserRole().name() : null,
-            user.getCreatedAt() != null ? user.getCreatedAt().format(DateTimeFormatter.ISO_DATE_TIME) : null,
-            user.getUpdatedAt() != null ? user.getUpdatedAt().format(DateTimeFormatter.ISO_DATE_TIME) : null
+            user.getCreatedAt(),
+            user.getUpdatedAt()
         );
     }
 
     public CategoryResponse toCategoryResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getName());
+        return new CategoryResponse(
+            category.getId(),
+            category.getName(),
+            category.getCreatedAt(),
+            category.getUpdatedAt()
+        );
     }
 
     public static RoleResponse toRoleResponse(Role role) {
-        return new RoleResponse(role.getId(), role.getUserRole());
+        return new RoleResponse(
+            role.getId(),
+            role.getUserRole(),
+            role.getCreatedAt(),
+            role.getUpdatedAt()
+        );
     }
 
     public static OrderResponse toOrderResponse(Order order) {
-        return OrderResponse
-                .builder()
+        return OrderResponse.builder()
                 .id(order.getId())
                 .user(DTOConverter.toUserResponse(order.getUser()))
                 .firstName(order.getFirstName())
@@ -63,6 +71,8 @@ public class DTOConverter {
                 .shippingDate(order.getShippingDate())
                 .paymentMethod(order.getPaymentMethod())
                 .orderDetails(order.getOrderDetails())
+                .createdAt(order.getCreatedAt())
+                .updatedAt(order.getUpdatedAt())
                 .build();
     }
 

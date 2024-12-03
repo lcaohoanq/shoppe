@@ -82,11 +82,14 @@ logging:
 springdoc:
   swagger-ui:
     path: ${api.prefix}/swagger-ui.html
-    url: ${api.prefix}/api-docs
-    config-url: ${api.prefix}/api-docs/swagger-config
+    enabled: true
     disable-swagger-default-url: true
+    security:
+      basic:
+        enabled: true
   api-docs:
     path: ${api.prefix}/api-docs
+    enabled: true
   show-actuator: true
   paths-to-match: ${api.prefix}/**
 

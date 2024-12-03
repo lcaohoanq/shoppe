@@ -6,8 +6,8 @@ import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
-import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.services.category.ICategoryService;
+import com.lcaohoanq.shoppe.utils.DTOConverter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,7 @@ public class CategoryController {
 
     private final ICategoryService categoryService;
     private final LocalizationUtils localizationUtils;
+    private final DTOConverter dtoConverter;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<CategoryResponse>> getAllCategories(
@@ -51,9 +52,9 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable int id) {
-        Category category = categoryService.getById(id);
-        CategoryResponse response = new CategoryResponse(category.getId(), category.getName());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+            dtoConverter.toCategoryResponse(categoryService.getById(id))
+        );
     }
 
     @PostMapping("")
@@ -66,20 +67,8 @@ public class CategoryController {
         if (result.hasErrors()) {
             throw new MethodArgumentNotValidException(result);
         }
-
-        try {
-
-            Category category = categoryService.createCategory(categoryDTO);
-
-            CategoryResponse response = new CategoryResponse(category.getId(), category.getName());
-
-            categoryService.createCategory(categoryDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (Exception e) {
-            throw new RuntimeException(
-                localizationUtils.
-                    getLocalizedMessage("category.create_category.create_failed"));
-        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(dtoConverter.toCategoryResponse(categoryService.createCategory(categoryDTO)));
     }
 
     @PutMapping("/{id}")

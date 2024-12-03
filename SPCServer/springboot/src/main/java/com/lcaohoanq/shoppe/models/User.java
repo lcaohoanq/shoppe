@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.UserStatus;
+import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
