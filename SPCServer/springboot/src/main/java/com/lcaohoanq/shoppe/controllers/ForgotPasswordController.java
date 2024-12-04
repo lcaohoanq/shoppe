@@ -36,25 +36,22 @@ public class ForgotPasswordController {
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<ForgotPasswordResponse> forgotPassword(
+    public ResponseEntity<ApiResponse<ForgotPasswordResponse>> forgotPassword(
         @Validated @RequestParam String toEmail
     ) throws MessagingException {
         User user = (User) request.getAttribute("validatedEmail"); //get from aop
 
-        try {
-            forgotPasswordService.sendEmailOtp(user);
+        forgotPasswordService.sendEmailOtp(user);
 
-            ForgotPasswordResponse response =
-                new ForgotPasswordResponse(
-                    "Forgot password email sent successfully to " + user.getEmail());
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            if (e instanceof MessagingException) {
-                log.error("Error sending email", e.getCause());
-                throw e;
-            }
-            throw e;
-        }
+        ForgotPasswordResponse response =
+            new ForgotPasswordResponse(
+                "Forgot password email sent successfully to " + user.getEmail());
+
+        return ResponseEntity.ok(ApiResponse.<ForgotPasswordResponse>builder()
+                                     .message(response.message())
+                                     .statusCode(HttpStatus.OK.value())
+                                     .isSuccess(true)
+                                     .build());
     }
 
     @PutMapping("")

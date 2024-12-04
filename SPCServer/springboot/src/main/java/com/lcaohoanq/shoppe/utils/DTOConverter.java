@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.utils;
 import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.OrderDetailResponse;
 import com.lcaohoanq.shoppe.dtos.responses.OrderResponse;
+import com.lcaohoanq.shoppe.dtos.responses.ProductImageResponse;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.RoleResponse;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
@@ -10,6 +11,7 @@ import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.models.Order;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.models.Product;
+import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.User;
 
@@ -77,12 +79,25 @@ public interface DTOConverter {
             product.getId(),
             product.getName(),
             product.getDescription(),
-            product.getImages(),
-            product.getPrice(),
-            product.getQuantity(),
+            product.getThumbnail(),
             product.getCategory(),
+            product.getPrice(),
+            product.getPriceBeforeDiscount(),
+            product.getQuantity(),
+            product.getSold(),
+            product.getView(),
+            product.getRating(),
             product.getCreatedAt(),
             product.getUpdatedAt()
+        );
+    }
+
+    default ProductImageResponse toProductImageResponse(ProductImage productImage){
+        return new ProductImageResponse(
+            productImage.getId(),
+            productImage.getProduct().getId(),
+            productImage.getImageUrl(),
+            productImage.getVideoUrl()
         );
     }
 

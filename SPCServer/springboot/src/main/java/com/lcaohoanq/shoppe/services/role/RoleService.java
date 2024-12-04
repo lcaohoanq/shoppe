@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.services.role;
 
 import com.lcaohoanq.shoppe.dtos.request.RoleDTO;
+import com.lcaohoanq.shoppe.enums.UserRole;
 import com.lcaohoanq.shoppe.exceptions.base.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Role;
@@ -29,6 +30,13 @@ public class RoleService implements IRoleService, DTOConverter {
     public RoleResponse createRole(RoleDTO roleDTO) {
         if(roleRepository.findByUserRole(roleDTO.userRole()).isPresent()){
             throw new DataAlreadyExistException("Role with name " + roleDTO.userRole().name() + " already exist");
+        }
+
+        for(UserRole userRole : UserRole.values()){
+            //if not exist throw exception
+            if(!userRole.name().equals(roleDTO.userRole().name())){
+                throw new DataNotFoundException("Role with name " + roleDTO.userRole().name() + " is not valid");
+            }
         }
 
         Role newRole = Role.builder()

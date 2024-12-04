@@ -50,10 +50,11 @@ public class WebSecurityConfig {
                 .requestMatchers(
                     String.format("%s/auth/login", apiPrefix),
                     String.format("%s/auth/register", apiPrefix),
-                    String.format("%s/roles", apiPrefix),
+                    String.format("%s/roles/**", apiPrefix),
                     String.format("%s/users", apiPrefix),
                     String.format("%s/forgot-password", apiPrefix),
                     String.format("%s/categories/**", apiPrefix),
+                    String.format("%s/products/**", apiPrefix),
                     "/error"
                 ).permitAll()
                 // Swagger UI with basic auth

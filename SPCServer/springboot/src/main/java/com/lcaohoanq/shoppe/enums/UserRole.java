@@ -9,7 +9,7 @@ public enum UserRole {
 
     MEMBER("MEMBER"),
     STAFF("STAFF"),
-    BREEDER("BREEDER"),
+    SHOP_OWNER("SHOP_OWNER"),
     MANAGER("MANAGER");
 
     private final String role;

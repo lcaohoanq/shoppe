@@ -9,8 +9,10 @@ import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.exceptions.base.DataWrongFormatException;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Slf4j
 @RestControllerAdvice
@@ -38,11 +41,22 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError<Object> handleDataNotFoundException(DataNotFoundException e) {
         return ApiError.errorBuilder()
-                .message(localizationUtils.getLocalizedMessage(MessageKey.DATA_NOT_FOUND))
-                .reason(e.getMessage())
-                .statusCode(HttpStatus.NOT_FOUND.value())
-                .isSuccess(false)
-                .build();
+            .message(localizationUtils.getLocalizedMessage(MessageKey.DATA_NOT_FOUND))
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.NOT_FOUND.value())
+            .isSuccess(false)
+            .build();
+    }
+
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError<Object> handleMessagingException(MessagingException e) {
+        return ApiError.errorBuilder()
+            .message("Error sending email")
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .isSuccess(false)
+            .build();
     }
 
     @ExceptionHandler(NullPointerException.class)
@@ -83,25 +97,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public BaseResponse<Object> handleGenerateDataException(GenerateDataException e) {
         return ExceptionResponse.builder()
-                .message(localizationUtils.getLocalizedMessage("exception.generate_data_error"))
-                .reason(e.getMessage())
-                .build();
+            .message(localizationUtils.getLocalizedMessage("exception.generate_data_error"))
+            .reason(e.getMessage())
+            .build();
     }
-
-//    @ExceptionHandler(DataAlreadyExistException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public BaseResponse<Object> handleDataAlreadyExistsException(DataAlreadyExistException e) {
-//        return ExceptionResponse.builder()
-//                .message(localizationUtils.getLocalizedMessage("exception.data_already_exist"))
-//                .reason(e.getMessage())
-//                .build();
-//    }
 
     @ExceptionHandler(InvalidApiPathVariableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError<Object> handleInvalidApiPathVariableException(InvalidApiPathVariableException e) {
+    public ApiError<Object> handleInvalidApiPathVariableException(
+        InvalidApiPathVariableException e) {
         return ApiError.errorBuilder()
-            .message(localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_INVALID_API_PATH_VARIABLE))
+            .message(localizationUtils.getLocalizedMessage(
+                MessageKey.EXCEPTION_INVALID_API_PATH_VARIABLE))
             .reason(e.getMessage())
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .isSuccess(false)
@@ -110,14 +117,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError<Object> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    public ApiError<Object> handleHttpMessageNotReadableException(
+        HttpMessageNotReadableException ex) {
         return ApiError.errorBuilder()
-                .message("Request body is required")
-                .reason(ex.getMessage())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .isSuccess(false)
-                .build()
-        ;
+            .message("Request body is required")
+            .reason(ex.getMessage())
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .isSuccess(false)
+            .build()
+            ;
     }
 
 
@@ -125,7 +133,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+        MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -137,7 +145,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DeleteException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public  ApiError<Object> handleDeleteException(DeleteException e) {
+    public ApiError<Object> handleDeleteException(DeleteException e) {
         return ApiError.errorBuilder()
             .message(localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_DELETE_ERROR))
             .reason(e.getMessage())
@@ -161,7 +169,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError<Object> handleMalformBehaviourException(MalformBehaviourException e) {
         return ApiError.errorBuilder()
-            .message(localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_MALFORMED_BEHAVIOUR))
+            .message(
+                localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_MALFORMED_BEHAVIOUR))
             .reason(e.getMessage())
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .isSuccess(false)
@@ -170,7 +179,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ApiError<Object> handleAccessDeniedException(AccessDeniedException e, WebRequest request) {
+    public ApiError<Object> handleAccessDeniedException(AccessDeniedException e,
+                                                        WebRequest request) {
         return ApiError.errorBuilder()
             .message(localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_PERMISSION_DENIED))
             .reason("Insufficient privileges to access this resource")
@@ -185,7 +195,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtAuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ApiError<Object> handleJwtAuthenticationException(JwtAuthenticationException e, WebRequest request) {
+    public ApiError<Object> handleJwtAuthenticationException(JwtAuthenticationException e,
+                                                             WebRequest request) {
         return ApiError.errorBuilder()
             .message("Authentication Failed")
             .reason(e.getMessage())
@@ -257,15 +268,39 @@ public class GlobalExceptionHandler {
             .build();
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, DataAlreadyExistException.class})
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError<Object> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
-        return ApiError.errorBuilder()
-            .message(localizationUtils.getLocalizedMessage(MessageKey.EXCEPTION_DATA_INTEGRITY_VIOLATION))
-            .reason(e.getMessage())
+    @ExceptionHandler(DataAlreadyExistException.class)
+    public ResponseEntity<ApiError<Object>> handleDataAlreadyExistException(
+        DataAlreadyExistException ex) {
+        ApiError<Object> apiError = ApiError.errorBuilder()
+            .message(ex.getMessage())
             .statusCode(HttpStatus.CONFLICT.value())
             .isSuccess(false)
+            .data(Map.of(
+                "timestamp", System.currentTimeMillis(),
+                "path", Objects.requireNonNull(
+                    ServletUriComponentsBuilder.fromCurrentRequest().build().getPath())
+            ))
             .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
+    // Handle Spring's DataIntegrityViolationException separately
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError<Object>> handleDataIntegrityViolationException(
+        DataIntegrityViolationException ex) {
+        log.error("DataIntegrityViolationException: ", ex);
+        ApiError<Object> apiError = ApiError.errorBuilder()
+            .message("Data integrity violation: " + ex.getMostSpecificCause().getMessage())
+            .statusCode(HttpStatus.CONFLICT.value())
+            .isSuccess(false)
+            .data(Map.of(
+                "timestamp", System.currentTimeMillis(),
+                "path", Objects.requireNonNull(
+                    ServletUriComponentsBuilder.fromCurrentRequest().build().getPath())
+            ))
+            .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
 }

@@ -56,7 +56,7 @@ public class RoleController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+//    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<ApiResponse<RoleResponse>> createRole(
         @Valid @RequestBody RoleDTO roleDTO,
         BindingResult bindingResult) {

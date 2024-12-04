@@ -8,10 +8,16 @@ public record ProductResponse(
     Long id,
     String name,
     String description,
-    String image,
-    Double price,
-    Integer quantity,
+    String thumbnail,
     String category,
+    Double price,
+
+    @JsonProperty("price_before_discount")
+    Double priceBeforeDiscount,
+    Integer quantity,
+    Integer sold,
+    Integer view,
+    Double rating,
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")

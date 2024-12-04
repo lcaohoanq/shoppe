@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService, DTOConverter,
-    PaginationConverter<Category> {
+    PaginationConverter {
 
     private final CategoryRepository categoryRepository;
 
@@ -50,18 +50,8 @@ public class CategoryService implements ICategoryService, DTOConverter,
     @Override
     public PageResponse<CategoryResponse> getAllCategories(PageRequest pageRequest) {
         Page<Category> categoriesPage = categoryRepository.findAll(pageRequest);
-
-        List<CategoryResponse> categoryResponses = categoriesPage.getContent().stream()
-            .map(this::toCategoryResponse)
-            .collect(Collectors.toList());
-
-        return PageResponse.<CategoryResponse>pageBuilder()
-            .data(categoryResponses)
-            .pagination(toPaginationMeta(categoriesPage, pageRequest))
-            .statusCode(200)
-            .isSuccess(true)
-            .message("Categories fetched successfully")
-            .build();
+        return mapPageResponse(categoriesPage, pageRequest, this::toCategoryResponse,
+            "Get all categories successfully");
     }
 
     @Override

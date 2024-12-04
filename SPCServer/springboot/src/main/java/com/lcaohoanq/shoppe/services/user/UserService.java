@@ -49,7 +49,7 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService, PaginationConverter<User>, DTOConverter {
+public class UserService implements IUserService, PaginationConverter, DTOConverter {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -63,20 +63,12 @@ public class UserService implements IUserService, PaginationConverter<User>, DTO
 
     @Override
     public PageResponse<UserResponse> fetchUser(Pageable pageable) {
-
         Page<User> usersPage = userRepository.findAll(pageable);
-
-        List<UserResponse> userResponses = usersPage.getContent().stream()
-            .map(this::toUserResponse)
-            .toList();
-
-        return PageResponse.<UserResponse>pageBuilder()
-            .message("Users fetched successfully")
-            .statusCode(HttpStatus.OK.value())
-            .isSuccess(true)
-            .pagination(toPaginationMeta(usersPage, pageable))
-            .data(userResponses)
-            .build();
+        return mapPageResponse(
+            usersPage,
+            pageable,
+            this::toUserResponse,
+            "Get all users successfully");
     }
 
     @Override
@@ -436,7 +428,7 @@ public class UserService implements IUserService, PaginationConverter<User>, DTO
     @Override
     public void validateAccountBalance(User user, long basePrice) {
 //        if (user.getAccountBalance() < Math.floorDiv(basePrice, BusinessNumber.FEE_ADD_KOI_TO_AUCTION)) {
-//            throw new MalformDataException("You don't have enough money to register Koi to Auction");
+//            throw new MalformDataException("You don't have enough money to register Product to Auction");
 //        }
     }
 

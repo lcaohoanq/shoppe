@@ -20,6 +20,9 @@ import com.lcaohoanq.shoppe.services.role.RoleService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import com.lcaohoanq.shoppe.utils.OtpUtils;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +49,6 @@ public class AuthService implements IAuthService {
     private final SocialAccountRepository socialAccountRepository;
     private final LocalizationUtils localizationUtils;
     private final IMailService mailService;
-    private final OtpService otpService;
     private final RoleService roleService;
     private final TokenService tokenService;
 
@@ -66,52 +68,25 @@ public class AuthService implements IAuthService {
             throw new DataIntegrityViolationException("Email already exists");
         }
 
-        User newUser = User.builder()
-            .name(userRegisterDTO.name())
-            .email(userRegisterDTO.email())
-            .password(userRegisterDTO.password())
-            .isActive(true)
-            .address(userRegisterDTO.address())
-            .dateOfBirth(userRegisterDTO.dateOfBirth())
-            .avatar(Optional.ofNullable(userRegisterDTO.avatar())
-                           .orElse("https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"))
-            .build();
-
-        newUser.setPassword(passwordEncoder.encode(userRegisterDTO.password()));
-
-        newUser.setRole(
-            roleRepository
-                .findById(1L)
-                .orElseThrow(() -> new DataNotFoundException("Role not found")));
-
-        User savedUser = userRepository.save(newUser);
-
-        // send OTP email
-        String otp = OtpUtils.generateOtp();
-        Context context = new Context();
-        context.setVariable("name", savedUser.getName());
-        context.setVariable("otp", otp);
-
-        mailService.sendMail(
-            savedUser.getEmail(),
-            "Verify your email",
-            EmailCategoriesEnum.OTP.getType(),
-            context
-        );
-
-        log.info("Send email otp to {}", savedUser.getEmail());
-
-        Otp otpEntity = Otp.builder()
-            .email(savedUser.getEmail())
-            .otp(otp)
-            .expiredAt(LocalDateTime.now().plusMinutes(5))
-            .isUsed(false)
-            .isExpired(false)
-            .build();
-
-        otpService.createOtp(otpEntity);
-
-        return savedUser;
+        return Single.fromCallable(() -> {
+            User newUser = User.builder()
+                .name(userRegisterDTO.name())
+                .email(userRegisterDTO.email())
+                .password(passwordEncoder.encode(userRegisterDTO.password()))
+                .isActive(true)
+                .address(userRegisterDTO.address())
+                .dateOfBirth(userRegisterDTO.dateOfBirth())
+                .avatar(Optional.ofNullable(userRegisterDTO.avatar())
+                    .orElse("https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"))
+                .role(roleRepository
+                    .findById(1L)
+                    .orElseThrow(() -> new DataNotFoundException("Role not found")))
+                .build();
+            return userRepository.save(newUser);
+        })
+        .flatMap(mailService::createEmailVerification)  // Chain the email sending
+        .subscribeOn(Schedulers.io())
+        .blockingGet();
     }
 
     @Override

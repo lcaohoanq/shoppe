@@ -5,7 +5,7 @@ networks:
 services:
   postgres:
     image: postgres:latest
-    container_name: postgres_shoppe
+    container_name: postgres_shoppee
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: Iloveyou123!
@@ -19,7 +19,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin_shoppe
+    container_name: pgadmin_shoppee
     environment:
       PGADMIN_DEFAULT_EMAIL: hoangclw@gmail.com
       PGADMIN_DEFAULT_PASSWORD: password
@@ -32,7 +32,7 @@ services:
 
   redis-container:
     image: docker.io/redis:7.2.3
-    container_name: redis-container-shoppe
+    container_name: redis_shoppee
     restart: always
     ports:
       - "6379:6379"

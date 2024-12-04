@@ -1,7 +1,6 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,33 +15,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products")
+@Table(name = "coupons")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Product extends BaseEntity {
+public class Coupon {
 
     @Id
-    @SequenceGenerator(name = "products_seq", sequenceName = "products_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
+    @SequenceGenerator(name = "coupons_seq", sequenceName = "coupons_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coupons_seq")
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
-    private String name;
-    private String description;
-    private String thumbnail;
-    private String category;
-    private double price;
 
-    @Column(name = "price_before_discount")
-    @JsonProperty("price_before_discount")
-    private double priceBeforeDiscount;
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
 
-    private int quantity;
-    private int sold;
-    private int view;
-    private double rating;
+    @Column(name = "active", nullable = false)
+    private boolean active;
 
 }

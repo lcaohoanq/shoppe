@@ -48,52 +48,58 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         try {
-            if (request.getServletPath().equals("/error") ||
-                isPublicEndpoint(request.getServletPath(), request) ||
-                isSwaggerEndpoint(request.getServletPath())) {
+            String servletPath = request.getServletPath();
+            String method = request.getMethod();
+            
+            log.info("Processing request: {} {}", method, servletPath);
+            
+            // Check if public endpoint
+            boolean isPublic = isPublicEndpoint(servletPath, request);
+            log.info("Is public endpoint? {}", isPublic);
+            
+            if (servletPath.equals("/error") || isPublic || isSwaggerEndpoint(servletPath)) {
+                log.info("Bypassing authentication for: {} {}", method, servletPath);
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // Token validation
             String token = extractToken(request);
+            if (token == null) {
+                log.info("No token found for: {} {}", method, servletPath);
+                sendErrorResponse(response, "No authentication token provided",
+                                  HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                return;
+            }
 
-            // Check if endpoint requires authentication
-            if (!isPublicEndpoint(request.getServletPath(), request)) {
-                if (token == null) {
-                    sendErrorResponse(response, "No authentication token provided",
-                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
-                    return;
+            try {
+                // Try to parse the token first - this will catch malformed tokens
+                String email = jwtTokenUtil.extractEmail(token);
+                if (email == null) {
+                    throw new JwtAuthenticationException("Invalid token");
                 }
 
-                try {
-                    // Try to parse the token first - this will catch malformed tokens
-                    String email = jwtTokenUtil.extractEmail(token);
-                    if (email == null) {
-                        throw new JwtAuthenticationException("Invalid token");
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                    User userDetails = (User) userDetailsService.loadUserByUsername(email);
+                    if (jwtTokenUtil.validateToken(token, userDetails)) {
+                        SecurityContextHolder.getContext().setAuthentication(
+                            createAuthentication(userDetails, request)
+                        );
                     }
-
-                    if (SecurityContextHolder.getContext().getAuthentication() == null) {
-                        User userDetails = (User) userDetailsService.loadUserByUsername(email);
-                        if (jwtTokenUtil.validateToken(token, userDetails)) {
-                            SecurityContextHolder.getContext().setAuthentication(
-                                createAuthentication(userDetails, request)
-                            );
-                        }
-                    }
-                } catch (JwtAuthenticationException e) {
-                    sendErrorResponse(response, e.getMessage(),
-                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
-                    return;
-                } catch (MalformedJwtException | IllegalArgumentException e) {
-                    // Explicitly catch malformed token exceptions
-                    sendErrorResponse(response, "Malformed authentication token",
-                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
-                    return;
-                } catch (ExpiredJwtException e) {
-                    sendErrorResponse(response, "Token has expired",
-                                      HttpStatus.UNAUTHORIZED, request.getRequestURI());
-                    return;
                 }
+            } catch (JwtAuthenticationException e) {
+                sendErrorResponse(response, e.getMessage(),
+                                  HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                return;
+            } catch (MalformedJwtException | IllegalArgumentException e) {
+                // Explicitly catch malformed token exceptions
+                sendErrorResponse(response, "Malformed authentication token",
+                                  HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                return;
+            } catch (ExpiredJwtException e) {
+                sendErrorResponse(response, "Token has expired",
+                                  HttpStatus.UNAUTHORIZED, request.getRequestURI());
+                return;
             }
 
             // Continue to Spring Security's role checking
@@ -145,18 +151,33 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private boolean isPublicEndpoint(String path, HttpServletRequest request) {
+        String method = request.getMethod();
+        log.info("Checking public endpoint: {} {}", method, path);
+        
         // Allow all HTTP methods for these endpoints
         if (path.equals(apiPrefix + "/auth/login") ||
             path.equals(apiPrefix + "/auth/register") ||
-            path.equals(apiPrefix + "/roles") ||
             path.equals(apiPrefix + "/users") ||
             path.equals(apiPrefix + "/forgot-password") ||
             path.equals("/error")) {
+            log.info("Matched basic public endpoint");
             return true;
+        }
+
+        // Check roles endpoint
+        if (path.startsWith(apiPrefix + "/roles")) {
+            boolean isPost = request.getMethod().equals("POST");
+            log.info("Roles endpoint - Is POST? {}", isPost);
+            return isPost;
         }
 
         // Only allow GET requests for categories
         if (path.startsWith(apiPrefix + "/categories")) {
+            return request.getMethod().equals("GET");
+        }
+
+        // Only allow GET requests for products
+        if (path.startsWith(apiPrefix + "/products")) {
             return request.getMethod().equals("GET");
         }
 

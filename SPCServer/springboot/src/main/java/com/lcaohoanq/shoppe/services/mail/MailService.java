@@ -1,7 +1,15 @@
 package com.lcaohoanq.shoppe.services.mail;
 
+import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
+import com.lcaohoanq.shoppe.models.Otp;
+import com.lcaohoanq.shoppe.models.User;
+import com.lcaohoanq.shoppe.services.otp.OtpService;
+import com.lcaohoanq.shoppe.utils.OtpUtils;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +25,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 public class MailService implements IMailService {
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
+    private final OtpService otpService;
 
     @Override
     @Async
@@ -36,6 +45,37 @@ public class MailService implements IMailService {
         }
     }
 
+    @Override
+    public Single<User> createEmailVerification(User user) {
+        return Single.fromCallable(() -> {
+            String otp = OtpUtils.generateOtp();
+
+            // Create email context
+            Context context = new Context();
+            context.setVariable("name", user.getName());
+            context.setVariable("otp", otp);
+
+            // Send email
+            this.sendMail(
+                user.getEmail(),
+                "Verify your email",
+                EmailCategoriesEnum.OTP.getType(),
+                context
+            );
+
+            // Create OTP record
+            Otp otpEntity = Otp.builder()
+                .email(user.getEmail())
+                .otp(otp)
+                .expiredAt(LocalDateTime.now().plusMinutes(5))
+                .isUsed(false)
+                .isExpired(false)
+                .build();
+
+            otpService.createOtp(otpEntity);
+            return user;  // Return the user for chaining
+        }).subscribeOn(Schedulers.io());
+    }
 
 
 }

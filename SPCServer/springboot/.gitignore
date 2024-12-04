@@ -41,3 +41,4 @@ src/main/resources/logs/application.log
 redis-data/dump.rdb
 allure-results/
 *.txt
+docker/redis-data/

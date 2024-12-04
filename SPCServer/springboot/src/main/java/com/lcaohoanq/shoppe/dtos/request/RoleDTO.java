@@ -8,6 +8,5 @@ import lombok.Builder;
 @Builder
 public record RoleDTO(
     @JsonProperty("name")
-    @NotBlank(message = "Role name is required")
     UserRole userRole
 ) {}

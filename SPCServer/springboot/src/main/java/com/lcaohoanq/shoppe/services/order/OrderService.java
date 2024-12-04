@@ -86,7 +86,7 @@ public class OrderService implements IOrderService {
 
             // Tìm thông tin sản phẩm t cơ sở dữ liệu (hoặc sử dụng cache nếu cần)
             Product product = productRepository.findById(koiId)
-                    .orElseThrow(() -> new DataNotFoundException("Koi not found with id: " + koiId));
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + koiId));
 
             // Đặt thông tin cho OrderDetail
             orderDetail.setProduct(product);
