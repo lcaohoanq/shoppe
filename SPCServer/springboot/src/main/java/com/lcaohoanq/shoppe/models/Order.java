@@ -64,6 +64,12 @@ public class Order extends BaseEntity {
     @Column(name="order_date")
     private LocalDate orderDate;
 
+    @Column(name="max_weight")
+    private Float maxWeight;
+
+    @Column(name="recipient_signature")
+    private boolean recipientSignature;
+
     @Column(name = "total_money")
     private Float totalMoney;
 

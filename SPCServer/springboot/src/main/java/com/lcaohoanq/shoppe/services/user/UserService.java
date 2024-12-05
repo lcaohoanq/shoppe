@@ -38,7 +38,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -240,101 +239,34 @@ public class UserService implements IUserService, PaginationConverter, DTOConver
     )
     @Override
     public void updateAccountBalance(Long userId, Long payment) throws Exception {
-//        User existingUser = userRepository.findById(userId)
-//            .orElseThrow(() -> new DataNotFoundException(
-//                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
-//            ));
-//        existingUser.setAccountBalance(existingUser.getAccountBalance() + payment);
-//
-//        Context context = new Context();
-//        context.setVariable("name", existingUser.getFirstName() + " " + existingUser.getLastName());
-//        context.setVariable("amount", payment);
-//        context.setVariable("balance", existingUser.getAccountBalance());
-//
-//        try {
-//            mailService.sendMail(
-//                existingUser.getEmail(),
-//                "Account balance updated",
-//                EmailCategoriesEnum.BALANCE_FLUCTUATION.getType(),
-//                context
-//            );
-//        } catch (MessagingException e) {
-//            log.error("Failed to send email to {}", existingUser.getEmail(), e);
-//            throw new MessagingException(String.format("Failed to send email to %s", existingUser.getEmail()));
-//        }
-//
-//        log.info("User {} balance updated. New balance: {}", userId, existingUser.getAccountBalance());
-//        userRepository.save(existingUser);
-    }
-
-    @Transactional
-    @Override
-    public void verifyOtpToVerifyUser(Long userId, String otp) throws Exception {
-        User user = userRepository.findById(userId)
+        User existingUser = userRepository.findById(userId)
             .orElseThrow(() -> new DataNotFoundException(
                 localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
             ));
+        existingUser.getWallet().setBalance(existingUser.getWallet().getBalance() + payment);
 
-        if (user.getStatus() == UserStatus.VERIFIED) {
-            throw new DataNotFoundException(
-                localizationUtils.getLocalizedMessage(MessageKey.USER_ALREADY_VERIFIED)
+        Context context = new Context();
+        context.setVariable("name", existingUser.getName());
+        context.setVariable("amount", payment);
+        context.setVariable("balance", existingUser.getWallet().getBalance());
+
+        try {
+            mailService.sendMail(
+                existingUser.getEmail(),
+                "Account balance updated",
+                EmailCategoriesEnum.BALANCE_FLUCTUATION.getType(),
+                context
             );
+        } catch (MessagingException e) {
+            log.error("Failed to send email to {}", existingUser.getEmail(), e);
+            throw new MessagingException(String.format("Failed to send email to %s", existingUser.getEmail()));
         }
 
-        if (user.getStatus() == UserStatus.BANNED) {
-            throw new DataNotFoundException("User is banned");
-        }
-
-        Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
-
-        //check the otp is expired or not
-        if (otpEntity.getExpiredAt().isBefore(LocalDateTime.now())) {
-            otpEntity.setExpired(true);
-            otpService.disableOtp(otpEntity.getId());
-            throw new DataNotFoundException(
-                localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
-            );
-        }
-
-        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
-            throw new DataNotFoundException("Invalid OTP");
-        }
-
-        otpEntity.setUsed(true);
-        otpService.disableOtp(otpEntity.getId());
-        user.setStatus(UserStatus.VERIFIED);
-        userRepository.save(user);
+        log.info("User {} balance updated. New balance: {}", userId, existingUser.getWallet().getBalance());
+        userRepository.save(existingUser);
     }
 
-    @Transactional
-    @Override
-    public void verifyOtpIsCorrect(Long userId, String otp) throws Exception {
-        User user = findUserById(userId);
 
-        Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
-
-        //check the otp is expired or not
-        if (otpEntity.getExpiredAt().isBefore(LocalDateTime.now())) {
-            otpEntity.setExpired(true);
-            otpService.disableOtp(otpEntity.getId());
-            throw new DataNotFoundException(
-                localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
-            );
-        }
-
-        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
-            throw new DataNotFoundException("Invalid OTP");
-        }
-
-        otpEntity.setUsed(true);
-        otpService.disableOtp(otpEntity.getId());
-    }
-
-    private Otp getOtpByEmailOtp(String email, String otp) {
-        return otpService.getOtpByEmailOtp(email, otp)
-            .orElseThrow(
-                () -> new DataNotFoundException("OTP is not correct, please try again later"));
-    }
 
     @Override
     public void bannedUser(Long userId) throws DataNotFoundException {
@@ -428,7 +360,7 @@ public class UserService implements IUserService, PaginationConverter, DTOConver
     @Override
     public void validateAccountBalance(User user, long basePrice) {
 //        if (user.getAccountBalance() < Math.floorDiv(basePrice, BusinessNumber.FEE_ADD_KOI_TO_AUCTION)) {
-//            throw new MalformDataException("You don't have enough money to register Product to Auction");
+//            throw new MalformDataException("You don't have enough money to register Product to SHOPPE");
 //        }
     }
 

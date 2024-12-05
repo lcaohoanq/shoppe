@@ -11,6 +11,7 @@ public record ProductResponse(
     String thumbnail,
     String category,
     Double price,
+    @JsonProperty("shop_owner_id") Long shopOwnerId,
 
     @JsonProperty("price_before_discount")
     Double priceBeforeDiscount,

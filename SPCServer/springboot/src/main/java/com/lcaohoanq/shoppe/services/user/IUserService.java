@@ -37,10 +37,6 @@ public interface IUserService {
 
     void updateAccountBalance(Long userId, Long payment) throws Exception;
 
-    void verifyOtpToVerifyUser(Long userId, String otp) throws Exception;
-
-    void verifyOtpIsCorrect(Long userId, String otp) throws Exception;
-
     void bannedUser(Long userId) throws DataNotFoundException;
 
     void updatePassword(UpdatePasswordDTO updatePasswordDTO) throws Exception;

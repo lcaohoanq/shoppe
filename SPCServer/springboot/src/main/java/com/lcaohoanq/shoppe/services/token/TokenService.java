@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TokenService implements ITokenService{
     private static final int MAX_TOKENS = 3;
@@ -69,13 +71,6 @@ public class TokenService implements ITokenService{
         return tokenRepository.findByToken(token);
     }
 
-    @Override
-    @Transactional
-    public void setTokenExpired() {
-        LocalDateTime now = LocalDateTime.now();
-        tokenRepository.updateExpiredTokens(now);
-    }
-
     @Transactional
     @Override
     public Token addToken(User user,String token, boolean isMobileDevice) {
@@ -117,4 +112,5 @@ public class TokenService implements ITokenService{
         tokenRepository.save(newToken);
         return newToken;
     }
+
 }

@@ -31,7 +31,7 @@ public class RoleController {
     private final IRoleService roleService;
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<RoleResponse>>> getAllRoles() {
+    public ResponseEntity<ApiResponse<List<RoleResponse>>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.<List<RoleResponse>>builder()
                 .message("Roles fetched successfully")
@@ -43,8 +43,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<RoleResponse>> getRoleById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<RoleResponse>> getById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.<RoleResponse>builder()
                 .message("Role fetched successfully")
@@ -56,8 +55,8 @@ public class RoleController {
     }
 
     @PostMapping("")
-//    @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<RoleResponse>> createRole(
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<RoleResponse>> create(
         @Valid @RequestBody RoleDTO roleDTO,
         BindingResult bindingResult) {
 
@@ -78,7 +77,7 @@ public class RoleController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<RoleResponse>> updateRole(
+    public ResponseEntity<ApiResponse<RoleResponse>> update(
         @PathVariable Long id,
         @Valid @RequestBody RoleDTO roleDTO) {
         roleService.updateRole(id, roleDTO);
@@ -94,7 +93,7 @@ public class RoleController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<RoleResponse>> deleteRole(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<RoleResponse>> delete(@PathVariable Long id) {
         roleService.deleteRole(id);
         return ResponseEntity.ok(
             ApiResponse.<RoleResponse>builder()

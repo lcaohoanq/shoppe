@@ -1,14 +1,12 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,13 +16,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products")
+@Table(name = "wallets")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Product extends BaseEntity {
+public class Wallet {
 
     @Id
     @SequenceGenerator(name = "products_seq", sequenceName = "products_id_seq", allocationSize = 1)
@@ -32,26 +30,11 @@ public class Product extends BaseEntity {
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
-    private String name;
-    private String description;
-    private String thumbnail;
-    private double price;
 
-    @Column(name = "price_before_discount")
-    @JsonProperty("price_before_discount")
-    private double priceBeforeDiscount;
+    @Column(name = "balance", nullable = false)
+    private Float balance;
 
-    private int quantity;
-    private int sold;
-    private int view;
-    private double rating;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "shop_owner_id")
-    private User shopOwner;
+    @OneToOne(mappedBy = "wallet")
+    private User user;
 
 }

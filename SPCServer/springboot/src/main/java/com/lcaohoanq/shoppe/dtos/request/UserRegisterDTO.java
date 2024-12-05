@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.constants.Regex;
+import com.lcaohoanq.shoppe.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -15,6 +16,9 @@ public record UserRegisterDTO(
 
     @JsonProperty("email")
     @Email(message = "Email is invalid") String email,
+
+    @JsonProperty("gender")
+    @NotBlank(message = "Gender is required") Gender gender,
 
     @JsonProperty("address")
     String address,

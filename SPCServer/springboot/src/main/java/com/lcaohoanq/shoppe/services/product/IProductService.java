@@ -14,4 +14,6 @@ public interface IProductService {
 
     ProductResponse getById(long id);
 
+    boolean existsByName(String name);
+
 }

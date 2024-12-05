@@ -1,8 +1,11 @@
 package com.lcaohoanq.shoppe.controllers;
 
+import com.lcaohoanq.shoppe.annotations.RetryAndBlock;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.UserLoginDTO;
 import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.request.VerifyUserDTO;
+import com.lcaohoanq.shoppe.dtos.responses.OtpResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.models.Token;
 import com.lcaohoanq.shoppe.models.User;
@@ -10,6 +13,7 @@ import com.lcaohoanq.shoppe.dtos.responses.LoginResponse;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.services.auth.AuthService;
+import com.lcaohoanq.shoppe.services.auth.IAuthService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.services.user.IUserService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
@@ -28,7 +32,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +49,7 @@ public class AuthController implements Identifiable, DTOConverter {
     private final LocalizationUtils localizationUtils;
     private final TokenService tokenService;
     private final HttpServletRequest request;
-    private final AuthService authService;
+    private final IAuthService authService;
 
     @Timed(
         value = "custom.login.requests",
@@ -151,6 +157,48 @@ public class AuthController implements Identifiable, DTOConverter {
                     .isSuccess(false)
                     .build());
         }
+    }
+
+    @PutMapping("/verify/{otp}")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    public ResponseEntity<ApiResponse<OtpResponse>> verifiedUser(
+        @PathVariable int otp
+    ) throws Exception {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        authService.verifyOtpToVerifyUser(user.getId(), String.valueOf(otp));
+        return ResponseEntity.ok().body(
+            ApiResponse.<OtpResponse>builder()
+                .message(MessageKey.VERIFY_USER_SUCCESSFULLY)
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .build());
+    }
+
+    @Timed(
+        value = "custom.verify.requests",
+        extraTags = {"uri", "/api/v1/users/verify"},
+        description = "Track verify request count")
+    @RetryAndBlock(maxAttempts = 3, blockDurationSeconds = 3600, maxDailyAttempts = 6)
+    @PostMapping("/send-verify-otp")
+    public ResponseEntity<ApiResponse<OtpResponse>> verifiedUserNotLogin(
+        @Valid @RequestBody VerifyUserDTO verifyUserDTO,
+        BindingResult result
+    ) throws Exception {
+        if (result.hasErrors()) {
+            throw new MethodArgumentNotValidException(result);
+        }
+
+        User user = userService.findUserByEmail(verifyUserDTO.email());
+        authService.verifyOtpToVerifyUser(user.getId(), verifyUserDTO.otp());
+        return ResponseEntity.ok().body(
+            ApiResponse.<OtpResponse>builder()
+                .message(MessageKey.VERIFY_USER_SUCCESSFULLY)
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .build());
     }
 
 }

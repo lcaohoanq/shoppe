@@ -166,9 +166,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         // Check roles endpoint
         if (path.startsWith(apiPrefix + "/roles")) {
-            boolean isPost = request.getMethod().equals("POST");
-            log.info("Roles endpoint - Is POST? {}", isPost);
-            return isPost;
+            boolean isGet = request.getMethod().equals("GET");
+            log.info("Roles endpoint - Is GET? {}", isGet);
+            return isGet;
         }
 
         // Only allow GET requests for categories

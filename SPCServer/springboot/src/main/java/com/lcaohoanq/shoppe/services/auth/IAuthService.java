@@ -9,5 +9,6 @@ public interface IAuthService {
     String login(String email, String password) throws Exception;
     User getUserDetailsFromToken(String token) throws Exception;
     void logout(String token, User user) throws Exception;
-
+    void verifyOtpToVerifyUser(Long userId, String otp) throws Exception;
+    void verifyOtpIsCorrect(Long userId, String otp) throws Exception;
 }

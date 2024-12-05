@@ -4,23 +4,26 @@ import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.constants.Regex;
 import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
-import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
+import com.lcaohoanq.shoppe.enums.Country;
+import com.lcaohoanq.shoppe.enums.Currency;
+import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.exceptions.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exceptions.MalformBehaviourException;
 import com.lcaohoanq.shoppe.exceptions.PasswordWrongFormatException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Otp;
 import com.lcaohoanq.shoppe.models.User;
+import com.lcaohoanq.shoppe.models.Wallet;
 import com.lcaohoanq.shoppe.repositories.RoleRepository;
 import com.lcaohoanq.shoppe.repositories.SocialAccountRepository;
 import com.lcaohoanq.shoppe.repositories.UserRepository;
+import com.lcaohoanq.shoppe.repositories.WalletRepository;
 import com.lcaohoanq.shoppe.services.mail.IMailService;
 import com.lcaohoanq.shoppe.services.otp.OtpService;
 import com.lcaohoanq.shoppe.services.role.RoleService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
+import com.lcaohoanq.shoppe.services.user.UserService;
 import com.lcaohoanq.shoppe.utils.MessageKey;
-import com.lcaohoanq.shoppe.utils.OtpUtils;
-import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import java.time.LocalDateTime;
@@ -33,7 +36,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.context.Context;
 
 @Slf4j
 @Service
@@ -51,12 +53,16 @@ public class AuthService implements IAuthService {
     private final IMailService mailService;
     private final RoleService roleService;
     private final TokenService tokenService;
+    private final OtpService otpService;
+    private final UserService userService;
+    private final WalletRepository walletRepository;
 
     @Override
     @Transactional
     public User register(UserRegisterDTO userRegisterDTO) throws Exception {
-        if(!userRegisterDTO.password().matches(Regex.PASSWORD_REGEX)){
-            throw new PasswordWrongFormatException("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
+        if (!userRegisterDTO.password().matches(Regex.PASSWORD_REGEX)) {
+            throw new PasswordWrongFormatException(
+                "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
         }
 
         if (!userRegisterDTO.password().equals(userRegisterDTO.confirmPassword())) {
@@ -69,31 +75,53 @@ public class AuthService implements IAuthService {
         }
 
         return Single.fromCallable(() -> {
-            User newUser = User.builder()
-                .name(userRegisterDTO.name())
-                .email(userRegisterDTO.email())
-                .password(passwordEncoder.encode(userRegisterDTO.password()))
-                .isActive(true)
-                .address(userRegisterDTO.address())
-                .dateOfBirth(userRegisterDTO.dateOfBirth())
-                .avatar(Optional.ofNullable(userRegisterDTO.avatar())
-                    .orElse("https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"))
-                .role(roleRepository
-                    .findById(1L)
-                    .orElseThrow(() -> new DataNotFoundException("Role not found")))
-                .build();
-            return userRepository.save(newUser);
-        })
-        .flatMap(mailService::createEmailVerification)  // Chain the email sending
-        .subscribeOn(Schedulers.io())
-        .blockingGet();
+                User newUser = User.builder()
+                    .name(userRegisterDTO.name())
+                    .email(userRegisterDTO.email())
+                    .password(passwordEncoder.encode(userRegisterDTO.password()))
+                    .isActive(true)
+                    .gender(userRegisterDTO.gender())
+                    .status(UserStatus.UNVERIFIED)
+                    .address(userRegisterDTO.address())
+                    .dateOfBirth(userRegisterDTO.dateOfBirth())
+                    .preferredLanguage(Country.UNITED_STATES)
+                    .preferredCurrency(Currency.USD)
+                    .avatar(Optional.ofNullable(userRegisterDTO.avatar())
+                                .orElse(
+                                    "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"))
+                    .role(roleRepository
+                              .findById(1L)
+                              .orElseThrow(() -> new DataNotFoundException("Role not found")))
+                    .build();
+
+                // Step 1: Save the user first without the wallet
+                newUser = userRepository.save(newUser);
+
+                // Step 2: Create and save the wallet with a reference to the saved user
+                Wallet newWallet = Wallet.builder()
+                    .balance(0F)
+                    .user(newUser)  // Set the saved user
+                    .build();
+
+                newWallet = walletRepository.save(newWallet);
+
+                // Step 3: Set the wallet on the user and save the user again
+                newUser.setWallet(newWallet);
+                userRepository.save(newUser);
+
+                return newUser;
+            })
+            .flatMap(mailService::createEmailVerification)  // Chain the email sending
+            .subscribeOn(Schedulers.io())
+            .blockingGet();
     }
 
     @Override
     public String login(String email, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKey.WRONG_PHONE_PASSWORD));
+            throw new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.WRONG_PHONE_PASSWORD));
         }
         User existingUser = optionalUser.get();
 
@@ -123,12 +151,80 @@ public class AuthService implements IAuthService {
 
     @Override
     public void logout(String token, User user) throws Exception {
-        if(jwtTokenUtils.isTokenExpired(token)){
+        if (jwtTokenUtils.isTokenExpired(token)) {
             throw new ExpiredTokenException("Token is expired");
         }
 
         tokenService.deleteToken(token, user);
     }
 
+    @Transactional
+    @Override
+    public void verifyOtpToVerifyUser(Long userId, String otp) throws Exception {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)
+            ));
+
+        if (user.getStatus() == UserStatus.VERIFIED) {
+            throw new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.USER_ALREADY_VERIFIED)
+            );
+        }
+
+        if (user.getStatus() == UserStatus.BANNED) {
+            throw new DataNotFoundException("User is banned");
+        }
+
+        Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
+
+        //check the otp is expired or not
+        if (otpEntity.getExpiredAt().isBefore(LocalDateTime.now())) {
+            otpEntity.setExpired(true);
+            otpService.disableOtp(otpEntity.getId());
+            throw new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
+            );
+        }
+
+        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
+            throw new DataNotFoundException("Invalid OTP");
+        }
+
+        otpEntity.setUsed(true);
+        otpService.disableOtp(otpEntity.getId());
+        user.setStatus(UserStatus.VERIFIED);
+        userRepository.save(user);
+    }
+
+    private Otp getOtpByEmailOtp(String email, String otp) {
+        return otpService.getOtpByEmailOtp(email, otp)
+            .orElseThrow(
+                () -> new DataNotFoundException("OTP is not correct, please try again later"));
+    }
+
+    @Transactional
+    @Override
+    public void verifyOtpIsCorrect(Long userId, String otp) throws Exception {
+        User user = userService.findUserById(userId);
+
+        Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
+
+        //check the otp is expired or not
+        if (otpEntity.getExpiredAt().isBefore(LocalDateTime.now())) {
+            otpEntity.setExpired(true);
+            otpService.disableOtp(otpEntity.getId());
+            throw new DataNotFoundException(
+                localizationUtils.getLocalizedMessage(MessageKey.OTP_EXPIRED)
+            );
+        }
+
+        if (!otpEntity.getOtp().equals(String.valueOf(otp))) {
+            throw new DataNotFoundException("Invalid OTP");
+        }
+
+        otpEntity.setUsed(true);
+        otpService.disableOtp(otpEntity.getId());
+    }
 
 }

@@ -1,12 +1,18 @@
 package com.lcaohoanq.shoppe.controllers;
 
+import com.github.javafaker.Faker;
 import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
+import com.lcaohoanq.shoppe.models.Category;
+import com.lcaohoanq.shoppe.repositories.CategoryRepository;
+import com.lcaohoanq.shoppe.services.category.CategoryService;
 import com.lcaohoanq.shoppe.services.product.IProductService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final IProductService productService;
+    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
@@ -80,5 +88,42 @@ public class ProductController {
         );
 
     }
+
+//    @PostMapping("/generateFakeProducts")
+//    @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
+//    public ResponseEntity<String> generateFakeProducts() {
+//        Faker faker = new Faker();
+//        Random random = new Random();
+//
+//        List<Category> categoryList = categoryRepository.findAll();
+//
+//        for (int i = 10_001; i <= 1_000_000; i++) {
+////            String productName = faker.commerce().productName();
+////            if(productService.existsByName(productName)) {
+////                continue;
+////            }
+//
+//            String randomCategory = categoryList.get(random.nextInt(categoryList.size())).getName();
+//
+//            ProductDTO productDTO = new ProductDTO(
+//                faker.commerce().productName(),
+//                faker.lorem().sentence(), //description
+//                faker.internet().image(), //thumbnail
+//                randomCategory, //category
+//                (double)faker.number().numberBetween(10, 90_000_000), //price
+//                (double)faker.number().numberBetween(10, 90_000_000), //priceBeforeDiscount
+//                faker.number().numberBetween(1, 10000), //quantity
+//                faker.number().numberBetween(0, 10000), //sold
+//                faker.number().numberBetween(0, 10000), //view
+//                faker.number().randomDouble(1, 0, 5) //rating
+//            );
+//            try{
+//                productService.createProduct(productDTO);
+//            } catch (Exception e) {
+//                return ResponseEntity.badRequest().body(e.getMessage());
+//            }
+//        }
+//        return ResponseEntity.ok("Fake products generated");
+//    }
 
 }

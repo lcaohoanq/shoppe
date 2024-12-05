@@ -48,10 +48,10 @@ public class CategoryService implements ICategoryService, DTOConverter,
     }
 
     @Override
-    public PageResponse<CategoryResponse> getAllCategories(PageRequest pageRequest) {
-        Page<Category> categoriesPage = categoryRepository.findAll(pageRequest);
-        return mapPageResponse(categoriesPage, pageRequest, this::toCategoryResponse,
-            "Get all categories successfully");
+    public List<CategoryResponse> getAllCategories() {
+       return categoryRepository.findAll().stream()
+           .map(this::toCategoryResponse)
+           .toList();
     }
 
     @Override

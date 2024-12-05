@@ -4,15 +4,14 @@ import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.CategoryDTO;
 import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
-import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.services.category.ICategoryService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
+import com.lcaohoanq.shoppe.utils.MessageKey;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -38,19 +36,21 @@ public class CategoryController implements DTOConverter {
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<PageResponse<CategoryResponse>> getAllCategories(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int limit
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAll(
     ) {
-        return ResponseEntity.ok(categoryService.getAllCategories(PageRequest.of(page, limit,
-                                                                                 Sort.by(
-                                                                                     "createdAt").ascending())));
+        return ResponseEntity.ok(
+            ApiResponse.<List<CategoryResponse>>builder()
+                .message("Get all categories successfully")
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .data(categoryService.getAllCategories())
+                .build());
     }
 
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<CategoryResponse>> getById(@PathVariable int id) {
         return ResponseEntity.ok(
             ApiResponse.<CategoryResponse>builder()
                 .message("Get category successfully")
@@ -63,7 +63,7 @@ public class CategoryController implements DTOConverter {
 
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
+    public ResponseEntity<ApiResponse<CategoryResponse>> create(
         @Valid @RequestBody CategoryDTO categoryDTO,
         BindingResult result
     ) {
@@ -83,7 +83,7 @@ public class CategoryController implements DTOConverter {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(
+    public ResponseEntity<ApiResponse<CategoryResponse>> update(
         @PathVariable int id,
         @Valid @RequestBody CategoryDTO categoryDTO,
         BindingResult result) {
@@ -107,7 +107,7 @@ public class CategoryController implements DTOConverter {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryResponse>> deleteCategory(@PathVariable int id) {
+    public ResponseEntity<ApiResponse<CategoryResponse>> delete(@PathVariable int id) {
         categoryService.delete(id);
         return ResponseEntity.ok(
             ApiResponse.<CategoryResponse>builder()

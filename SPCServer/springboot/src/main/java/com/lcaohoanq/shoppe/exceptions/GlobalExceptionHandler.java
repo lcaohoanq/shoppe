@@ -120,7 +120,7 @@ public class GlobalExceptionHandler {
     public ApiError<Object> handleHttpMessageNotReadableException(
         HttpMessageNotReadableException ex) {
         return ApiError.errorBuilder()
-            .message("Request body is required")
+            .message("JSON parse error")
             .reason(ex.getMessage())
             .statusCode(HttpStatus.BAD_REQUEST.value())
             .isSuccess(false)

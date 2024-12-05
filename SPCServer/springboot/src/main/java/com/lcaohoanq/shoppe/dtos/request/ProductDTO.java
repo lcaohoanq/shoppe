@@ -18,6 +18,9 @@ public record ProductDTO(
     @NotNull(message = "Product's category must not be null")
     String category,
 
+    @NotNull(message = "Product's owner must not be null")
+    Long shopOwnerId,
+
     @Min(value = 0, message = "Price must be greater than 0")
     Double price,
 

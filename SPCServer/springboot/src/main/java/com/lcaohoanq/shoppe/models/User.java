@@ -1,8 +1,12 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.enums.Country;
+import com.lcaohoanq.shoppe.enums.Currency;
+import com.lcaohoanq.shoppe.enums.Gender;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.models.base.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,9 +16,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,6 +61,9 @@ public class User extends BaseEntity implements UserDetails {
 
     private String name;
 
+    @Enumerated(EnumType.ORDINAL)
+    private Gender gender;
+
     @Column(name="is_active", columnDefinition = "boolean default true")
     @JsonProperty("is_active")
     private boolean isActive;
@@ -74,9 +83,22 @@ public class User extends BaseEntity implements UserDetails {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="wallet_id")
+    private Wallet wallet;
+
     @ManyToOne
     @JoinColumn(name="role_id")
     private Role role;
+
+    @Column(name = "preferred_language")
+    private Country preferredLanguage;
+
+    @Column(name = "preferred_currency")
+    private Currency preferredCurrency;
+
+    @Column(name = "last_login_timestamp")
+    private LocalDateTime lastLoginTimestamp;
 
     //Spring Security
     @Override

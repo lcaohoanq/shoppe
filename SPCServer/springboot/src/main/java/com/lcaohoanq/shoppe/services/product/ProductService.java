@@ -4,10 +4,13 @@ import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
+import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.models.Product;
+import com.lcaohoanq.shoppe.models.User;
 import com.lcaohoanq.shoppe.repositories.CategoryRepository;
 import com.lcaohoanq.shoppe.repositories.ProductRepository;
+import com.lcaohoanq.shoppe.repositories.UserRepository;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
 import com.lcaohoanq.shoppe.utils.PaginationConverter;
 import java.util.Optional;
@@ -22,6 +25,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Override
     public PageResponse<ProductResponse> getAllProducts(PageRequest pageRequest) {
@@ -31,7 +35,11 @@ public class ProductService implements IProductService, DTOConverter, Pagination
 
     @Override
     public ProductResponse getById(long id) {
-        return productRepository.findById(id).map(this::toProductResponse).orElse(null);
+        Optional<Product> product = productRepository.findById(id);
+        if(product.orElseThrow(() -> new DataNotFoundException("Product not exist")) == null){
+            throw new DataNotFoundException("Product not exist");
+        }
+        return toProductResponse(product.get());
     }
 
     @Override
@@ -43,11 +51,17 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             throw new CategoryNotFoundException("Category not exist");
         }
 
+        Optional<User> shopOwner = userRepository.findById(productDTO.shopOwnerId());
+        if(shopOwner.isEmpty()){
+            throw new DataNotFoundException("Shop owner not exist");
+        }
+
         Product newProduct = Product.builder()
             .name(productDTO.name())
             .description(productDTO.description())
             .thumbnail(productDTO.thumbnail())
-            .category(category.get().getName())
+            .category(category.get())
+            .shopOwner(shopOwner.get())
             .price(productDTO.price())
             .priceBeforeDiscount(productDTO.priceBeforeDiscount())
             .quantity(productDTO.quantity())
@@ -57,6 +71,11 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             .build();
 
         return toProductResponse(productRepository.save(newProduct));
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return productRepository.existsByName(name);
     }
 
 }
