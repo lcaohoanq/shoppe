@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 @JsonPropertyOrder({
     "message",
+    "data",
+    "pagination",
     "status_code",
     "is_success",
-    "pagination",
-    "data"
 })
 @NoArgsConstructor
 public class PageResponse<T> extends ApiResponse<List<T>> {

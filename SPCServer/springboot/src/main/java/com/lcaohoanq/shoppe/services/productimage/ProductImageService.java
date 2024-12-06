@@ -24,7 +24,7 @@ public class ProductImageService implements IProductImageService, DTOConverter,
     private final IProductService productService;
 
     @Override
-    public void createProductImage(long productId, String url) throws Exception {
+    public void create(long productId, String url) throws Exception {
         ProductResponse productResponse =  productService.getById(productId);
 
         Product product = Product.builder()
@@ -40,7 +40,7 @@ public class ProductImageService implements IProductImageService, DTOConverter,
     }
 
     @Override
-    public void updateProductImage(long id, long productId, String url) throws Exception {
+    public void update(long id, long productId, String url) throws Exception {
         ProductImage productImage = ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
         productImage.setImageUrl(url);
@@ -48,27 +48,27 @@ public class ProductImageService implements IProductImageService, DTOConverter,
     }
 
     @Override
-    public void deleteProductImage(long id) throws Exception {
+    public void delete(long id) throws Exception {
         ProductImage productImage = ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
         ProductImageRepository.delete(productImage);
     }
 
     @Override
-    public List<ProductImageResponse> getProductImage(long id) throws Exception {
+    public List<ProductImageResponse> findById(long id) throws Exception {
         ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
         return List.of(toProductImageResponse(ProductImageRepository.getById(id)));
     }
 
     @Override
-    public PageResponse<ProductImageResponse> getAllProductImages(Pageable pageable) throws Exception {
+    public PageResponse<ProductImageResponse> getAll(Pageable pageable) throws Exception {
         Page<ProductImage> productImages = ProductImageRepository.findAll(pageable);
         return mapPageResponse(productImages, pageable, this::toProductImageResponse, "Get All product images successfully");
     }
 
     @Override
-    public List<ProductImageResponse> getProductImagesByProductId(Long productId) throws Exception {
+    public List<ProductImageResponse> getByProductId(Long productId) throws Exception {
         List<ProductImage> productImages = ProductImageRepository.findByProductId(productId);
             if (productImages.isEmpty()) {
                 throw new Exception("Product images not found");

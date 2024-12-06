@@ -105,7 +105,7 @@ public class AuthService implements IAuthService {
 
                 newWallet = walletRepository.save(newWallet);
 
-                // Step 3: Set the wallet on the user and save the user again
+            // Step 3: Set the wallet on the user and save the user again
                 newUser.setWallet(newWallet);
                 userRepository.save(newUser);
 

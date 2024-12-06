@@ -36,9 +36,11 @@ export class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'expire-access-token': 60 * 60 * 24, // 1 ngày
         'expire-refresh-token': 60 * 60 * 24 * 160 // 160 ngày
-      }
+      },
+      withCredentials: true
     })
     this.instance.interceptors.request.use(
       (config) => {

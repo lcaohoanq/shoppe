@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductImage {
 
     public static final int MAXIMUM_IMAGES_PER_PRODUCT = 6;

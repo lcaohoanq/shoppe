@@ -7,15 +7,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface IProductImageService {
 
-    void createProductImage(long productId, String url) throws Exception;
+    void create(long productId, String url) throws Exception;
 
-    void updateProductImage(long id, long productId, String url) throws Exception;
+    void update(long id, long productId, String url) throws Exception;
 
-    void deleteProductImage(long id) throws Exception;
+    void delete(long id) throws Exception;
 
-    List<ProductImageResponse> getProductImage(long id) throws Exception;
+    List<ProductImageResponse> findById(long id) throws Exception;
 
-    PageResponse<ProductImageResponse> getAllProductImages(Pageable pageable) throws Exception;
-    List<ProductImageResponse> getProductImagesByProductId(Long productId) throws Exception;
+    PageResponse<ProductImageResponse> getAll(Pageable pageable) throws Exception;
+    List<ProductImageResponse> getByProductId(Long productId) throws Exception;
 
 }

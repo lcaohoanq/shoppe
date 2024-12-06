@@ -42,3 +42,4 @@ redis-data/dump.rdb
 allure-results/
 *.txt
 docker/redis-data/
+uploads/

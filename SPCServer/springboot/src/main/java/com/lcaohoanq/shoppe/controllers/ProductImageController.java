@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,25 +24,25 @@ public class ProductImageController {
     private final IProductImageService productImageService;
 
     @GetMapping("")
-    public ResponseEntity<PageResponse<ProductImageResponse>> getAllProductImages(
+    public ResponseEntity<PageResponse<ProductImageResponse>> getAll(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "0") int limit
+        @RequestParam(defaultValue = "10") int limit
     ) throws Exception {
 
         return ResponseEntity.ok(
-            productImageService.getAllProductImages(PageRequest.of(page, limit)));
+            productImageService.getAll(PageRequest.of(page, limit)));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<List<ProductImageResponse>>> getProductImageByProductId(
-        @PathVariable("id") Long id
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ApiResponse<List<ProductImageResponse>>> getByProductId(
+        @PathVariable("id") Long productId
     ) throws Exception {
         return ResponseEntity.ok(
             ApiResponse.<List<ProductImageResponse>>builder()
                 .message("Get list product success")
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)
-                .data(productImageService.getProductImagesByProductId(id))
+                .data(productImageService.getByProductId(productId))
                 .build()
         );
     }

@@ -1,14 +1,18 @@
 package com.lcaohoanq.shoppe.services.product;
 
 import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
+import com.lcaohoanq.shoppe.dtos.request.ProductImageDTO;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
+import com.lcaohoanq.shoppe.exceptions.InvalidParamException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.models.Product;
+import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.models.User;
 import com.lcaohoanq.shoppe.repositories.CategoryRepository;
+import com.lcaohoanq.shoppe.repositories.ProductImageRepository;
 import com.lcaohoanq.shoppe.repositories.ProductRepository;
 import com.lcaohoanq.shoppe.repositories.UserRepository;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
@@ -26,6 +30,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final ProductImageRepository productImageRepository;
 
     @Override
     public PageResponse<ProductResponse> getAllProducts(PageRequest pageRequest) {
@@ -76,6 +81,26 @@ public class ProductService implements IProductService, DTOConverter, Pagination
     @Override
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
+    }
+
+    @Override
+    public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO)
+        throws Exception {
+        Product existingProduct = productRepository
+            .findById(productId)
+            .orElseThrow(() ->
+                             new DataNotFoundException("Category not found: " + productImageDTO.productId()));
+
+        ProductImage newProductImage = ProductImage.builder()
+            .product(existingProduct)
+            .imageUrl(productImageDTO.imageUrl())
+            .build();
+        //khong cho insert qua 5 anh cho mot san pham
+        int size = productImageRepository.findByProductId(productId).size();
+        if (size >= ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
+            throw new InvalidParamException("Required :" + ProductImage.MAXIMUM_IMAGES_PER_PRODUCT);
+        }
+        return productImageRepository.save(newProductImage);
     }
 
 }

@@ -48,6 +48,28 @@ public class GlobalExceptionHandler {
             .build();
     }
 
+    @ExceptionHandler(FileTooLargeException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+    public ApiError<Object> handleFileTooLargeException(FileTooLargeException e) {
+        return ApiError.errorBuilder()
+            .message(localizationUtils.getLocalizedMessage(MessageKey.UPLOAD_IMAGES_FILE_LARGE))
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.PAYLOAD_TOO_LARGE.value())
+            .isSuccess(false)
+            .build();
+    }
+
+    @ExceptionHandler(UnsupportedMediaTypeException.class)
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public ApiError<Object> handleUnsupportedMediaTypeException(UnsupportedMediaTypeException e) {
+        return ApiError.errorBuilder()
+            .message(localizationUtils.getLocalizedMessage(MessageKey.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE))
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
+            .isSuccess(false)
+            .build();
+    }
+
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError<Object> handleMessagingException(MessagingException e) {
