@@ -4,6 +4,7 @@ import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
 import com.lcaohoanq.shoppe.dtos.request.ProductImageDTO;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
+import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exceptions.InvalidParamException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +48,16 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             throw new DataNotFoundException("Product not exist");
         }
         return toProductResponse(product.get());
+    }
+
+    @Transactional
+    @Override
+    public void delete(long id) {
+        Optional<Product> product = productRepository.findById(id);
+        if(product.orElseThrow(() -> new DataNotFoundException("Product not exist")) == null){
+            throw new DataNotFoundException("Product not exist");
+        }
+        productRepository.updateProductIsActive(id, false);
     }
 
     @Override
@@ -73,6 +85,8 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             .sold(productDTO.sold())
             .view(productDTO.view())
             .rating(productDTO.rating())
+            .status(ProductStatus.UNVERIFIED) //default status
+            .isActive(true) //default active
             .build();
 
         return toProductResponse(productRepository.save(newProduct));

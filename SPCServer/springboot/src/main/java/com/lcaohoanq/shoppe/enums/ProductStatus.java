@@ -6,12 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum EKoiStatus {
+public enum ProductStatus {
 
     UNVERIFIED("UNVERIFIED"),
     VERIFIED("VERIFIED"),
-    REJECTED("REJECTED"),
-    SOLD("SOLD"),;
+    REJECTED("REJECTED");
 
     private final String status;
 

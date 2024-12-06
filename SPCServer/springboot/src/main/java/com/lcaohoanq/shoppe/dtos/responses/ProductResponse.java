@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.dtos.responses;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lcaohoanq.shoppe.enums.ProductStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public record ProductResponse(
     Integer view,
     Double rating,
     
+    @JsonProperty("status") ProductStatus status,
     @JsonProperty("is_active") Boolean isActive,
 
     @JsonProperty("created_at")

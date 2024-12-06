@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.enums.ProductStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -32,5 +33,8 @@ public record ProductDTO(
     Integer quantity,
     Integer sold,
     Integer view,
-    Double rating
+    Double rating,
+    ProductStatus status,
+    @JsonProperty("is_active")
+    Boolean isActive
 ) {}

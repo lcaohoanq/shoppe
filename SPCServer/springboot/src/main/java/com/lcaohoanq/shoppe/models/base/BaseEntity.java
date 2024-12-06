@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.models.base;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
@@ -20,10 +21,12 @@ import lombok.Setter;
 public class BaseEntity {
 
     @Column(name="created_at")
+    @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime createdAt;
 
     @Column(name="updated_at")
+    @JsonProperty("updated_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime updatedAt;
 

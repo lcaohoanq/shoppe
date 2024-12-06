@@ -30,6 +30,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,6 +142,21 @@ public class ProductController {
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)
                 .data(productImages).build()
+        );
+    }
+    
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(
+        @PathVariable long id
+    ) {
+        productService.delete(id);
+        return ResponseEntity.ok(
+            ApiResponse.<ProductResponse>builder()
+                .message("Delete product success")
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .build()
         );
     }
 

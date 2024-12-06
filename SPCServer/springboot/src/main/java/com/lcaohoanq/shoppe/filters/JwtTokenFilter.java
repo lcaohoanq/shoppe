@@ -170,6 +170,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             log.info("Roles endpoint - Is GET? {}", isGet);
             return isGet;
         }
+        
+        if (path.startsWith(apiPrefix + "/product-images")) {
+            boolean isGet = request.getMethod().equals("GET");
+            log.info("Product Images endpoint - Is GET? {}", isGet);
+            return isGet;
+        }
 
         // Only allow GET requests for categories
         if (path.startsWith(apiPrefix + "/categories")) {

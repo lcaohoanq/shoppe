@@ -91,6 +91,7 @@ public interface DTOConverter {
             product.getSold(),
             product.getView(),
             product.getRating(),
+            product.getStatus(),
             product.isActive(),
             product.getCreatedAt(),
             product.getUpdatedAt()

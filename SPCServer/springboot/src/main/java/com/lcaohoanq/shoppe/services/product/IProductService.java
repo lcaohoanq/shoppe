@@ -16,6 +16,8 @@ public interface IProductService {
 
     ProductResponse getById(long id);
 
+    void delete(long id);
+    
     boolean existsByName(String name);
 
     ProductImage createProductImage(Long productId, MediaMeta mediaMeta, ProductImageDTO productImageDTO)

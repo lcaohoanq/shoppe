@@ -1,9 +1,12 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,6 +49,10 @@ public class Product extends BaseEntity {
     private int sold;
     private int view;
     private double rating;
+    
+    @JsonProperty("status")
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @Column(name = "is_active")
     @JsonProperty("is_active")

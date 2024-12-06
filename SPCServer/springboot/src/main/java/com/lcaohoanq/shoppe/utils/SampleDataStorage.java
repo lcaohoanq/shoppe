@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.utils;
 
-import com.lcaohoanq.shoppe.enums.EKoiStatus;
+import com.lcaohoanq.shoppe.enums.ProductStatus;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;
@@ -12,7 +12,7 @@ public class SampleDataStorage {
 
         String[] genders = {"M", "F", "O", "U"};
 
-        EKoiStatus[] koiStatusList = EKoiStatus.values();
+        ProductStatus[] koiStatusList = ProductStatus.values();
 
         List<String>  koiNames = Arrays.asList(
             "Kohaku", "Sanke", "Showa", "Tancho", "Shusui", "Asagi", "Bekko",
