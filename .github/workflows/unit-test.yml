@@ -19,6 +19,9 @@ jobs:
           cache: maven
 
       - name: Run All Unit Tests
+        working-directory: ./SPCServer/springboot
         run: mvn -B clean test --file pom.xml
         env:
           SPRING_PROFILES_ACTIVE: test
+
+
