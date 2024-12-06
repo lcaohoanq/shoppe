@@ -87,7 +87,7 @@ public class OrderController implements DTOConverter{
     // this endpoint will search all order of user retrieve from token (some
     // condition)
     @GetMapping("/search-user-orders-by-keyword")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<OrderPaginationResponse> searchUserOrdersByKeyword(
         @RequestParam(defaultValue = "", required = false) String keyword,
         @RequestParam(defaultValue = "0") int page,
@@ -109,7 +109,7 @@ public class OrderController implements DTOConverter{
 
     // GET http://localhost:8088/api/v1/orders/2
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<?> getOrder(
         @Valid @PathVariable("id") Long orderId) {
         try {
@@ -215,7 +215,7 @@ public class OrderController implements DTOConverter{
     }
 
     @GetMapping("/user/{user_id}/get-active-sorted-orders")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<OrderPaginationResponse> getSortedOrder(
         @PathVariable("user_id") Long userId,
         @RequestParam("keyword") OrderStatus keyword,

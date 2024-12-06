@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${api.prefix}/orders_details")
+@RequestMapping("${api.prefix}/orders-details")
 @RequiredArgsConstructor
 public class OrderDetailController implements DTOConverter{
 
@@ -34,7 +34,7 @@ public class OrderDetailController implements DTOConverter{
 
     //Thêm mới 1 order detail
     @PostMapping("")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_STORE_OWNER', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
     public ResponseEntity<?> createOrderDetail(
         @Valid @RequestBody OrderDetailDTO orderDetailDTO) {
         try {
@@ -47,7 +47,7 @@ public class OrderDetailController implements DTOConverter{
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<?> getOrderDetail(
         @Valid @PathVariable("id") Long id) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
@@ -55,7 +55,7 @@ public class OrderDetailController implements DTOConverter{
     }
 
     @GetMapping("/order/{orderId}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<?> getOrderDetails(
         @Valid @PathVariable("orderId") Long orderId
     ) {
@@ -68,7 +68,7 @@ public class OrderDetailController implements DTOConverter{
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_STORE_OWNER', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<?> updateOrderDetail(
         @Valid @PathVariable("id") Long id,
@@ -83,7 +83,7 @@ public class OrderDetailController implements DTOConverter{
 
     @DeleteMapping("/{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_STORE_OWNER', 'ROLE_STAFF')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
     public ResponseEntity<?> deleteOrderDetail(
         @Valid @PathVariable("id") Long id) {
         orderDetailService.deleteById(id);

@@ -81,12 +81,12 @@ public class OrderService implements IOrderService {
             orderDetail.setOrder(order);
 
             // Lấy thông tin sản phẩm từ cartItemDTO
-            Long koiId = cartItemDTO.koiId();
+            Long id = cartItemDTO.productId();
             int quantity = cartItemDTO.quantity();
 
             // Tìm thông tin sản phẩm t cơ sở dữ liệu (hoặc sử dụng cache nếu cần)
-            Product product = productRepository.findById(koiId)
-                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + koiId));
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + id));
 
             // Đặt thông tin cho OrderDetail
             orderDetail.setProduct(product);

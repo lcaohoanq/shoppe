@@ -176,6 +176,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             log.info("Product Images endpoint - Is GET? {}", isGet);
             return isGet;
         }
+        
+        if (path.startsWith(apiPrefix + "/forgot-password")) {
+            boolean isBypass = request.getMethod().equals("GET") || request.getMethod().equals("PUT");
+            log.info("Forgot Password endpoint - Is GET? {}", isBypass);
+            return isBypass;
+        }
 
         // Only allow GET requests for categories
         if (path.startsWith(apiPrefix + "/categories")) {

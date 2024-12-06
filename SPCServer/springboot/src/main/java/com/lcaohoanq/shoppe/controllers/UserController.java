@@ -65,7 +65,7 @@ public class UserController implements DTOConverter {
     }
 
     @PostMapping("/details")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<UserResponse> takeUserDetailsFromToken() throws Exception {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
@@ -76,7 +76,7 @@ public class UserController implements DTOConverter {
     //     PUT: localhost:4000/api/v1/users/4/deposit/100
 //     Header: Authorization Bearer token
     @PutMapping("/{userId}/deposit/{payment}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<String> deposit(
         @PathVariable long userId,
         @PathVariable long payment
@@ -92,7 +92,7 @@ public class UserController implements DTOConverter {
     }
 
     @PutMapping("/details/{userId}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserDetails(
         @PathVariable Long userId,
         @Valid @RequestBody UpdateUserDTO updatedUserDTO,
@@ -119,7 +119,7 @@ public class UserController implements DTOConverter {
     }
 
     @PutMapping("/block/{userId}/{active}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_STORE_OWNER')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<String> blockOrEnable(
         @Valid @PathVariable long userId,
         @Valid @PathVariable int active

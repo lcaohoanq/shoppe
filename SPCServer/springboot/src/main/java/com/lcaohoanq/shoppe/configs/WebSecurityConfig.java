@@ -56,6 +56,9 @@ public class WebSecurityConfig {
                     String.format("%s/categories/**", apiPrefix),
                     String.format("%s/products/**", apiPrefix),
                     String.format("%s/product-images/**", apiPrefix),
+                    String.format("%s/forgot-password/**", apiPrefix),
+                    String.format("%s/orders-details/**", apiPrefix),
+                    String.format("%s/orders/**", apiPrefix),
                     "/error"
                 ).permitAll()
                 // Swagger UI with basic auth
