@@ -36,7 +36,6 @@ public class Product extends BaseEntity {
     private Long id;
     private String name;
     private String description;
-    private String thumbnail;
     private double price;
 
     @Column(name = "price_before_discount")
@@ -47,6 +46,10 @@ public class Product extends BaseEntity {
     private int sold;
     private int view;
     private double rating;
+
+    @Column(name = "is_active")
+    @JsonProperty("is_active")
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

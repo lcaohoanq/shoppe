@@ -20,9 +20,11 @@ import lombok.Setter;
 public class BaseEntity {
 
     @Column(name="created_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime createdAt;
 
     @Column(name="updated_at")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     private LocalDateTime updatedAt;
 
     @PrePersist

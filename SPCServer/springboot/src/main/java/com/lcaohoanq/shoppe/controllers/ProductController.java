@@ -10,6 +10,7 @@ import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.FileTooLargeException;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.exceptions.UnsupportedMediaTypeException;
+import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.repositories.CategoryRepository;
 import com.lcaohoanq.shoppe.services.category.CategoryService;
@@ -117,9 +118,18 @@ public class ProductController {
             String filename = fileStoreService
                 .storeFile(fileStoreService.validateProductImage(file));
 
+            MediaMeta mediaMeta = MediaMeta.builder()
+                .fileName(filename)
+                .fileType(file.getContentType())
+                .fileSize(file.getSize())
+                .imageUrl(filename)
+                .videoUrl(null)
+                .build();
+
             //lưu vào đối tượng product trong DB
             ProductImage productImage = productService.createProductImage(
                 existingProduct.id(),
+                mediaMeta,
                 new ProductImageDTO(existingProduct.id(), filename)
             );
             productImages.add(productImage);

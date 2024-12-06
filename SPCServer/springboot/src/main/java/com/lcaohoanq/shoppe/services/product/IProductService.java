@@ -4,8 +4,8 @@ import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
 import com.lcaohoanq.shoppe.dtos.request.ProductImageDTO;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
+import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.ProductImage;
-import java.awt.print.Pageable;
 import org.springframework.data.domain.PageRequest;
 
 public interface IProductService {
@@ -18,6 +18,6 @@ public interface IProductService {
 
     boolean existsByName(String name);
 
-    ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO)
+    ProductImage createProductImage(Long productId, MediaMeta mediaMeta, ProductImageDTO productImageDTO)
         throws Exception;
 }

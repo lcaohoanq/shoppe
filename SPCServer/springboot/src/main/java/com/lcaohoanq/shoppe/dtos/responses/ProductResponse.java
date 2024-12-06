@@ -20,6 +20,7 @@ import java.util.List;
     "sold",
     "view",
     "rating",
+    "is_active",
     "created_at",
     "updated_at"
 })
@@ -27,7 +28,6 @@ public record ProductResponse(
     Long id,
     String name,
     String description,
-    String thumbnail,
 
     List<ProductImageResponse> images,
 
@@ -41,6 +41,8 @@ public record ProductResponse(
     Integer sold,
     Integer view,
     Double rating,
+    
+    @JsonProperty("is_active") Boolean isActive,
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")

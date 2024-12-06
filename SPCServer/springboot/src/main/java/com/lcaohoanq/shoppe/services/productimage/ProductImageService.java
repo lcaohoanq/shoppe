@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.services.productimage;
 import com.lcaohoanq.shoppe.dtos.responses.ProductImageResponse;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
+import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.Product;
 import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.repositories.ProductImageRepository;
@@ -10,6 +11,7 @@ import com.lcaohoanq.shoppe.services.product.IProductService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
 import com.lcaohoanq.shoppe.utils.PaginationConverter;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,11 @@ public class ProductImageService implements IProductImageService, DTOConverter,
 
         ProductImage productImage = ProductImage.builder()
             .product(product)
-            .imageUrl(url)
+            .mediaMeta(
+                MediaMeta.builder()
+                    .imageUrl(url)
+                    .build()
+            )
             .build();
 
         ProductImageRepository.save(productImage);
@@ -43,7 +49,11 @@ public class ProductImageService implements IProductImageService, DTOConverter,
     public void update(long id, long productId, String url) throws Exception {
         ProductImage productImage = ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
-        productImage.setImageUrl(url);
+        productImage.setMediaMeta(
+            MediaMeta.builder()
+                .imageUrl(url)
+                .build()
+        );
         ProductImageRepository.save(productImage);
     }
 
@@ -56,9 +66,9 @@ public class ProductImageService implements IProductImageService, DTOConverter,
 
     @Override
     public List<ProductImageResponse> findById(long id) throws Exception {
-        ProductImageRepository.findById(id)
+        ProductImage productImage = ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
-        return List.of(toProductImageResponse(ProductImageRepository.getById(id)));
+        return List.of(toProductImageResponse(productImage));
     }
 
     @Override

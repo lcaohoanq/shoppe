@@ -81,8 +81,7 @@ public interface DTOConverter {
         return new ProductResponse(
             product.getId(),
             product.getName(),
-            product.getDescription(),
-            product.getThumbnail(),
+            product.getDescription(), 
             product.getImages().stream().map(this::toProductImageResponse).toList(),
             toCategoryResponse(product.getCategory()),
             product.getPrice(),
@@ -92,6 +91,7 @@ public interface DTOConverter {
             product.getSold(),
             product.getView(),
             product.getRating(),
+            product.isActive(),
             product.getCreatedAt(),
             product.getUpdatedAt()
         );
@@ -101,8 +101,7 @@ public interface DTOConverter {
         return new ProductImageResponse(
             productImage.getId(),
             productImage.getProduct().getId(),
-            productImage.getImageUrl(),
-            productImage.getVideoUrl()
+            productImage.getMediaMeta()
         );
     }
 

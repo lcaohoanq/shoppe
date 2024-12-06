@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lcaohoanq.shoppe.metadata.MediaMeta;
 
 @JsonPropertyOrder({
     "id",
@@ -15,6 +16,5 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public record ProductImageResponse(
     @JsonProperty("id") Long id,
     @JsonProperty("product_id") Long productId,
-    @JsonProperty("image_url") String imageUrl,
-    @JsonProperty("video_url") String videoUrl
+    @JsonProperty("media_meta") MediaMeta mediaMeta
 ) {}

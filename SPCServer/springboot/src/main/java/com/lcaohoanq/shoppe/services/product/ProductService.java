@@ -7,6 +7,7 @@ import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exceptions.InvalidParamException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
+import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.Category;
 import com.lcaohoanq.shoppe.models.Product;
 import com.lcaohoanq.shoppe.models.ProductImage;
@@ -64,7 +65,6 @@ public class ProductService implements IProductService, DTOConverter, Pagination
         Product newProduct = Product.builder()
             .name(productDTO.name())
             .description(productDTO.description())
-            .thumbnail(productDTO.thumbnail())
             .category(category.get())
             .shopOwner(shopOwner.get())
             .price(productDTO.price())
@@ -84,7 +84,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
     }
 
     @Override
-    public ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO)
+    public ProductImage createProductImage(Long productId, MediaMeta mediaMeta, ProductImageDTO productImageDTO)
         throws Exception {
         Product existingProduct = productRepository
             .findById(productId)
@@ -93,7 +93,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
 
         ProductImage newProductImage = ProductImage.builder()
             .product(existingProduct)
-            .imageUrl(productImageDTO.imageUrl())
+            .mediaMeta(mediaMeta)
             .build();
         //khong cho insert qua 5 anh cho mot san pham
         int size = productImageRepository.findByProductId(productId).size();
