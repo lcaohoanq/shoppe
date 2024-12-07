@@ -50,7 +50,6 @@ public class Product extends BaseEntity {
     private int view;
     private double rating;
     
-    @JsonProperty("status")
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 

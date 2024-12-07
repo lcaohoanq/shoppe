@@ -78,6 +78,10 @@ public class AuthService implements IAuthService {
         if (userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }
+        
+        if (userRepository.existsByPhoneNumber(accountRegisterDTO.phoneNumber())) {
+            throw new DataIntegrityViolationException("Phone number already exists");
+        }
 
         HttpServletRequest request =
             ((ServletRequestAttributes) Objects.requireNonNull(
@@ -96,6 +100,7 @@ public class AuthService implements IAuthService {
                     .name(accountRegisterDTO.name())
                     .email(accountRegisterDTO.email())
                     .password(passwordEncoder.encode(accountRegisterDTO.password()))
+                    .phoneNumber(accountRegisterDTO.phoneNumber())
                     .isActive(true)
                     .gender(accountRegisterDTO.gender())
                     .status(UserStatus.UNVERIFIED)

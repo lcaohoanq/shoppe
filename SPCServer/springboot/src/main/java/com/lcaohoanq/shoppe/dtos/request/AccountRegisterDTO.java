@@ -18,6 +18,10 @@ public record AccountRegisterDTO(
 
     @JsonProperty("email")
     @Email(message = "Email is invalid") String email,
+    
+    @JsonProperty("phone_number")
+    @Pattern(regexp = Regex.PHONE_NUMBER_REGEX, message = "Phone number is invalid")
+    @NotBlank(message = "Phone number is required") String phoneNumber,
 
     @JsonProperty("gender") Gender gender,
 
