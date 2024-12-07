@@ -1,5 +1,10 @@
 # Dự án Shopee Clone Typescript
 
+## Preview
+
+![image](https://github.com/user-attachments/assets/52256f2c-775f-4dc7-bd68-997b91fbf727)
+
+
 ## Chức năng trong dự án
 
 - Authentication module: Quản lý bằng JWT
