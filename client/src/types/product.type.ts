@@ -1,6 +1,8 @@
+import { ProductImageReponse } from './productimage.type'
+
 export interface Product {
-  _id: string
-  images: string[]
+  id: string
+  images: ProductImageReponse[]
   price: number
   rating: number
   price_before_discount: number
@@ -9,6 +11,7 @@ export interface Product {
   view: number
   name: string
   description: string
+  shop_owner_id: number
   category: {
     _id: string
     name: string

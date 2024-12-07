@@ -50,15 +50,15 @@ public class ProductController {
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<PageResponse<ProductResponse>> getAllProducts(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int limit
+    public ResponseEntity<PageResponse<ProductResponse>> getAll(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "60") int limit
     ) {
         return ResponseEntity.ok(
             productService.getAll(
-                PageRequest.of(page,
+                PageRequest.of(page - 1,
                                limit,
-                               Sort.by("createdAt").descending())));
+                               Sort.by("id").ascending())));
     }
 
     @GetMapping("/{id}")

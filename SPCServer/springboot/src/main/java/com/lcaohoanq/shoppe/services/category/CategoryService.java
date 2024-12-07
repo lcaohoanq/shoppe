@@ -51,6 +51,7 @@ public class CategoryService implements ICategoryService, DTOConverter,
     public List<CategoryResponse> getAllCategories() {
        return categoryRepository.findAll().stream()
            .map(this::toCategoryResponse)
+           .sorted((o1, o2) -> (int) (o1.id() - o2.id()))
            .toList();
     }
 

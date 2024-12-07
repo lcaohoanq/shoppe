@@ -9,7 +9,13 @@ import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
 import { purchasesStatus } from 'src/constants/purchase'
 import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
-import { formatCurrency, formatNumberToSocialStyle, getIdFromNameId, rateSale } from 'src/utils/utils'
+import {
+  formatCurrency,
+  formatNumberToSocialStyle,
+  getIdFromNameId,
+  getRandomProductImage,
+  rateSale
+} from 'src/utils/utils'
 import Product from '../ProductList/components/Product'
 import path from 'src/constants/path'
 import { useTranslation } from 'react-i18next'
@@ -21,10 +27,16 @@ export default function ProductDetail() {
   const queryClient = useQueryClient()
   const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
-  const id = getIdFromNameId(nameId as string)
+  const id = Number(nameId)
   const { data: productDetailData } = useQuery({
     queryKey: ['product', id],
-    queryFn: () => productApi.getProductDetail(id as string)
+    queryFn: () => {
+      if (isNaN(id)) {
+        throw new Error('Invalid product ID')
+      }
+      return productApi.getProductDetail(id)
+    },
+    enabled: !isNaN(id)
   })
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
@@ -35,6 +47,9 @@ export default function ProductDetail() {
     [product, currentIndexImages]
   )
   const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
+
+  console.log('Data nameId: ' + nameId)
+  console.log('Data id: ' + id)
 
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -49,7 +64,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (product && product.images.length > 0) {
-      setActiveImage(product.images[0])
+      setActiveImage(getRandomProductImage(product))
     }
   }, [product])
 
@@ -99,7 +114,7 @@ export default function ProductDetail() {
 
   const addToCart = () => {
     addToCartMutation.mutate(
-      { buy_count: buyCount, product_id: product?._id as string },
+      { buy_count: buyCount, product_id: product?.id as string },
       {
         onSuccess: (data) => {
           toast.success(data.data.message, { autoClose: 1000 })
@@ -293,8 +308,8 @@ export default function ProductDetail() {
           <div className='uppercase text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</div>
           {productsData && (
             <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-              {productsData.data.data.products.map((product) => (
-                <div className='col-span-1' key={product._id}>
+              {productsData.data.data.map((product) => (
+                <div className='col-span-1' key={product.id}>
                   <Product product={product} />
                 </div>
               ))}

@@ -67,6 +67,26 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
 
   return (
     <div className='py-4'>
+      <Link to={path.home} className='mb-5 flex items-center font-bold uppercase'>
+        <svg
+          enableBackground='new 0 0 15 15'
+          viewBox='0 0 15 15'
+          x={0}
+          y={0}
+          className='mr-3 h-4 w-3 fill-current stroke-current'
+        >
+          <g>
+            <polyline
+              fill='none'
+              points='5.5 13.2 5.5 5.8 1.5 1.2 13.5 1.2 9.5 5.8 9.5 10.2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeMiterlimit={10}
+            />
+          </g>
+        </svg>
+        {t('aside filter.filter search')}
+      </Link>
       <Link
         to={path.home}
         className={classNames('flex items-center font-bold', {
@@ -117,26 +137,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
           )
         })}
       </ul>
-      <Link to={path.home} className='mt-4 flex items-center font-bold uppercase'>
-        <svg
-          enableBackground='new 0 0 15 15'
-          viewBox='0 0 15 15'
-          x={0}
-          y={0}
-          className='mr-3 h-4 w-3 fill-current stroke-current'
-        >
-          <g>
-            <polyline
-              fill='none'
-              points='5.5 13.2 5.5 5.8 1.5 1.2 13.5 1.2 9.5 5.8 9.5 10.2'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeMiterlimit={10}
-            />
-          </g>
-        </svg>
-        {t('aside filter.filter search')}
-      </Link>
+
       <div className='my-4 h-[1px] bg-gray-300' />
       <div className='my-5'>
         <div>Khoảng giá</div>

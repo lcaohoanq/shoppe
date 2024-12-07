@@ -30,6 +30,15 @@ Với range = 2 áp dụng cho khoảng cách đầu, cuối và xung quanh curr
  */
 
 const RANGE = 2
+
+// Add scroll to top helper function
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
 export default function Pagination({ queryConfig, pageSize }: Props) {
   const page = Number(queryConfig.page)
 
@@ -40,7 +49,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
       if (!dotBefore) {
         dotBefore = true
         return (
-          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
+          <span key={index} className='mx-2 rounded border bg-[#e5e7eb] text-xl text-gray-700 px-3 py-2 '>
             ...
           </span>
         )
@@ -51,7 +60,7 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
       if (!dotAfter) {
         dotAfter = true
         return (
-          <span key={index} className='mx-2 rounded border bg-white px-3 py-2 shadow-sm'>
+          <span key={index} className='mx-2 rounded border bg-[#e5e7eb] text-xl text-gray-700 px-3 py-2 '>
             ...
           </span>
         )
@@ -86,7 +95,8 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               }).toString()
             }}
             key={index}
-            className={classNames('mx-2 cursor-pointer rounded border bg-white px-3 py-2 shadow-sm', {
+            onClick={scrollToTop}
+            className={classNames('mx-2 cursor-pointer rounded border bg-[#e5e7eb] text-xl text-gray-700 px-3 py-2 ', {
               'border-cyan-500': pageNumber === page,
               'border-transparent': pageNumber !== page
             })}
@@ -99,7 +109,9 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
   return (
     <div className='mt-6 flex flex-wrap justify-center'>
       {page === 1 ? (
-        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>Prev</span>
+        <span className='mx-2 cursor-not-allowed rounded border bg-[#e5e7eb] text-xl text-gray-700/60 px-3 py-2  '>
+          &#60;
+        </span>
       ) : (
         <Link
           to={{
@@ -109,15 +121,18 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               page: (page - 1).toString()
             }).toString()
           }}
-          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2  shadow-sm'
+          onClick={scrollToTop}
+          className='mx-2 cursor-pointer rounded border bg-[#e5e7eb] text-xl text-gray-700 px-3 py-2  '
         >
-          Prev
+          &#60;
         </Link>
       )}
 
       {renderPagination()}
       {page === pageSize ? (
-        <span className='mx-2 cursor-not-allowed rounded border bg-white/60 px-3 py-2  shadow-sm'>Next</span>
+        <span className='mx-2 cursor-not-allowed rounded border bg-[#e5e7eb] text-xl text-gray-700/60 px-3 py-2  '>
+          &#62;
+        </span>
       ) : (
         <Link
           to={{
@@ -127,9 +142,10 @@ export default function Pagination({ queryConfig, pageSize }: Props) {
               page: (page + 1).toString()
             }).toString()
           }}
-          className='mx-2 cursor-pointer rounded border bg-white px-3 py-2  shadow-sm'
+          onClick={scrollToTop}
+          className='mx-2 cursor-pointer rounded border bg-[#e5e7eb] text-xl text-gray-700 px-3 py-2  '
         >
-          Next
+          &#62;
         </Link>
       )}
     </div>

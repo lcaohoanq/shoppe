@@ -17,6 +17,7 @@ import { useContext } from 'react'
 import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
 import { Helmet } from 'react-helmet-async'
+import { Divider } from '@mui/material'
 
 type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
 const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
@@ -118,8 +119,42 @@ export default function Register() {
                   isLoading={registerAccountMutation.isLoading}
                   disabled={registerAccountMutation.isLoading}
                 >
-                  Đăng ký
+                  Tiếp theo
                 </Button>
+              </div>
+              <div className='m-3 mb-5'>
+                <Divider
+                  sx={{
+                    color: 'gray',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  HOẶC
+                </Divider>
+              </div>
+              <div className='flex gap-3'>
+                <Button
+                  type='submit'
+                  className='flex  w-full  border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase b hover:1bg-red-600'
+                >
+                  Facebook
+                </Button>
+                <Button
+                  type='submit'
+                  className='flex  w-full  border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase b hover:bg-red-600'
+                >
+                  Google
+                </Button>
+              </div>
+              <div className='text-center m-5 text-sm'>
+                Bằng việc đăng kí, bạn đã đồng ý với Shopee về &#32;
+                <Link className='text-red-400' to='/'>
+                  Điều khoản dịch vụ
+                </Link>
+                &#32; &#38; &#32;
+                <Link className='text-red-400' to='/'>
+                  Chính sách bảo mật
+                </Link>
               </div>
               <div className='mt-8 flex items-center justify-center'>
                 <span className='text-gray-400'>Bạn đã có tài khoản?</span>
