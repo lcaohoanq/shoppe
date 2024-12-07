@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.OrderDetailDTO;
+import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.dtos.responses.OrderDetailResponse;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders-details")
 @RequiredArgsConstructor
-public class OrderDetailController implements DTOConverter{
+public class OrderDetailController implements DTOConverter {
 
     private final IOrderDetailService orderDetailService;
     private final LocalizationUtils localizationUtils;
@@ -35,61 +37,81 @@ public class OrderDetailController implements DTOConverter{
     //Thêm mới 1 order detail
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
-    public ResponseEntity<?> createOrderDetail(
-        @Valid @RequestBody OrderDetailDTO orderDetailDTO) {
-        try {
-            OrderDetail newOrderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
-            return ResponseEntity.ok().body(this.fromOrderDetail(newOrderDetail));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> createOrderDetail(
+        @Valid @RequestBody OrderDetailDTO orderDetailDTO) throws Exception {
+        return ResponseEntity.ok().body(
+            ApiResponse.<OrderDetailResponse>builder()
+                .message("Create order detail successfully")
+                .isSuccess(true)
+                .statusCode(HttpStatus.CREATED.value())
+                .data(orderDetailService.create(orderDetailDTO))
+                .build()
+        );
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
-    public ResponseEntity<?> getOrderDetail(
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> getById(
         @Valid @PathVariable("id") Long id) throws DataNotFoundException {
-        OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
-        return ResponseEntity.ok().body(this.fromOrderDetail(orderDetail));
+        return ResponseEntity.ok().body(
+            ApiResponse.<OrderDetailResponse>builder()
+                .message("Order detail found successfully")
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .data(orderDetailService.getById(id))
+                .build()
+        );
     }
 
     @GetMapping("/order/{orderId}")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
-    public ResponseEntity<?> getOrderDetails(
+    public ResponseEntity<ApiResponse<List<OrderDetailResponse>>> getOrderDetails(
         @Valid @PathVariable("orderId") Long orderId
     ) {
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
         List<OrderDetailResponse> orderDetailResponses = orderDetails
             .stream()
-            .map(this::fromOrderDetail)
+            .map(this::toOrderDetailResponse)
             .toList();
-        return ResponseEntity.ok(orderDetailResponses);
+
+        return ResponseEntity.ok(
+            ApiResponse.<List<OrderDetailResponse>>builder()
+                .message("Get order details successfully")
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .data(orderDetailResponses)
+                .build());
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
-    public ResponseEntity<?> updateOrderDetail(
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> updateOrderDetail(
         @Valid @PathVariable("id") Long id,
-        @RequestBody OrderDetailDTO orderDetailDTO) {
-        try {
-            OrderDetail orderDetail = orderDetailService.updateOrderDetail(id, orderDetailDTO);
-            return ResponseEntity.ok().body(orderDetail);
-        } catch (DataNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        @RequestBody OrderDetailDTO orderDetailDTO
+    ) {
+        return ResponseEntity.ok().body(
+            ApiResponse.<OrderDetailResponse>builder()
+                .message("Update order detail successfully")
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .data(orderDetailService.update(id, orderDetailDTO))
+                .build());
+
     }
 
     @DeleteMapping("/{id}")
     @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_SHOP_OWNER', 'ROLE_STAFF')")
-    public ResponseEntity<?> deleteOrderDetail(
+    public ResponseEntity<ApiResponse<OrderDetailResponse>> deleteOrderDetail(
         @Valid @PathVariable("id") Long id) {
-        orderDetailService.deleteById(id);
-        return ResponseEntity.ok()
-            .body(localizationUtils
-                      .getLocalizedMessage(MessageKey.DELETE_ORDER_DETAIL_SUCCESSFULLY));
+        orderDetailService.delete(id);
+        return ResponseEntity.ok().body(
+            ApiResponse.<OrderDetailResponse>builder()
+                .message(localizationUtils.getLocalizedMessage(
+                    MessageKey.DELETE_ORDER_DETAIL_SUCCESSFULLY))
+                .statusCode(HttpStatus.OK.value())
+                .build());
     }
 
 }

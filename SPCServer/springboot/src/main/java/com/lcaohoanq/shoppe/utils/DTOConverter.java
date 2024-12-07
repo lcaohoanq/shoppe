@@ -109,7 +109,7 @@ public interface DTOConverter {
         );
     }
 
-    default OrderDetailResponse fromOrderDetail(OrderDetail orderDetail) {
+    default OrderDetailResponse toOrderDetailResponse(OrderDetail orderDetail) {
         return OrderDetailResponse
             .builder()
             .id(orderDetail.getId())

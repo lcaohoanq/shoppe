@@ -4,6 +4,7 @@ import com.lcaohoanq.shoppe.dtos.request.CartItemDTO;
 import com.lcaohoanq.shoppe.dtos.request.OrderDTO;
 import com.lcaohoanq.shoppe.dtos.request.OrderDetailDTO;
 import com.lcaohoanq.shoppe.dtos.request.OrderWithDetailsDTO;
+import com.lcaohoanq.shoppe.dtos.responses.OrderResponse;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.exceptions.MalformDataException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
@@ -17,6 +18,7 @@ import com.lcaohoanq.shoppe.repositories.ProductRepository;
 import com.lcaohoanq.shoppe.repositories.UserRepository;
 import com.lcaohoanq.shoppe.services.orderdetail.IOrderDetailService;
 import com.lcaohoanq.shoppe.services.user.IUserService;
+import com.lcaohoanq.shoppe.utils.DTOConverter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService {
+public class OrderService implements IOrderService, DTOConverter {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
@@ -43,11 +45,12 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public Order create(OrderDTO orderDTO) throws Exception {
+    public OrderResponse create(User user, OrderDTO orderDTO) throws Exception {
         // tìm xem user'id có tồn tại ko
-        User user = userRepository
-                .findById(orderDTO.getUserId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + orderDTO.getUserId()));
+        user = userRepository
+                .findById(user.getId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with provided id"));
+        
         // convert orderDTO => Order
         // dùng thư viện Model Mapper
         // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
@@ -108,7 +111,7 @@ public class OrderService implements IOrderService {
         log.info("Order created with ID: {}", order.getId());
         log.info("Number of OrderDetails: {}", order.getOrderDetails().size());
 
-        return order;
+        return toOrderResponse(order);
     }
 
     @Transactional

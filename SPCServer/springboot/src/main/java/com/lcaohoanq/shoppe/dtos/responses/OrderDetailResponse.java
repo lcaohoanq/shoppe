@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 //@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "order_details_id",
+    "order_id",
+    "product_id",
+    "price",
+    "number_of_products",
+    "total_money",
+    "color"
+})
 public class OrderDetailResponse {
+    
+    @JsonProperty("order_details_id")
     private Long id;
 
     @JsonProperty("order_id")

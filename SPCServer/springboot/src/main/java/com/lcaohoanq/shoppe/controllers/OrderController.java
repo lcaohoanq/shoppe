@@ -4,6 +4,7 @@ import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.OrderDTO;
 import com.lcaohoanq.shoppe.dtos.request.UpdateOrderStatusDTO;
+import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.exceptions.InvalidApiPathVariableException;
 import com.lcaohoanq.shoppe.exceptions.MalformDataException;
@@ -42,7 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
-public class OrderController implements DTOConverter{
+public class OrderController implements DTOConverter {
 
     private final IOrderService orderService;
     private final LocalizationUtils localizationUtils;
@@ -51,21 +52,26 @@ public class OrderController implements DTOConverter{
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
-    public ResponseEntity<?> createOrder(
+    public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
         @Valid @RequestBody OrderDTO orderDTO,
-        BindingResult result) {
+        BindingResult result
+    ) throws Exception {
+        
         if (result.hasErrors()) {
             throw new MethodArgumentNotValidException(result);
         }
-        try {
-            Order newOrder = orderService.create(orderDTO);
-            return ResponseEntity.ok(toOrderResponse(newOrder));
-        } catch (Exception e) {
-            BaseResponse<Object> response = new BaseResponse<>();
-            response.setMessage("Create order failed");
-            response.setReason(e.getMessage());
-            return ResponseEntity.badRequest().body(response);
-        }
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ApiResponse.<OrderResponse>builder()
+                .message("Create order successfully")
+                .statusCode(HttpStatus.CREATED.value())
+                .isSuccess(true)
+                .data(orderService.create(user, orderDTO))
+                .build());
     }
 
     @GetMapping("/user/{user_id}")
@@ -93,7 +99,8 @@ public class OrderController implements DTOConverter{
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int limit
     ) throws Exception {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
 
         PageRequest pageRequest = PageRequest.of(page, limit);

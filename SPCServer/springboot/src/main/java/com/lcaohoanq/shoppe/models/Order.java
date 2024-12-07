@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
@@ -62,6 +63,7 @@ public class Order extends BaseEntity {
     private String note;
 
     @Column(name="order_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderDate;
 
     @Column(name="max_weight")
@@ -80,6 +82,7 @@ public class Order extends BaseEntity {
     private String shippingAddress;
 
     @Column(name = "shipping_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate shippingDate;
 
     @Column(name = "tracking_number")

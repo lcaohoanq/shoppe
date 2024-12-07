@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.models.OrderDetail;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import java.time.LocalDate;
@@ -18,7 +19,30 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonPropertyOrder({
+    "order_id",
+    "user",
+    "first_name",
+    "last_name",
+    "phone_number",
+    "email",
+    "address",
+    "note",
+    "order_date",
+    "status",
+    "total_money",
+    "shipping_method",
+    "shipping_address",
+    "shipping_date",
+    "payment_method",
+    "tracking_number",
+    "order_details",
+    "created_at",
+    "updated_at"
+})
 public class OrderResponse {
+
+    @JsonProperty("order_id")
     private Long id;
 
     @JsonProperty("user")
@@ -43,7 +67,7 @@ public class OrderResponse {
     private String note;
 
     @JsonProperty("order_date")
-    //@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderDate;
 
     @JsonProperty("status")
@@ -59,6 +83,7 @@ public class OrderResponse {
     private String shippingAddress;
 
     @JsonProperty("shipping_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate shippingDate;
 
     @JsonProperty("payment_method")
