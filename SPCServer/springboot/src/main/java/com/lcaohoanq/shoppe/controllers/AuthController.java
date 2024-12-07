@@ -67,20 +67,17 @@ public class AuthController implements Identifiable, DTOConverter {
 
         String token = authService.login(userLoginDTO.email(), userLoginDTO.password());
         String userAgent = request.getHeader("User-Agent");
-        User userDetail = authService.getUserDetailsFromToken(token);
-        Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
+        UserResponse userDetail = authService.getUserDetailsFromToken(token);
+        Token jwtToken = tokenService.addToken(userDetail.id(), token, isMobileDevice(userAgent));
 
         log.info("User logged in successfully");
 
         LoginResponse response = new LoginResponse(
             jwtToken.getToken(),
             jwtToken.getRefreshToken(),
-            jwtToken.getTokenType() == null ? "Bearer" : jwtToken.getTokenType(),
-            userDetail.getId(),
-            userDetail.getUsername(),
-            userDetail.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList()
+            jwtToken.getRefreshExpirationDate(),
+            jwtToken.getExpirationDate(),
+            userDetail
         );
 
         return ResponseEntity.ok(ApiResponse.<LoginResponse>builder()

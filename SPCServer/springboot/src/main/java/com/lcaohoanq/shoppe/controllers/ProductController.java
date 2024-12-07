@@ -58,7 +58,7 @@ public class ProductController {
             productService.getAll(
                 PageRequest.of(page,
                                limit,
-                               Sort.by("createdAt").ascending())));
+                               Sort.by("createdAt").descending())));
     }
 
     @GetMapping("/{id}")

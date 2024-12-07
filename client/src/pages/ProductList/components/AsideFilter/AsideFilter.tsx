@@ -91,15 +91,15 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       <div className='my-4 h-[1px] bg-gray-300' />
       <ul>
         {categories.map((categoryItem) => {
-          const isActive = category === categoryItem._id
+          const isActive = category === categoryItem.id
           return (
-            <li className='py-2 pl-2' key={categoryItem._id}>
+            <li className='py-2 pl-2' key={categoryItem.id}>
               <Link
                 to={{
                   pathname: path.home,
                   search: createSearchParams({
                     ...queryConfig,
-                    category: categoryItem._id
+                    category: categoryItem.id
                   }).toString()
                 }}
                 className={classNames('relative px-2', {

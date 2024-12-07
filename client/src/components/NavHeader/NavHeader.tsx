@@ -118,6 +118,7 @@ export default function NavHeader() {
           <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
             Đăng nhập
           </Link>
+          <Link to={'https://help.shopee.vn/portal/4'}>Bạn cần giúp đỡ</Link>
         </div>
       )}
     </div>

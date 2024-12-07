@@ -4,6 +4,7 @@ import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.constants.Regex;
 import com.lcaohoanq.shoppe.dtos.request.AccountRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
 import com.lcaohoanq.shoppe.enums.UserStatus;
@@ -23,6 +24,7 @@ import com.lcaohoanq.shoppe.services.otp.OtpService;
 import com.lcaohoanq.shoppe.services.role.RoleService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.services.user.UserService;
+import com.lcaohoanq.shoppe.utils.DTOConverter;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -44,7 +46,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService {
+public class AuthService implements IAuthService, DTOConverter {
 
 
     private final UserRepository userRepository;
@@ -158,7 +160,7 @@ public class AuthService implements IAuthService {
 
     //Token
     @Override
-    public User getUserDetailsFromToken(String token) throws Exception {
+    public UserResponse getUserDetailsFromToken(String token) throws Exception {
         if (jwtTokenUtils.isTokenExpired(token)) {
             throw new ExpiredTokenException("Token is expired");
         }
@@ -166,7 +168,7 @@ public class AuthService implements IAuthService {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
-            return user.get();
+            return toUserResponse(user.get());
         } else {
             throw new Exception(
                 localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)

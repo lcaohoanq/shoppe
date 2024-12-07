@@ -16,12 +16,11 @@ public record UserResponse(
     @JsonProperty("is_active") boolean isActive,
     @JsonProperty("status") UserStatus status,
     @JsonProperty("date_of_birth") String dob,
-    @JsonProperty("phoneNumber") String phone,
+    @JsonProperty("phone_number") String phone,
     @JsonProperty("address") String address,
     @JsonProperty("avatar") String avatar,
     @JsonProperty("role_name") String roleName,
-    @JsonIgnore
-    @JsonProperty("wallet_id") Long walletId,
+    @JsonIgnore @JsonProperty("wallet_id") Long walletId,
     @JsonProperty ("preferred_language") String preferredLanguage,
     @JsonProperty ("preferred_currency") String preferredCurrency,
 

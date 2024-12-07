@@ -7,6 +7,7 @@ import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.models.Token;
 import com.lcaohoanq.shoppe.models.User;
 import com.lcaohoanq.shoppe.repositories.TokenRepository;
+import com.lcaohoanq.shoppe.services.user.UserService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TokenService implements ITokenService{
     private static final int MAX_TOKENS = 3;
+    private final UserService userService;
     @Value("${jwt.expiration}")
     private int expiration; //save to an environment variable
 
@@ -73,8 +75,9 @@ public class TokenService implements ITokenService{
 
     @Transactional
     @Override
-    public Token addToken(User user,String token, boolean isMobileDevice) {
-        List<Token> userTokens = tokenRepository.findByUser(user);
+    public Token addToken(long userId, String token, boolean isMobileDevice) {
+        User existingUser = userService.findUserById(userId);
+        List<Token> userTokens = tokenRepository.findByUserId(existingUser.getId());
         int tokenCount = userTokens.size();
         // Số lượng token vượt quá giới hạn, xóa một token cũ
         if (tokenCount >= MAX_TOKENS) {
@@ -98,7 +101,7 @@ public class TokenService implements ITokenService{
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expirationInSeconds);
         // Tạo mới một token cho người dùng
         Token newToken = Token.builder()
-                .user(user)
+                .user(existingUser)
                 .token(token)
                 .revoked(false)
                 .expired(false)

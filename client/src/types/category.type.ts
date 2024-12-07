@@ -1,4 +1,8 @@
+import { ApiResponse } from './api.type'
+
 export interface Category {
-  _id: string
+  id: string
   name: string
 }
+
+export type CategoryResponse = ApiResponse<Category[]>

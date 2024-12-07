@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
-    List<Token> findByUser(User user);
+    List<Token> findByUserId(Long userId);
 
     Token findByToken(String token);
 
