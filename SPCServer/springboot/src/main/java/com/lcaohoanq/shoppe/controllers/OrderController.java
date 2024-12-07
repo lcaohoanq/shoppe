@@ -58,7 +58,7 @@ public class OrderController implements DTOConverter{
             throw new MethodArgumentNotValidException(result);
         }
         try {
-            Order newOrder = orderService.createOrder(orderDTO);
+            Order newOrder = orderService.create(orderDTO);
             return ResponseEntity.ok(toOrderResponse(newOrder));
         } catch (Exception e) {
             BaseResponse<Object> response = new BaseResponse<>();
@@ -113,7 +113,7 @@ public class OrderController implements DTOConverter{
     public ResponseEntity<?> getOrder(
         @Valid @PathVariable("id") Long orderId) {
         try {
-            Order existingOrder = orderService.getOrder(orderId);
+            Order existingOrder = orderService.getById(orderId);
             OrderResponse orderResponse = toOrderResponse(existingOrder);
             return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
@@ -141,7 +141,7 @@ public class OrderController implements DTOConverter{
         }
         try {
             Order order;
-            order = orderService.updateOrder(id, orderDTO);
+            order = orderService.update(id, orderDTO);
             return ResponseEntity.ok(toOrderResponse(order));
         } catch (MalformDataException e) {
             response.setMessage("Update order failed");
@@ -167,7 +167,7 @@ public class OrderController implements DTOConverter{
             throw new InvalidApiPathVariableException("Order id must be greater than 0");
         }
         try {
-            orderService.deleteOrder(id);
+            orderService.delete(id);
             String result = localizationUtils.getLocalizedMessage(
                 MessageKey.DELETE_ORDER_SUCCESSFULLY, id);
             return ResponseEntity.ok().body(result);

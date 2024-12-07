@@ -43,7 +43,7 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public Order createOrder(OrderDTO orderDTO) throws Exception {
+    public Order create(OrderDTO orderDTO) throws Exception {
         // tìm xem user'id có tồn tại ko
         User user = userRepository
                 .findById(orderDTO.getUserId())
@@ -111,11 +111,6 @@ public class OrderService implements IOrderService {
         return order;
     }
 
-    @Override
-    public Order createOrder(Order order) throws Exception {
-        return orderRepository.save(order);
-    }
-
     @Transactional
     public Order updateOrderWithDetails(OrderWithDetailsDTO orderWithDetailsDTO) {
         modelMapper.typeMap(OrderWithDetailsDTO.class, Order.class)
@@ -139,14 +134,14 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order getOrder(Long id) {
+    public Order getById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
     }
 
     @Override
     @Transactional
-    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
+    public Order update(Long id, OrderDTO orderDTO) throws DataNotFoundException {
         Order existingOrder = orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
 
@@ -172,7 +167,7 @@ public class OrderService implements IOrderService {
 
     @Override
     @Transactional
-    public void deleteOrder(Long id) {
+    public void delete(Long id) {
         Order order = orderRepository
                 .findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));

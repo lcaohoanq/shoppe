@@ -61,7 +61,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private String name;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(name="is_active", columnDefinition = "boolean default true")
@@ -90,12 +90,12 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToOne
     @JoinColumn(name="role_id")
     private Role role;
-
+    
     @Column(name = "preferred_language")
-    private Country preferredLanguage;
-
+    private String preferredLanguage;
+    
     @Column(name = "preferred_currency")
-    private Currency preferredCurrency;
+    private String preferredCurrency;
 
     @Column(name = "last_login_timestamp")
     private LocalDateTime lastLoginTimestamp;

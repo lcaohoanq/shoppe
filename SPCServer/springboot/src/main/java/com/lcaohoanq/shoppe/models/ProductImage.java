@@ -45,7 +45,7 @@ public class ProductImage {
     private Product product;
 
     @Embedded
-    @JsonProperty("media_meta")
+    @JsonProperty("metadata")
     private MediaMeta mediaMeta;
 
 }

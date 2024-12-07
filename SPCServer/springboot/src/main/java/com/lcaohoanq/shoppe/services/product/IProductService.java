@@ -10,9 +10,9 @@ import org.springframework.data.domain.PageRequest;
 
 public interface IProductService {
 
-    PageResponse<ProductResponse> getAllProducts(PageRequest pageRequest);
+    PageResponse<ProductResponse> getAll(PageRequest pageRequest);
 
-    ProductResponse createProduct(ProductDTO productDTO);
+    ProductResponse create(ProductDTO productDTO);
 
     ProductResponse getById(long id);
 

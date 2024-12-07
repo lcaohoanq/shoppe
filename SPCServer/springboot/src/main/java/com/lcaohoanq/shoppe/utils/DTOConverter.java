@@ -23,6 +23,7 @@ public interface DTOConverter {
             user.getEmail(),
             user.getPassword(),
             user.getName(),
+            user.getGender(),
             user.isActive(),
             user.getStatus(),
             String.valueOf(user.getDateOfBirth()).split(" ")[0],
@@ -31,6 +32,8 @@ public interface DTOConverter {
             user.getAvatar(),
             user.getRole() != null ? user.getRole().getUserRole().name() : null,
             user.getWallet().getId(),
+            user.getPreferredLanguage(),
+            user.getPreferredCurrency(),
             user.getCreatedAt(),
             user.getUpdatedAt()
         );

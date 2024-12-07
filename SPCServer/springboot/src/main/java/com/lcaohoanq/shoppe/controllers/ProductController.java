@@ -3,22 +3,17 @@ package com.lcaohoanq.shoppe.controllers;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.ProductDTO;
 import com.lcaohoanq.shoppe.dtos.request.ProductImageDTO;
-import com.lcaohoanq.shoppe.dtos.responses.ProductImageResponse;
 import com.lcaohoanq.shoppe.dtos.responses.ProductResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
-import com.lcaohoanq.shoppe.exceptions.FileTooLargeException;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
-import com.lcaohoanq.shoppe.exceptions.UnsupportedMediaTypeException;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.repositories.CategoryRepository;
 import com.lcaohoanq.shoppe.services.category.CategoryService;
 import com.lcaohoanq.shoppe.services.file.IFileStoreService;
 import com.lcaohoanq.shoppe.services.product.IProductService;
-import com.lcaohoanq.shoppe.utils.MessageKey;
 import jakarta.validation.Valid;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +55,7 @@ public class ProductController {
         @RequestParam(defaultValue = "10") int limit
     ) {
         return ResponseEntity.ok(
-            productService.getAllProducts(
+            productService.getAll(
                 PageRequest.of(page,
                                limit,
                                Sort.by("createdAt").ascending())));
@@ -97,7 +92,7 @@ public class ProductController {
                 .message("Create new product success")
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)
-                .data(productService.createProduct(productDTO))
+                .data(productService.create(productDTO))
                 .build()
         );
 

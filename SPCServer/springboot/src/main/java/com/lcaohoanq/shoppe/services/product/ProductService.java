@@ -7,6 +7,7 @@ import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.exceptions.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exceptions.InvalidParamException;
+import com.lcaohoanq.shoppe.exceptions.MalformBehaviourException;
 import com.lcaohoanq.shoppe.exceptions.base.DataNotFoundException;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.models.Category;
@@ -36,7 +37,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
     private final ProductImageRepository productImageRepository;
 
     @Override
-    public PageResponse<ProductResponse> getAllProducts(PageRequest pageRequest) {
+    public PageResponse<ProductResponse> getAll(PageRequest pageRequest) {
         Page<Product> productsPage = productRepository.findAll(pageRequest);
         return mapPageResponse(productsPage, pageRequest, this::toProductResponse, "Get all products successfully");
     }
@@ -61,7 +62,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
     }
 
     @Override
-    public ProductResponse createProduct(ProductDTO productDTO) {
+    public ProductResponse create(ProductDTO productDTO) {
 
         Optional<Category> category = categoryRepository.findByName(productDTO.category());
 
@@ -105,6 +106,8 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             .orElseThrow(() ->
                              new DataNotFoundException("Category not found: " + productImageDTO.productId()));
 
+        if(!existingProduct.isActive()) throw new MalformBehaviourException("Product is not active");
+        
         ProductImage newProductImage = ProductImage.builder()
             .product(existingProduct)
             .mediaMeta(mediaMeta)

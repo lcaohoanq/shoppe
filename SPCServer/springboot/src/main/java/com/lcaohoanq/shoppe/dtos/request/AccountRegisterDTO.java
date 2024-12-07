@@ -1,15 +1,17 @@
 package com.lcaohoanq.shoppe.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.constants.Regex;
+import com.lcaohoanq.shoppe.enums.Country;
+import com.lcaohoanq.shoppe.enums.Currency;
 import com.lcaohoanq.shoppe.enums.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
 
-@Builder
-public record UserRegisterDTO(
+public record AccountRegisterDTO(
 
     @JsonProperty("name")
     @NotBlank(message = "Name is required") String name,
@@ -17,8 +19,7 @@ public record UserRegisterDTO(
     @JsonProperty("email")
     @Email(message = "Email is invalid") String email,
 
-    @JsonProperty("gender")
-    @NotBlank(message = "Gender is required") Gender gender,
+    @JsonProperty("gender") Gender gender,
 
     @JsonProperty("address")
     String address,
@@ -32,6 +33,14 @@ public record UserRegisterDTO(
 
     @JsonProperty("date_of_birth")
     String dateOfBirth,
+
+    @JsonProperty("preferred_language")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    Country preferredLanguage,
+
+    @JsonProperty("preferred_currency")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    Currency preferredCurrency,
 
     @JsonProperty("avatar")
     String avatar

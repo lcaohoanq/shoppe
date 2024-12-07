@@ -1,9 +1,16 @@
 package com.lcaohoanq.shoppe.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum Gender {
 
-    MALE,
-    FEMALE,
-    OTHER
+    MALE("MALE"),
+    FEMALE("FEMALE"),
+    OTHER("OTHER");
+    
+    private final String value;
 
 }

@@ -3,7 +3,7 @@ package com.lcaohoanq.shoppe.controllers;
 import com.lcaohoanq.shoppe.annotations.RetryAndBlock;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.UserLoginDTO;
-import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.request.AccountRegisterDTO;
 import com.lcaohoanq.shoppe.dtos.request.VerifyUserDTO;
 import com.lcaohoanq.shoppe.dtos.responses.OtpResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
@@ -12,7 +12,6 @@ import com.lcaohoanq.shoppe.models.User;
 import com.lcaohoanq.shoppe.dtos.responses.LoginResponse;
 import com.lcaohoanq.shoppe.dtos.responses.UserResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
-import com.lcaohoanq.shoppe.services.auth.AuthService;
 import com.lcaohoanq.shoppe.services.auth.IAuthService;
 import com.lcaohoanq.shoppe.services.token.TokenService;
 import com.lcaohoanq.shoppe.services.user.IUserService;
@@ -99,7 +98,7 @@ public class AuthController implements Identifiable, DTOConverter {
         description = "Track register request count")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponse>> createUser(
-        @RequestBody @Valid UserRegisterDTO userRegisterDTO,
+        @RequestBody @Valid AccountRegisterDTO accountRegisterDTO,
         BindingResult result
     ) throws Exception {
 
@@ -107,7 +106,7 @@ public class AuthController implements Identifiable, DTOConverter {
             throw new MethodArgumentNotValidException(result);
         }
 
-        User user = authService.register(userRegisterDTO);
+        User user = authService.register(accountRegisterDTO);
         log.info("New user registered successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(
             ApiResponse.<UserResponse>builder()

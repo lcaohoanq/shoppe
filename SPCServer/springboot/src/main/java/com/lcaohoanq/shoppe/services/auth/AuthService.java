@@ -3,7 +3,7 @@ package com.lcaohoanq.shoppe.services.auth;
 import com.lcaohoanq.shoppe.components.JwtTokenUtils;
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.constants.Regex;
-import com.lcaohoanq.shoppe.dtos.request.UserRegisterDTO;
+import com.lcaohoanq.shoppe.dtos.request.AccountRegisterDTO;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
 import com.lcaohoanq.shoppe.enums.UserStatus;
@@ -26,7 +26,9 @@ import com.lcaohoanq.shoppe.services.user.UserService;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Service
@@ -59,34 +63,47 @@ public class AuthService implements IAuthService {
 
     @Override
     @Transactional
-    public User register(UserRegisterDTO userRegisterDTO) throws Exception {
-        if (!userRegisterDTO.password().matches(Regex.PASSWORD_REGEX)) {
+    public User register(AccountRegisterDTO accountRegisterDTO) throws Exception {
+        
+        if (!accountRegisterDTO.password().matches(Regex.PASSWORD_REGEX)) {
             throw new PasswordWrongFormatException(
                 "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
         }
 
-        if (!userRegisterDTO.password().equals(userRegisterDTO.confirmPassword())) {
+        if (!accountRegisterDTO.password().equals(accountRegisterDTO.confirmPassword())) {
             throw new MalformBehaviourException("Password and confirm password must be the same");
         }
 
-        String email = userRegisterDTO.email();
+        String email = accountRegisterDTO.email();
         if (userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }
 
+        HttpServletRequest request =
+            ((ServletRequestAttributes) Objects.requireNonNull(
+                RequestContextHolder.getRequestAttributes())).getRequest();
+        String acceptLanguage = request.getHeader("Accept-Language");
+        String preferredLanguage = String.valueOf(Optional.ofNullable(accountRegisterDTO.preferredLanguage())
+            .orElse(acceptLanguage == null || acceptLanguage.isEmpty()
+                ? Country.UNITED_STATES
+                : Country.valueOf(acceptLanguage.toUpperCase())));
+        
+        String preferredCurrency = String.valueOf(Optional.ofNullable(accountRegisterDTO.preferredCurrency())
+            .orElse(Currency.USD));
+
         return Single.fromCallable(() -> {
                 User newUser = User.builder()
-                    .name(userRegisterDTO.name())
-                    .email(userRegisterDTO.email())
-                    .password(passwordEncoder.encode(userRegisterDTO.password()))
+                    .name(accountRegisterDTO.name())
+                    .email(accountRegisterDTO.email())
+                    .password(passwordEncoder.encode(accountRegisterDTO.password()))
                     .isActive(true)
-                    .gender(userRegisterDTO.gender())
+                    .gender(accountRegisterDTO.gender())
                     .status(UserStatus.UNVERIFIED)
-                    .address(userRegisterDTO.address())
-                    .dateOfBirth(userRegisterDTO.dateOfBirth())
-                    .preferredLanguage(Country.UNITED_STATES)
-                    .preferredCurrency(Currency.USD)
-                    .avatar(Optional.ofNullable(userRegisterDTO.avatar())
+                    .address(accountRegisterDTO.address())
+                    .dateOfBirth(accountRegisterDTO.dateOfBirth())
+                    .preferredLanguage(preferredLanguage)
+                    .preferredCurrency(preferredCurrency)
+                    .avatar(Optional.ofNullable(accountRegisterDTO.avatar())
                                 .orElse(
                                     "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"))
                     .role(roleRepository
@@ -124,6 +141,9 @@ public class AuthService implements IAuthService {
                 localizationUtils.getLocalizedMessage(MessageKey.WRONG_PHONE_PASSWORD));
         }
         User existingUser = optionalUser.get();
+        
+        existingUser.setLastLoginTimestamp(LocalDateTime.now());
+        userRepository.save(existingUser);
 
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(email, password, existingUser.getAuthorities());
