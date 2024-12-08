@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.constants.Regex;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
 import com.lcaohoanq.shoppe.enums.Gender;
@@ -20,6 +21,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,11 +82,16 @@ public class User extends BaseEntity implements UserDetails {
 
     private String address;
 
+    @Unique
+    @Column(name="phone_number",nullable = false, length = 100)
     @JsonProperty("phone_number")
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="wallet_id")
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Wallet wallet;
 
     @ManyToOne

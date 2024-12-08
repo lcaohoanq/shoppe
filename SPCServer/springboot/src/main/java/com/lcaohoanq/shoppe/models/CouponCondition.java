@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +28,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CouponCondition {
+public class CouponCondition extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "coupon_conditions_seq", sequenceName = "coupon_conditions_id_seq", allocationSize = 1)

@@ -13,9 +13,6 @@ public record ProductDTO(
     @NotNull(message = "Product's description must not be null")
     String description,
 
-    @NotNull(message = "Product's thumbnail must not be null")
-    String thumbnail,
-
     @NotNull(message = "Product's category must not be null")
     String category,
 

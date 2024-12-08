@@ -63,7 +63,7 @@ public class CategoryController implements DTOConverter {
 
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<CategoryResponse>> create(
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> create(
         @Valid @RequestBody CategoryDTO categoryDTO,
         BindingResult result
     ) {
@@ -72,7 +72,7 @@ public class CategoryController implements DTOConverter {
             throw new MethodArgumentNotValidException(result);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            ApiResponse.<CategoryResponse>builder()
+            ApiResponse.<List<CategoryResponse>>builder()
                 .message("Create category successfully")
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)

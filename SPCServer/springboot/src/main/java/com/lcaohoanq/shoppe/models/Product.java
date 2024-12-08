@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.models.base.BaseEntity;
@@ -15,6 +16,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,6 +68,9 @@ public class Product extends BaseEntity {
     private User shopOwner;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductImage> images;
+    private List<ProductImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    private List<CartProduct> cartProducts = new ArrayList<>();
 
 }

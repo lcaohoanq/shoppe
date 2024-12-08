@@ -10,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 
 public interface ICategoryService {
 
-    CategoryResponse createCategory(CategoryDTO categoryDTO) throws DataAlreadyExistException;
+    List<CategoryResponse>  createCategory(CategoryDTO categoryDTO) throws DataAlreadyExistException;
     CategoryResponse getById(long id) throws DataNotFoundException;
     List<CategoryResponse> getAllCategories();
     void update(long categoryId, CategoryDTO categoryDTO) throws DataNotFoundException;

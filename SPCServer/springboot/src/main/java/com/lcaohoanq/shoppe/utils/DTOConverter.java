@@ -14,6 +14,10 @@ import com.lcaohoanq.shoppe.models.Product;
 import com.lcaohoanq.shoppe.models.ProductImage;
 import com.lcaohoanq.shoppe.models.Role;
 import com.lcaohoanq.shoppe.models.User;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 public interface DTOConverter {
 
@@ -81,11 +85,17 @@ public interface DTOConverter {
     }
 
     default ProductResponse toProductResponse(Product product) {
+        List<ProductImageResponse> productImageResponses = Optional.ofNullable(product.getImages())
+            .orElse(Collections.emptyList())
+            .stream()
+            .map(this::toProductImageResponse)
+            .toList();
+        
         return new ProductResponse(
             product.getId(),
             product.getName(),
-            product.getDescription(), 
-            product.getImages().stream().map(this::toProductImageResponse).toList(),
+            product.getDescription(),
+            productImageResponses,
             toCategoryResponse(product.getCategory()),
             product.getPrice(),
             product.getShopOwner().getId(),

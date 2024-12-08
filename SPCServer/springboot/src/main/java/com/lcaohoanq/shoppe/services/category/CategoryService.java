@@ -26,17 +26,23 @@ public class CategoryService implements ICategoryService, DTOConverter,
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryResponse createCategory(CategoryDTO category) throws DataAlreadyExistException {
+    public List<CategoryResponse> createCategory(CategoryDTO category) throws DataAlreadyExistException {
+        List<String> categories = category.name();
 
-        categoryRepository.findByName(category.name()).ifPresent(c -> {
+        //check if category already exist
+        if (categoryRepository.existsByNameIn(categories)) {
             throw new CategoryAlreadyExistException("Category already exist");
+        }
+        
+        categories.forEach(name -> {
+            Category newCategory = new Category();
+            newCategory.setName(name);
+            categoryRepository.save(newCategory);
         });
-
-        Category newCategory = Category.builder()
-            .name(category.name())
-            .build();
-
-        return toCategoryResponse(categoryRepository.save(newCategory));
+    
+        return categories.stream()
+            .map(name -> toCategoryResponse(categoryRepository.findByName(name).get()))
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -61,7 +67,7 @@ public class CategoryService implements ICategoryService, DTOConverter,
 
         Category existingCategory = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
-        existingCategory.setName(category.name());
+        existingCategory.setName(String.valueOf(category.name()));
         categoryRepository.save(existingCategory);
     }
 
