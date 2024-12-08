@@ -10,6 +10,8 @@ import com.lcaohoanq.shoppe.exceptions.base.DataWrongFormatException;
 import com.lcaohoanq.shoppe.utils.MessageKey;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +46,17 @@ public class GlobalExceptionHandler {
             .message(localizationUtils.getLocalizedMessage(MessageKey.DATA_NOT_FOUND))
             .reason(e.getMessage())
             .statusCode(HttpStatus.NOT_FOUND.value())
+            .isSuccess(false)
+            .build();
+    }
+    
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError<Object> handleIOException(IOException e) {
+        return ApiError.errorBuilder()
+            .message(localizationUtils.getLocalizedMessage(MessageKey.INTERNAL_SERVER_ERROR))
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .isSuccess(false)
             .build();
     }

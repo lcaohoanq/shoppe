@@ -58,7 +58,7 @@ export const getRandomProductImage = (product: Product) => {
   // Check if the product has images
   if (product.images && product.images.length > 0) {
     // Return the first image's URL
-    return product.images[0].media_meta.image_url
+    return `${config.baseUrl}assets/images/${product.images[0].media_meta.image_url}`
   }
   // Fallback to a default image or empty string
   return 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lf8dkbwetifeee@resize_w450_nl.webp' // or you could use a default placeholder image URL
