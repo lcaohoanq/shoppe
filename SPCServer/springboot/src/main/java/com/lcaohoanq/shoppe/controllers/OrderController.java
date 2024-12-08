@@ -259,7 +259,7 @@ public class OrderController implements DTOConverter {
         try {
             Order updatedOrder = orderService.updateOrderStatus(id,
                                                                 OrderStatus.valueOf(
-                                                                    updateOrderStatusDTO.getStatus()));
+                                                                    updateOrderStatusDTO.status()));
             return ResponseEntity.ok(toOrderResponse(updatedOrder));
         } catch (Exception e) {
             BaseResponse response = new BaseResponse();
