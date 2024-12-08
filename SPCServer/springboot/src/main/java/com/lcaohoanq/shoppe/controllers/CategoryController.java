@@ -2,7 +2,9 @@ package com.lcaohoanq.shoppe.controllers;
 
 import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.CategoryDTO;
+import com.lcaohoanq.shoppe.dtos.request.SubcategoryDTO;
 import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
+import com.lcaohoanq.shoppe.dtos.responses.SubcategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.services.category.ICategoryService;
@@ -57,6 +59,40 @@ public class CategoryController implements DTOConverter {
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)
                 .data(categoryService.getById(id))
+                .build()
+        );
+    }
+    
+    @GetMapping("/sub/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<ApiResponse<SubcategoryResponse>> getSubCategories(
+        @PathVariable int id
+    ) {
+        return ResponseEntity.ok(
+            ApiResponse.<SubcategoryResponse>builder()
+                .message("Get sub categories successfully")
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .data(categoryService.getSubCategories(id))
+                .build()
+        );
+    }
+    
+    @PostMapping("/sub")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<SubcategoryResponse>> createSubCategory(
+        @Valid @RequestBody SubcategoryDTO subcategoryDTO,
+        BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new MethodArgumentNotValidException(result);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ApiResponse.<SubcategoryResponse>builder()
+                .message("Create sub category successfully")
+                .statusCode(HttpStatus.CREATED.value())
+                .isSuccess(true)
+                .data(categoryService.createSubCategory(subcategoryDTO))
                 .build()
         );
     }
