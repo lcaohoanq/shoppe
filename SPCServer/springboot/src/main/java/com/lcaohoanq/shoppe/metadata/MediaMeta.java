@@ -2,8 +2,7 @@ package com.lcaohoanq.shoppe.metadata;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.shoppe.models.base.BaseEntity;
-import jakarta.persistence.Column;
+import com.lcaohoanq.shoppe.base.entity.BaseEntity;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

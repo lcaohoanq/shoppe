@@ -9,7 +9,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lcaohoanq.shoppe.dtos.responses.base.ApiError;
+import com.lcaohoanq.shoppe.api.ApiError;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
