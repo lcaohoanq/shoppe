@@ -5,9 +5,9 @@ import lombok.NoArgsConstructor;
 
 @JsonPropertyOrder({
     "message",
+    "reason",
     "status_code",
     "is_success",
-    "reason",
     "data"
 })
 @NoArgsConstructor

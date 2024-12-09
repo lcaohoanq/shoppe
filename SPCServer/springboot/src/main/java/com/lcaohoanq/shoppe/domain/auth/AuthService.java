@@ -1,11 +1,17 @@
 package com.lcaohoanq.shoppe.domain.auth;
 
+import com.github.javafaker.Faker;
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.constant.Regex;
+import com.lcaohoanq.shoppe.domain.cart.Cart;
+import com.lcaohoanq.shoppe.domain.cart.CartProduct;
+import com.lcaohoanq.shoppe.domain.cart.CartRepository;
+import com.lcaohoanq.shoppe.domain.role.Role;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
+import com.lcaohoanq.shoppe.enums.Gender;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
@@ -29,8 +35,11 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -61,6 +70,7 @@ public class AuthService implements IAuthService, DTOConverter {
     private final OtpService otpService;
     private final UserService userService;
     private final WalletRepository walletRepository;
+    private final CartRepository cartRepository;
 
     @Override
     @Transactional
@@ -125,11 +135,25 @@ public class AuthService implements IAuthService, DTOConverter {
                     .balance(0F)
                     .user(newUser)  // Set the saved user
                     .build();
-
+                
                 newWallet = walletRepository.save(newWallet);
+                
+                Cart newCart = Cart.builder()
+                    .user(newUser)
+                    .cartProducts(new ArrayList<>())
+                    .build();
+
+                CartProduct cartProduct = CartProduct.builder()
+                    .cart(newCart)
+                    .quantity(0)
+                    .build();
+
+                newCart.addCartProduct(cartProduct);
+                newCart = cartRepository.save(newCart);
 
             // Step 3: Set the wallet on the user and save the user again
                 newUser.setWallet(newWallet);
+                newUser.setCart(newCart);
                 userRepository.save(newUser);
 
                 return newUser;

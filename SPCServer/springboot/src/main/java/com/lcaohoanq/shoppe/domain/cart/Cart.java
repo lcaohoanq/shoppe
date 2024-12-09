@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -17,6 +18,7 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +29,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Cart extends BaseEntity {
 
     @Id
@@ -36,17 +39,33 @@ public class Cart extends BaseEntity {
     @JsonProperty("id")
     private Long id;
 
-    @Column(name = "total_quantity")
+    @Column(name = "total_quantity", columnDefinition = "integer default 0", nullable = false)
     private int totalQuantity;
 
-    @Column(name = "total_price")
+    @Column(name = "total_price", columnDefinition = "float default 0", nullable = false)
     private double totalPrice;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartProduct> cartProducts = new ArrayList<>();
+
+    public void addCartProduct(CartProduct cartProduct) {
+        if (cartProducts == null) {
+            cartProducts = new ArrayList<>();
+        }
+        cartProducts.add(cartProduct);
+        cartProduct.setCart(this);
+    }
+
+    public void removeCartProduct(CartProduct cartProduct) {
+        if (cartProducts != null) {
+            cartProducts.remove(cartProduct);
+            cartProduct.setCart(null);
+        }
+    }
     
 }

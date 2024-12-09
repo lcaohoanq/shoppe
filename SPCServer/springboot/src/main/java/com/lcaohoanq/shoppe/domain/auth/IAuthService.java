@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.auth;
 
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.domain.user.User;
+import java.util.List;
 
 public interface IAuthService {
 

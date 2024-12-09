@@ -45,4 +45,8 @@ public interface IUserService {
     void updateRole(long id, long roleId) throws DataNotFoundException;
 
     void validateAccountBalance(User user, long basePrice);
+    
+    Boolean existsByEmail(String email);
+
+    Boolean existsByPhoneNumber(String phoneNumber);
 }

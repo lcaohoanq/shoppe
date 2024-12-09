@@ -87,8 +87,8 @@ public class User extends BaseEntity implements UserDetails {
     @JsonProperty("phone_number")
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Cart cart;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

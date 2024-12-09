@@ -358,4 +358,14 @@ public class UserService implements IUserService, PaginationConverter, DTOConver
 //        }
     }
 
+    @Override
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    
+    @Override 
+    public Boolean existsByPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
 }

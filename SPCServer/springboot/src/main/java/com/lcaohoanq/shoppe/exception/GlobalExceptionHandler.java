@@ -325,7 +325,8 @@ public class GlobalExceptionHandler {
         DataIntegrityViolationException ex) {
         log.error("DataIntegrityViolationException: ", ex);
         ApiError<Object> apiError = ApiError.errorBuilder()
-            .message("Data integrity violation: " + ex.getMostSpecificCause().getMessage())
+            .message(localizationUtils.getLocalizedMessage("exception.data_integrity_violation"))
+            .reason(ex.getMostSpecificCause().getMessage())
             .statusCode(HttpStatus.CONFLICT.value())
             .isSuccess(false)
             .data(Map.of(
