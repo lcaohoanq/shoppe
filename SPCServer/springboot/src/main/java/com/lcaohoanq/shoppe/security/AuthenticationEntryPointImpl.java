@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lcaohoanq.shoppe.dtos.responses.base.ApiError;
+import com.lcaohoanq.shoppe.api.ApiError;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
