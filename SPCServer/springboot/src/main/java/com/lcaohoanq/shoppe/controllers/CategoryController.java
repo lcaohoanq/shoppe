@@ -4,12 +4,12 @@ import com.lcaohoanq.shoppe.components.LocalizationUtils;
 import com.lcaohoanq.shoppe.dtos.request.CategoryDTO;
 import com.lcaohoanq.shoppe.dtos.request.SubcategoryDTO;
 import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
+import com.lcaohoanq.shoppe.dtos.responses.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.SubcategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.ApiResponse;
 import com.lcaohoanq.shoppe.exceptions.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.services.category.ICategoryService;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
-import com.lcaohoanq.shoppe.utils.MessageKey;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -73,14 +73,14 @@ public class CategoryController implements DTOConverter {
                 .message("Get sub categories successfully")
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)
-                .data(categoryService.getSubCategories(id))
+                .data(categoryService.getSubCategory(id))
                 .build()
         );
     }
     
     @PostMapping("/sub")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<SubcategoryResponse>> createSubCategory(
+    public ResponseEntity<ApiResponse<CreateNewSubcategoryResponse>> createSubCategory(
         @Valid @RequestBody SubcategoryDTO subcategoryDTO,
         BindingResult result
     ) {
@@ -88,7 +88,7 @@ public class CategoryController implements DTOConverter {
             throw new MethodArgumentNotValidException(result);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            ApiResponse.<SubcategoryResponse>builder()
+            ApiResponse.<CreateNewSubcategoryResponse>builder()
                 .message("Create sub category successfully")
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)

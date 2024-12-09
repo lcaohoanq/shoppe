@@ -1,6 +1,8 @@
 package com.lcaohoanq.shoppe.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.models.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +26,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "subcategories")
-public class Subcategory extends BaseEntity{
+@JsonPropertyOrder({
+    "id",
+    "name",
+    "category"
+})
+public class Subcategory extends BaseEntity implements Comparable<Subcategory> {
 
     @Id
     @SequenceGenerator(name = "subcategories_seq", sequenceName = "subcategories_id_seq", allocationSize = 1)
@@ -35,7 +42,12 @@ public class Subcategory extends BaseEntity{
     private String name;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
-    
+
+    @Override
+    public int compareTo(Subcategory that) {
+        return this.id.compareTo(that.id);
+    }
 }

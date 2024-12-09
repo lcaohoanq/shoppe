@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lcaohoanq.shoppe.models.Subcategory;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @JsonPropertyOrder({
     "id",
@@ -17,6 +20,8 @@ public record CategoryResponse(
     Long id,
     @JsonProperty("name")
     String name,
+
+    @JsonProperty("subcategories") Set<Subcategory> subcategories,
 
     @JsonIgnore
     @JsonProperty("created_at")

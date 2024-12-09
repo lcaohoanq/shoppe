@@ -43,3 +43,4 @@ allure-results/
 *.txt
 docker/redis-data/
 #uploads/
+data/

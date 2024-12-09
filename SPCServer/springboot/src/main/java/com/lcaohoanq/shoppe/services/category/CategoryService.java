@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.services.category;
 import com.lcaohoanq.shoppe.dtos.request.CategoryDTO;
 import com.lcaohoanq.shoppe.dtos.request.SubcategoryDTO;
 import com.lcaohoanq.shoppe.dtos.responses.CategoryResponse;
+import com.lcaohoanq.shoppe.dtos.responses.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.SubcategoryResponse;
 import com.lcaohoanq.shoppe.dtos.responses.base.PageResponse;
 import com.lcaohoanq.shoppe.exceptions.CategoryAlreadyExistException;
@@ -15,6 +16,8 @@ import com.lcaohoanq.shoppe.repositories.CategoryRepository;
 import com.lcaohoanq.shoppe.repositories.SubcategoryRepository;
 import com.lcaohoanq.shoppe.utils.DTOConverter;
 import com.lcaohoanq.shoppe.utils.PaginationConverter;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -88,29 +91,21 @@ public class CategoryService implements ICategoryService, DTOConverter,
     }
 
     @Override
-    public SubcategoryResponse getSubCategories(long categoryId) throws DataNotFoundException {
-
-        Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
-
-        CategoryResponse categoryResponse = toCategoryResponse(category);
-
-        return new SubcategoryResponse(
-            categoryResponse,
-            subcategoryRepository.findByCategoryId(categoryId)
-        );
-
+    public SubcategoryResponse getSubCategory(long subcategoryId) throws DataNotFoundException {
+        Subcategory subcategory = subcategoryRepository.findById(subcategoryId)
+            .orElseThrow(() -> new DataNotFoundException("Subcategory not found"));
+        return new SubcategoryResponse(subcategory);
     }
 
     @Override
-    public SubcategoryResponse createSubCategory(SubcategoryDTO subcategoryDTO)
+    public CreateNewSubcategoryResponse createSubCategory(SubcategoryDTO subcategoryDTO)
         throws DataNotFoundException, DataAlreadyExistException {
 
         Category category = categoryRepository.findById(subcategoryDTO.categoryId())
             .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
 
-        if (subcategoryRepository.existsByNameIn(subcategoryDTO.name())) {
-            throw new DataAlreadyExistException("Subcategory already exist");
+        if (subcategoryRepository.existsByCategoryIdAndNameIn(category.getId(), subcategoryDTO.name())) {
+            throw new DataAlreadyExistException("Subcategory already exist in category: " + category.getId());
         }
 
         subcategoryDTO.name().forEach(name -> {
@@ -121,10 +116,8 @@ public class CategoryService implements ICategoryService, DTOConverter,
                     .build());
         });
 
-        return new SubcategoryResponse(
-            toCategoryResponse(category),
-            subcategoryRepository.findByCategoryId(category.getId())
-        );
+        return new CreateNewSubcategoryResponse(toCategoryResponse(category));
+        
 
     }
 }

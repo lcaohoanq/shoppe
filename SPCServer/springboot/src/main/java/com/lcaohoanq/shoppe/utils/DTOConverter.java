@@ -18,8 +18,12 @@ import com.lcaohoanq.shoppe.models.Subcategory;
 import com.lcaohoanq.shoppe.models.User;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public interface DTOConverter {
 
@@ -49,6 +53,8 @@ public interface DTOConverter {
         return new CategoryResponse(
             category.getId(),
             category.getName(),
+            category.getSubcategory().stream().sorted(Comparator.comparing(Subcategory::getId)).collect(
+                Collectors.toCollection(TreeSet::new)), 
             category.getCreatedAt(),
             category.getUpdatedAt()
         );
