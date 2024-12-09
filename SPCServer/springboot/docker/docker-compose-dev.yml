@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -70,8 +70,8 @@ services:
 #    networks:
 #      - shoppe_network
 
-volumes:
-  postgres_data:
-    driver: local
+#volumes:
+#  postgres_data:
+#    driver: local
 #  grafana_data:
 #    driver: local

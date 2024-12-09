@@ -44,3 +44,4 @@ allure-results/
 docker/redis-data/
 #uploads/
 data/
+postgres_data/
