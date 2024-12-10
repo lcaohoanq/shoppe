@@ -2,6 +2,9 @@ package com.lcaohoanq.shoppe.domain.category;
 
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.domain.subcategory.CreateNewSubcategoryResponse;
+import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryDTO;
+import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryResponse;
 import java.util.List;
 
 public interface ICategoryService {

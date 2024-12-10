@@ -1,9 +1,10 @@
-package com.lcaohoanq.shoppe.domain.category;
+package com.lcaohoanq.shoppe.domain.subcategory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.domain.category.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -69,24 +69,6 @@ public class UserController implements DTOConverter {
             toUserResponse(userService.findByUsername(userDetails.getUsername())));
     }
 
-    //     PUT: localhost:4000/api/v1/users/4/deposit/100
-//     Header: Authorization Bearer token
-    @PutMapping("/{userId}/deposit/{payment}")
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
-    public ResponseEntity<String> deposit(
-        @PathVariable long userId,
-        @PathVariable long payment
-    ) throws Exception {
-
-        if (payment <= 0) {
-            throw new MalformDataException("Payment must be greater than 0.");
-        }
-
-        userService.updateAccountBalance(userId, payment);
-        return ResponseEntity.ok().body("Successfully deposited.");
-
-    }
-
     @PutMapping("/details/{userId}")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
     public ResponseEntity<ApiResponse<UserResponse>> updateUserDetails(

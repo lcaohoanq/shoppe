@@ -1,4 +1,4 @@
-package com.lcaohoanq.shoppe.domain.category;
+package com.lcaohoanq.shoppe.domain.subcategory;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,10 @@
 package com.lcaohoanq.shoppe.domain.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.category.Category;
+import com.lcaohoanq.shoppe.domain.inventory.Inventory;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -68,6 +70,11 @@ public class Product extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "shop_owner_id")
     private User shopOwner;
+
+    @ManyToOne
+    @JoinColumn(name = "inventory_id")
+    @JsonBackReference
+    private Inventory inventory;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> images = new ArrayList<>();

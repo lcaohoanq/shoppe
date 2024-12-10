@@ -1,4 +1,4 @@
-package com.lcaohoanq.shoppe.domain.shippingcarrier;
+package com.lcaohoanq.shoppe.domain.logistic;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.enums.ShippingCarrierName;
@@ -28,8 +28,8 @@ import lombok.Setter;
 public class ShippingCarrier extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "orders_seq", sequenceName = "orders_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orders_seq")
+    @SequenceGenerator(name = "shipping_carriers_seq", sequenceName = "shipping_carriers_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shipping_carriers_seq")
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
@@ -37,5 +37,11 @@ public class ShippingCarrier extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "name", length = 100)
     private ShippingCarrierName name;
+    
+    @Column(name = "tracking_url")
+    private String trackingUrl;
+    
+    @Column(name = "contact_number")
+    private String contactNumber;
 
 }

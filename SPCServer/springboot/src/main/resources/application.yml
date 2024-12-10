@@ -126,3 +126,14 @@ management:
       enabled: true
     prometheus:
       enabled: true
+      
+vnpay:
+  api:
+    vnp_Version: ${VNPAY_VERSION}
+    vnp_Command: ${VNPAY_COMMAND}
+    vnp_OrderType: ${VNPAY_ORDER_TYPE}
+    vnp_PayUrl: ${VNPAY_PAY_URL}
+    vnp_Returnurl: ${VNPAY_RETURN_URL}
+    vnp_TmnCode: ${VNPAY_TMN_CODE}
+    vnp_HashSecret: ${VNPAY_HASH_SECRET}
+    vnp_apiUrl: ${VNPAY_API_URL}

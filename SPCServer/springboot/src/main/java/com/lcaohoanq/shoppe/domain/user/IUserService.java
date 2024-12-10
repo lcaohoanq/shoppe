@@ -31,9 +31,7 @@ public interface IUserService {
 
     @Transactional
     User updateUserBalance(Long userId, Long payment) throws Exception;
-
-    void updateAccountBalance(Long userId, Long payment) throws Exception;
-
+    
     void bannedUser(Long userId) throws DataNotFoundException;
 
     void updatePassword(UpdatePasswordDTO updatePasswordDTO) throws Exception;

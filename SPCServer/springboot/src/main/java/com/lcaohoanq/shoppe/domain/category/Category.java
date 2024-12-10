@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.category;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

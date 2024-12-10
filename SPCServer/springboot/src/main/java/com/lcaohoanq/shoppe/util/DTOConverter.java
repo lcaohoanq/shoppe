@@ -6,7 +6,7 @@ import com.lcaohoanq.shoppe.domain.cart.CartItemResponse;
 import com.lcaohoanq.shoppe.domain.cart.CartResponse;
 import com.lcaohoanq.shoppe.domain.category.Category;
 import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
-import com.lcaohoanq.shoppe.domain.category.Subcategory;
+import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import com.lcaohoanq.shoppe.domain.order.Order;
 import com.lcaohoanq.shoppe.domain.order.OrderDetail;
 import com.lcaohoanq.shoppe.domain.order.OrderDetailResponse;
@@ -19,6 +19,8 @@ import com.lcaohoanq.shoppe.domain.role.Role;
 import com.lcaohoanq.shoppe.domain.role.RoleResponse;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
+import com.lcaohoanq.shoppe.domain.wallet.Wallet;
+import com.lcaohoanq.shoppe.domain.wallet.WalletDTO.WalletResponse;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -160,6 +162,15 @@ public interface DTOConverter {
             cartItem.getQuantity(),
             cartItem.getCreatedAt(),
             cartItem.getUpdatedAt()
+        );
+    }
+    
+    default WalletResponse toWalletResponse(Wallet wallet){
+        return new WalletResponse(
+            wallet.getId(),
+            wallet.getBalance(),
+            wallet.getCreatedAt(),
+            wallet.getUpdatedAt()
         );
     }
 
