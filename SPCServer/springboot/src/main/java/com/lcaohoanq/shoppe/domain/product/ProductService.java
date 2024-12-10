@@ -1,16 +1,16 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.domain.category.Category;
+import com.lcaohoanq.shoppe.domain.category.CategoryRepository;
+import com.lcaohoanq.shoppe.domain.user.User;
+import com.lcaohoanq.shoppe.domain.user.UserRepository;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.exception.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exception.InvalidParamException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
-import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
-import com.lcaohoanq.shoppe.domain.category.Category;
-import com.lcaohoanq.shoppe.domain.user.User;
-import com.lcaohoanq.shoppe.domain.category.CategoryRepository;
-import com.lcaohoanq.shoppe.domain.user.UserRepository;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.Optional;
@@ -111,6 +111,21 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             throw new InvalidParamException("Required :" + ProductImage.MAXIMUM_IMAGES_PER_PRODUCT);
         }
         return productImageRepository.save(newProductImage);
+    }
+
+    @Override
+    public Boolean existsById(Long id) {
+        return productRepository.existsById(id);
+    }
+
+    @Transactional
+    @Override
+    public void updateQuantity(long productId, int quantity, boolean isIncrease) {
+        if (isIncrease) {
+            productRepository.increaseProductQuantity(productId, quantity);
+        } else {
+            productRepository.decreaseProductQuantity(productId, quantity);
+        }
     }
 
 }

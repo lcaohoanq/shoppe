@@ -1,20 +1,24 @@
 package com.lcaohoanq.shoppe.util;
 
-import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
-import com.lcaohoanq.shoppe.domain.order.OrderDetailResponse;
-import com.lcaohoanq.shoppe.domain.order.OrderResponse;
-import com.lcaohoanq.shoppe.domain.product.ProductImageResponse;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
-import com.lcaohoanq.shoppe.domain.role.RoleResponse;
-import com.lcaohoanq.shoppe.domain.user.UserResponse;
+import com.lcaohoanq.shoppe.domain.cart.Cart;
+import com.lcaohoanq.shoppe.domain.cart.CartItem;
+import com.lcaohoanq.shoppe.domain.cart.CartItemResponse;
+import com.lcaohoanq.shoppe.domain.cart.CartResponse;
 import com.lcaohoanq.shoppe.domain.category.Category;
+import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.category.Subcategory;
 import com.lcaohoanq.shoppe.domain.order.Order;
 import com.lcaohoanq.shoppe.domain.order.OrderDetail;
+import com.lcaohoanq.shoppe.domain.order.OrderDetailResponse;
+import com.lcaohoanq.shoppe.domain.order.OrderResponse;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductImage;
+import com.lcaohoanq.shoppe.domain.product.ProductImageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.role.Role;
-import com.lcaohoanq.shoppe.domain.category.Subcategory;
+import com.lcaohoanq.shoppe.domain.role.RoleResponse;
 import com.lcaohoanq.shoppe.domain.user.User;
+import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -134,6 +138,29 @@ public interface DTOConverter {
             .numberOfProducts(orderDetail.getNumberOfProducts())
             .totalMoney(orderDetail.getTotalMoney())
             .build();
+    }
+    
+    default CartResponse toCartResponse(Cart cart){
+        return new CartResponse(
+            cart.getId(), 
+            cart.getTotalQuantity(),
+            cart.getTotalPrice(),
+            cart.getUser().getId(),
+            cart.getCartItems(),
+            cart.getCreatedAt(),
+            cart.getUpdatedAt()
+        );
+    }
+    
+    default CartItemResponse toCartItemResponse(CartItem cartItem){
+        return new CartItemResponse(
+            cartItem.getId(),
+            cartItem.getCart().getId(),
+            this.toProductResponse(cartItem.getProduct()),
+            cartItem.getQuantity(),
+            cartItem.getCreatedAt(),
+            cartItem.getUpdatedAt()
+        );
     }
 
 }

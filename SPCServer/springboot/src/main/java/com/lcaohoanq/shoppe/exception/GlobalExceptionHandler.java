@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.exception;
 
+import com.lcaohoanq.shoppe.base.exception.OutOfStockException;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiError;
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
@@ -43,6 +44,17 @@ public class GlobalExceptionHandler {
             .message(localizationUtils.getLocalizedMessage(MessageKey.DATA_NOT_FOUND))
             .reason(e.getMessage())
             .statusCode(HttpStatus.NOT_FOUND.value())
+            .isSuccess(false)
+            .build();
+    }
+    
+    @ExceptionHandler(OutOfStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError<Object> handleOutOfStockException(OutOfStockException e) {
+        return ApiError.errorBuilder()
+            .message("Out of stock")
+            .reason(e.getMessage())
+            .statusCode(HttpStatus.BAD_REQUEST.value())
             .isSuccess(false)
             .build();
     }

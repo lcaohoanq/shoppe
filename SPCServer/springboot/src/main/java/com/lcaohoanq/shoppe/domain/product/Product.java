@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.shoppe.domain.cart.CartProduct;
+import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.category.Category;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.domain.user.User;
@@ -73,6 +73,6 @@ public class Product extends BaseEntity {
     private List<ProductImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<CartProduct> cartProducts = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
 }

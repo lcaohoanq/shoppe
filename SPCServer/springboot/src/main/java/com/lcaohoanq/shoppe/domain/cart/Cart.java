@@ -51,20 +51,20 @@ public class Cart extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartProduct> cartProducts = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
-    public void addCartProduct(CartProduct cartProduct) {
-        if (cartProducts == null) {
-            cartProducts = new ArrayList<>();
+    public void addCartProduct(CartItem cartItem) {
+        if (cartItems == null) {
+            cartItems = new ArrayList<>();
         }
-        cartProducts.add(cartProduct);
-        cartProduct.setCart(this);
+        cartItems.add(cartItem);
+        cartItem.setCart(this);
     }
 
-    public void removeCartProduct(CartProduct cartProduct) {
-        if (cartProducts != null) {
-            cartProducts.remove(cartProduct);
-            cartProduct.setCart(null);
+    public void removeCartProduct(CartItem cartItem) {
+        if (cartItems != null) {
+            cartItems.remove(cartItem);
+            cartItem.setCart(null);
         }
     }
     

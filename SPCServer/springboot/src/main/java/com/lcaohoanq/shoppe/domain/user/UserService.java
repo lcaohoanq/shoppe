@@ -368,4 +368,9 @@ public class UserService implements IUserService, PaginationConverter, DTOConver
         return userRepository.existsByPhoneNumber(phoneNumber);
     }
 
+    @Override
+    public Boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
 }

@@ -1,17 +1,16 @@
 package com.lcaohoanq.shoppe.domain.auth;
 
-import com.github.javafaker.Faker;
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.constant.Regex;
 import com.lcaohoanq.shoppe.domain.cart.Cart;
-import com.lcaohoanq.shoppe.domain.cart.CartProduct;
+import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.cart.CartRepository;
-import com.lcaohoanq.shoppe.domain.role.Role;
+import com.lcaohoanq.shoppe.domain.cart.CartResponse;
+import com.lcaohoanq.shoppe.domain.cart.CartService;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
-import com.lcaohoanq.shoppe.enums.Gender;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
@@ -36,10 +35,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -71,11 +68,12 @@ public class AuthService implements IAuthService, DTOConverter {
     private final UserService userService;
     private final WalletRepository walletRepository;
     private final CartRepository cartRepository;
+    private final CartService cartService;
 
     @Override
     @Transactional
     public User register(AccountRegisterDTO accountRegisterDTO) throws Exception {
-        
+
         if (!accountRegisterDTO.password().matches(Regex.PASSWORD_REGEX)) {
             throw new PasswordWrongFormatException(
                 "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character");
@@ -89,7 +87,7 @@ public class AuthService implements IAuthService, DTOConverter {
         if (userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }
-        
+
         if (userRepository.existsByPhoneNumber(accountRegisterDTO.phoneNumber())) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
@@ -98,13 +96,15 @@ public class AuthService implements IAuthService, DTOConverter {
             ((ServletRequestAttributes) Objects.requireNonNull(
                 RequestContextHolder.getRequestAttributes())).getRequest();
         String acceptLanguage = request.getHeader("Accept-Language");
-        String preferredLanguage = String.valueOf(Optional.ofNullable(accountRegisterDTO.preferredLanguage())
-            .orElse(acceptLanguage == null || acceptLanguage.isEmpty()
-                ? Country.UNITED_STATES
-                : Country.valueOf(acceptLanguage.toUpperCase())));
-        
-        String preferredCurrency = String.valueOf(Optional.ofNullable(accountRegisterDTO.preferredCurrency())
-            .orElse(Currency.USD));
+        String preferredLanguage = String.valueOf(
+            Optional.ofNullable(accountRegisterDTO.preferredLanguage())
+                .orElse(acceptLanguage == null || acceptLanguage.isEmpty()
+                            ? Country.UNITED_STATES
+                            : Country.valueOf(acceptLanguage.toUpperCase())));
+
+        String preferredCurrency = String.valueOf(
+            Optional.ofNullable(accountRegisterDTO.preferredCurrency())
+                .orElse(Currency.USD));
 
         return Single.fromCallable(() -> {
                 User newUser = User.builder()
@@ -135,23 +135,14 @@ public class AuthService implements IAuthService, DTOConverter {
                     .balance(0F)
                     .user(newUser)  // Set the saved user
                     .build();
-                
+
                 newWallet = walletRepository.save(newWallet);
-                
-                Cart newCart = Cart.builder()
-                    .user(newUser)
-                    .cartProducts(new ArrayList<>())
-                    .build();
 
-                CartProduct cartProduct = CartProduct.builder()
-                    .cart(newCart)
-                    .quantity(0)
-                    .build();
+                Cart newCart = cartRepository.findById
+                    (cartService.create(newUser.getId()).id())
+                    .orElseThrow(() -> new DataNotFoundException("Cart not found"));
 
-                newCart.addCartProduct(cartProduct);
-                newCart = cartRepository.save(newCart);
-
-            // Step 3: Set the wallet on the user and save the user again
+                // Step 3: Set the wallet on the user and save the user again
                 newUser.setWallet(newWallet);
                 newUser.setCart(newCart);
                 userRepository.save(newUser);
@@ -171,7 +162,7 @@ public class AuthService implements IAuthService, DTOConverter {
                 localizationUtils.getLocalizedMessage(MessageKey.WRONG_PHONE_PASSWORD));
         }
         User existingUser = optionalUser.get();
-        
+
         existingUser.setLastLoginTimestamp(LocalDateTime.now());
         userRepository.save(existingUser);
 

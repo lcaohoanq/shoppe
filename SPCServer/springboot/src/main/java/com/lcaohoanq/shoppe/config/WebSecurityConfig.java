@@ -60,6 +60,7 @@ public class WebSecurityConfig {
                     String.format("%s/orders-details/**", apiPrefix),
                     String.format("%s/orders/**", apiPrefix),
                     String.format("%s/assets/**", apiPrefix),
+                    String.format("%s/carts/**", apiPrefix),
                     "/error"
                 ).permitAll()
                 // Swagger UI with basic auth

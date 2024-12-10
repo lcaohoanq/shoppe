@@ -49,4 +49,6 @@ public interface IUserService {
     Boolean existsByEmail(String email);
 
     Boolean existsByPhoneNumber(String phoneNumber);
+    
+    Boolean existsById(Long id);
 }
