@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.cart.Cart;
@@ -8,6 +9,7 @@ import com.lcaohoanq.shoppe.enums.Gender;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.domain.wallet.Wallet;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.domain.chat.ChatRoom;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,6 +20,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -107,6 +110,14 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "last_login_timestamp")
     private LocalDateTime lastLoginTimestamp;
+
+    @OneToMany(mappedBy = "user1")
+    @JsonIgnore
+    private List<ChatRoom> initiatedChats = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user2")
+    @JsonIgnore
+    private List<ChatRoom> receivedChats = new ArrayList<>();
 
     //Spring Security
     @Override

@@ -49,6 +49,15 @@ spring:
           google:
             clientId: ${GOOGLE_OAUTH2_CLIENT_ID}
             clientSecret: ${GOOGLE_OAUTH2_CLIENT_SECRET}
+  
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: shoppe-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   data:
     redis:
