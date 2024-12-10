@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.domain.inventory;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.base.entity.BaseLocation;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +29,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "inventories")
 @Entity
-public class Inventory extends BaseEntity {
+public class Inventory extends BaseLocation {
 
     @Id
     @SequenceGenerator(name = "inventories_seq", sequenceName = "inventories_id_seq", allocationSize = 1)
@@ -36,11 +37,6 @@ public class Inventory extends BaseEntity {
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
-    
-    @JsonManagedReference
-    @OneToMany(mappedBy = "inventory")
-    @JsonProperty("inventory_locations")
-    private Set<InventoryLocation> inventoryLocations;
     
     @OneToMany(mappedBy = "inventory")
     @JsonManagedReference

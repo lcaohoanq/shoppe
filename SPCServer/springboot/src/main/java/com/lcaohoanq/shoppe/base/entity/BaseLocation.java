@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class BaseLocation {
+public class BaseLocation extends BaseEntity {
  
     private String name;
     private String address;
