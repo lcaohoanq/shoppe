@@ -198,6 +198,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (path.startsWith(apiPrefix + "/products")) {
             return request.getMethod().equals("GET");
         }
+        
+        // Only allow GET requests for headquarters
+        if (path.startsWith(apiPrefix + "/headquarters")) {
+            return request.getMethod().equals("GET");
+        }
 
         return false;
     }
