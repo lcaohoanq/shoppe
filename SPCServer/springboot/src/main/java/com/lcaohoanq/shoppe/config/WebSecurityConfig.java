@@ -62,7 +62,7 @@ public class WebSecurityConfig {
                     String.format("%s/assets/**", apiPrefix),
                     String.format("%s/carts/**", apiPrefix),
                     String.format("%s/wallets/**", apiPrefix),
-                    String.format("%s/inventories/**", apiPrefix),
+                    String.format("%s/warehouses/**", apiPrefix),
                     String.format("%s/payments/**", apiPrefix),
                     "/error"
                 ).permitAll()

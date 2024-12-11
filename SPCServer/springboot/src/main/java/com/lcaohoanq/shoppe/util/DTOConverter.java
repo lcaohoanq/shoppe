@@ -6,6 +6,8 @@ import com.lcaohoanq.shoppe.domain.cart.CartItemResponse;
 import com.lcaohoanq.shoppe.domain.cart.CartResponse;
 import com.lcaohoanq.shoppe.domain.category.Category;
 import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.inventory.Warehouse;
+import com.lcaohoanq.shoppe.domain.inventory.WarehouseResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import com.lcaohoanq.shoppe.domain.order.Order;
 import com.lcaohoanq.shoppe.domain.order.OrderDetail;
@@ -23,6 +25,7 @@ import com.lcaohoanq.shoppe.domain.wallet.Wallet;
 import com.lcaohoanq.shoppe.domain.wallet.WalletDTO.WalletResponse;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
@@ -56,8 +59,7 @@ public interface DTOConverter {
         return new CategoryResponse(
             category.getId(),
             category.getName(),
-            category.getSubcategory().stream().sorted(Comparator.comparing(Subcategory::getId)).collect(
-                Collectors.toCollection(TreeSet::new)), 
+            new LinkedHashSet<>(category.getSubcategory()), 
             category.getCreatedAt(),
             category.getUpdatedAt()
         );
@@ -174,4 +176,19 @@ public interface DTOConverter {
         );
     }
 
+    default WarehouseResponse toWareHouseResponse(Warehouse warehouse){
+        return new WarehouseResponse(
+            warehouse.getId(),
+            warehouse.getName(),
+            warehouse.getAddress(),
+            warehouse.getCity(),
+            warehouse.getCountry(),
+            warehouse.getQuantity(),
+            warehouse.getReserved(),
+            warehouse.getReorderPoint(),
+            warehouse.getCreatedAt(),
+            warehouse.getUpdatedAt()
+        );
+    }
+    
 }

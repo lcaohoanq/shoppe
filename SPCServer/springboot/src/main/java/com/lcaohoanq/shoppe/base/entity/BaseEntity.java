@@ -11,12 +11,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass //avoid direct persistence of this class, any entity that extends this class will have these fields
+@SuperBuilder
 public class BaseEntity {
 
     @Column(name="created_at")

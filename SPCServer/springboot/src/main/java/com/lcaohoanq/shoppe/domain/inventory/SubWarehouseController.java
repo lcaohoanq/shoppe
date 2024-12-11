@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${api.prefix}/inventories")
+@RequestMapping("${api.prefix}/sub-warehouses")
 @RequiredArgsConstructor
 @Slf4j
-public class InventoryController {
+public class SubWarehouseController {
 
-    
-    
 }

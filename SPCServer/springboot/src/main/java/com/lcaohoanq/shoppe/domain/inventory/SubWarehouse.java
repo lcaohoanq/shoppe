@@ -12,29 +12,31 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "sub_inventories")
-@Builder
+@Table(name = "sub_warehouses")
+@SuperBuilder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubInventory extends BaseLocation {
+public class SubWarehouse extends BaseLocation {
 
     @Id
-    @SequenceGenerator(name = "sub_inventories_seq", sequenceName = "sub_inventories_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sub_inventories_seq")
+    @SequenceGenerator(name = "sub_warehouses_seq", sequenceName = "sub_warehouses_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sub_warehouses_seq")
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
+
+    private String name;
     
     @ManyToOne
     @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
+    private Warehouse warehouse;
     
 }

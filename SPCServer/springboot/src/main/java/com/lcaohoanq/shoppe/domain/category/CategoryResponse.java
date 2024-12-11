@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @JsonPropertyOrder({
@@ -20,7 +21,7 @@ public record CategoryResponse(
     @JsonProperty("name")
     String name,
 
-    @JsonProperty("subcategories") Set<Subcategory> subcategories,
+    @JsonProperty("subcategories") LinkedHashSet<Subcategory> subcategories,
 
     @JsonIgnore
     @JsonProperty("created_at")

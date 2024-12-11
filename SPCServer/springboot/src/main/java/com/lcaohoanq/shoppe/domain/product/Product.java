@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.category.Category;
-import com.lcaohoanq.shoppe.domain.inventory.Inventory;
+import com.lcaohoanq.shoppe.domain.inventory.Warehouse;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -27,6 +27,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "products")
@@ -34,7 +35,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 public class Product extends BaseEntity {
 
     @Id
@@ -72,9 +73,9 @@ public class Product extends BaseEntity {
     private User shopOwner;
 
     @ManyToOne
-    @JoinColumn(name = "inventory_id")
+    @JoinColumn(name = "warehouse_id")
     @JsonBackReference
-    private Inventory inventory;
+    private Warehouse warehouse;
 
     @OneToMany(mappedBy = "product")
     private List<ProductImage> images = new ArrayList<>();
