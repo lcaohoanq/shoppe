@@ -9,19 +9,12 @@ import org.springframework.data.repository.query.Param;
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     Boolean existsByName(WarehouseName name);
-
-//    @Modifying
-//    @Query("UPDATE Warehouse wh SET wh.quantity = wh.quantity + :quantity WHERE wh.id = :productId")
-//    void increaseQuantity(
-//        @Param("productId") long productId,
-//        @Param("quantity") int quantity
-//    );
-//
-//    @Modifying
-//    @Query("UPDATE Warehouse wh SET wh.quantity = wh.quantity - :quantity WHERE wh.id = :productId")
-//    void decreaseQuantity(
-//        @Param("productId") long productId,
-//        @Param("quantity") int quantity
-//    );
+    
+    @Modifying
+    @Query("UPDATE Warehouse wh SET wh.quantity = :totalQuantity WHERE wh.id = :warehouseId")
+    void updateQuantity(
+        @Param("warehouseId") long warehouseId,
+        @Param("totalQuantity") long totalQuantity
+    );
     
 }

@@ -6,6 +6,7 @@ import com.lcaohoanq.shoppe.util.DTOConverter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,4 +53,11 @@ public class WarehouseService implements IWarehouseService, DTOConverter {
         
         return toWareHouseResponse(warehouse);
     }
+
+    @Override
+    @Transactional
+    public void updateQuantity(Long warehouseId, Long totalQuantity) {
+        warehouseRepository.updateQuantity(warehouseId, totalQuantity);
+    }
+    
 }

@@ -13,6 +13,7 @@ import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
+import java.util.HashSet;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -126,6 +127,16 @@ public class ProductService implements IProductService, DTOConverter, Pagination
         } else {
             productRepository.decreaseProductQuantity(productId, quantity);
         }
+    }
+
+    @Override
+    public HashSet<Product> findByWarehouseId(Long warehouseId) {
+        return productRepository.findByWarehouseId(warehouseId);
+    }
+
+    @Override
+    public Long countByWarehouseId(Long warehouseId) {
+        return productRepository.countTotalQuantityByWarehouseId(warehouseId);
     }
 
 }

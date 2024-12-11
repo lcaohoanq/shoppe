@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.product;
 
+import java.util.HashSet;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,6 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
         @Param("productId") long productId,
         @Param("quantity") int quantity
     );
+    
+    HashSet<Product> findByWarehouseId(Long warehouseId);
 
+    @Query("SELECT COALESCE(SUM(p.quantity), 0) FROM Product p WHERE p.warehouse.id = :warehouseId")
+    Long countTotalQuantityByWarehouseId(@Param("warehouseId") Long warehouseId);
 
 }

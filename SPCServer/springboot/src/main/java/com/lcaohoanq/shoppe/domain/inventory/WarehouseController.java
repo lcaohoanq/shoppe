@@ -1,8 +1,11 @@
 package com.lcaohoanq.shoppe.domain.inventory;
 
 import com.lcaohoanq.shoppe.api.ApiResponse;
+import com.lcaohoanq.shoppe.domain.product.IProductService;
+import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import jakarta.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class WarehouseController {
 
     private final IWarehouseService warehouseService;
+    private final IProductService productService;
 
     @GetMapping("")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
@@ -72,6 +76,36 @@ public class WarehouseController {
                 .data(warehouseService.create(request))
                 .isSuccess(true)
                 .statusCode(HttpStatus.CREATED.value())
+                .build()
+        );
+    }
+    
+    @GetMapping("/{id}/products")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<HashSet<Product>>> getProductsByWarehouseId(
+        @PathVariable("id") Long id
+    ) {
+        return ResponseEntity.ok().body(
+            ApiResponse.<HashSet<Product>>builder()
+                .message("Get products by warehouse id successfully")
+                .data(productService.findByWarehouseId(id))
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .build()
+        );
+    }
+    
+    @GetMapping("/{id}/count-products")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    public ResponseEntity<ApiResponse<Long>> countProductsByWarehouseId(
+        @PathVariable("id") Long id
+    ) {
+        return ResponseEntity.ok().body(
+            ApiResponse.<Long>builder()
+                .message("Count products by warehouse id successfully")
+                .data(productService.countByWarehouseId(id))
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
                 .build()
         );
     }

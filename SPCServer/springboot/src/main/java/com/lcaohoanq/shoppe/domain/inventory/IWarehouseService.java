@@ -8,4 +8,6 @@ public interface IWarehouseService {
     List<WarehouseResponse> findAll();
 
     WarehouseResponse findById(Long id);
+    
+    void updateQuantity(Long warehouseId, Long totalQuantity);
 }

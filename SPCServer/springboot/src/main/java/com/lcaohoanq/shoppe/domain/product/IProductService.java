@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
+import java.util.HashSet;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,4 +24,8 @@ public interface IProductService {
     Boolean existsById(Long id);
     
     void updateQuantity(long productId, int quantity, boolean isIncrease);
+
+    HashSet<Product> findByWarehouseId(Long warehouseId);
+    
+    Long countByWarehouseId(Long warehouseId);
 }
