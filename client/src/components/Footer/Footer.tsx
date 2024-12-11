@@ -1,6 +1,32 @@
-import CategoryList from './CategoryList'
+import { useEffect, useState } from 'react'
+import CategoryList, { ApiResponse } from './CategoryList'
+import axios from 'axios'
+import { Link } from '@mui/material'
+
+type HeadQuarter = {
+  id: number
+  region: string
+  domain_url: string
+  created_at: string
+  updated_at: string
+}
 
 export default function Footer() {
+  const [headQuarters, setHeadQuarters] = useState<HeadQuarter[]>([])
+
+  useEffect(() => {
+    const fetchHeadQuarters = async () => {
+      try {
+        const response = await axios.get<ApiResponse<HeadQuarter[]>>('http://localhost:8080/api/v1/headquarters')
+        setHeadQuarters(response.data.data)
+      } catch (error) {
+        console.error('Failed to fetch head quarters', error)
+      }
+    }
+
+    fetchHeadQuarters()
+  }, [])
+
   return (
     <footer className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -11,8 +37,12 @@ export default function Footer() {
           </div>
           <div className='lg:col-span-2'>
             <div>
-              Quốc gia & Khu vực: Singapore Indonesia Thái Lan Malaysia Việt Nam Philippines Brazil México Colombia
-              Chile Đài Loan
+              Quốc gia & Khu vực:{' '}
+              {headQuarters.map((headQuarter) => (
+                <Link key={headQuarter.id} href={headQuarter.domain_url} target='_blank' rel='noreferrer'>
+                  {headQuarter.region} |{' '}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

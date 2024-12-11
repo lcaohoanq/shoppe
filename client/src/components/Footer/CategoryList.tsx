@@ -18,7 +18,7 @@ type CategoryResponse = {
   updated_at: string
 }
 
-type ApiResponse<T> = {
+export type ApiResponse<T> = {
   message: string
   data: T
   status_code: number
@@ -70,13 +70,8 @@ function CategoryList() {
             >
               {category.name}
             </Typography>
-            <ul className='list-disc list-inside text-gray-600'>
-              {category.subcategories.map((subcategory) => (
-                <li key={subcategory.id} className='mb-1'>
-                  {subcategory.name}
-                </li>
-              ))}
-            </ul>
+
+            <p className='text-gray-700'>{category.subcategories.map((subcategory) => subcategory.name).join(' | ')}</p>
           </div>
         ))}
       </div>
