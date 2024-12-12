@@ -33,7 +33,7 @@ services:
   redis-container:
     image: docker.io/redis:7.2.3
     container_name: redis_shoppee
-    restart: always
+    restart: no
     ports:
       - "6379:6379"
     volumes:
