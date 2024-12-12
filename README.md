@@ -2,7 +2,9 @@
 
 ## Preview
 
-![image](https://github.com/user-attachments/assets/52256f2c-775f-4dc7-bd68-997b91fbf727)
+![image](https://github.com/user-attachments/assets/4092d3d0-ca1b-49d0-8b09-dab0c9ab0e1e)
+
+![image](https://github.com/user-attachments/assets/8843fbc3-1375-46a6-b307-02ab6981d709)
 
 
 ## Chức năng trong dự án
