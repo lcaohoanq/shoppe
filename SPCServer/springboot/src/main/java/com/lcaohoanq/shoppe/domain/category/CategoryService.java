@@ -1,5 +1,9 @@
 package com.lcaohoanq.shoppe.domain.category;
 
+import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.product.Product;
+import com.lcaohoanq.shoppe.domain.product.ProductRepository;
+import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryDTO;
@@ -11,9 +15,12 @@ import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +30,7 @@ public class CategoryService implements ICategoryService, DTOConverter,
 
     private final CategoryRepository categoryRepository;
     private final SubcategoryRepository subcategoryRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<CategoryResponse> createCategory(CategoryDTO category)
@@ -110,5 +118,19 @@ public class CategoryService implements ICategoryService, DTOConverter,
         return new CreateNewSubcategoryResponse(toCategoryResponse(category));
         
 
+    }
+
+    @Override
+    public PageResponse<ProductResponse> findByCategoryId(Long categoryId, Pageable pageable) {
+        if(getById(categoryId) == null){
+            throw new DataNotFoundException("Category not found");
+        }
+        Page<Product> productPage = productRepository.findByCategoryId(categoryId, pageable);
+        return mapPageResponse(
+            productPage,
+            pageable,
+            this::toProductResponse,
+            "Get products by category successfully"
+        );
     }
 }
