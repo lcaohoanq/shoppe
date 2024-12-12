@@ -59,7 +59,7 @@ public interface DTOConverter {
         return new CategoryResponse(
             category.getId(),
             category.getName(),
-            new LinkedHashSet<>(category.getSubcategory()), 
+            new TreeSet<>(category.getSubcategory()), 
             category.getCreatedAt(),
             category.getUpdatedAt()
         );

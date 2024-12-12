@@ -8,6 +8,7 @@ import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @JsonPropertyOrder({
     "id",
@@ -21,7 +22,7 @@ public record CategoryResponse(
     @JsonProperty("name")
     String name,
 
-    @JsonProperty("subcategories") LinkedHashSet<Subcategory> subcategories,
+    @JsonProperty("subcategories") TreeSet<Subcategory> subcategories,
 
     @JsonIgnore
     @JsonProperty("created_at")
