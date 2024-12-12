@@ -6,6 +6,14 @@
 
 ![image](https://github.com/user-attachments/assets/8843fbc3-1375-46a6-b307-02ab6981d709)
 
+## Quick Start
+
+- Via Go
+
+```zsh
+cd scripts
+./start start
+```
 
 ## Chức năng trong dự án
 
