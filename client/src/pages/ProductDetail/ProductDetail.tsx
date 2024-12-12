@@ -1,26 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
+import { convert } from 'html-to-text'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import productApi from 'src/apis/product.api'
 import purchaseApi from 'src/apis/purchase.api'
-import { toast } from 'react-toastify'
 import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
+import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
-import { Product as ProductType, ProductListConfig } from 'src/types/product.type'
+import { ProductListConfig, Product as ProductType } from 'src/types/product.type'
 import {
+  convertToCallAssets,
   formatCurrency,
   formatNumberToSocialStyle,
-  getIdFromNameId,
   getRandomProductImage,
   rateSale
 } from 'src/utils/utils'
 import Product from '../ProductList/components/Product'
-import path from 'src/constants/path'
-import { useTranslation } from 'react-i18next'
-import { Helmet } from 'react-helmet-async'
-import { convert } from 'html-to-text'
 
 export default function ProductDetail() {
   const { t } = useTranslation(['product'])
@@ -42,14 +42,18 @@ export default function ProductDetail() {
   const [activeImage, setActiveImage] = useState('')
   const product = productDetailData?.data.data
   const imageRef = useRef<HTMLImageElement>(null)
-  const currentImages = useMemo(
-    () => (product ? product.images.slice(...currentIndexImages) : []),
-    [product, currentIndexImages]
-  )
+  const currentImages = useMemo(() => {
+    if (!product || !product.images) return []
+    const startIndex = currentIndexImages[0]
+    const endIndex = currentIndexImages[1]
+    return product.images.slice(startIndex, endIndex)
+  }, [product, currentIndexImages])
   const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
 
   console.log('Data nameId: ' + nameId)
   console.log('Data id: ' + id)
+  console.log('Data productDetailData: ' + JSON.stringify(product))
+  console.log('current images: ' + JSON.stringify(currentImages))
 
   const { data: productsData } = useQuery({
     queryKey: ['products', queryConfig],
@@ -64,7 +68,10 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (product && product.images.length > 0) {
+      // Reset to initial state
+      setCurrentIndexImages([0, 5])
       setActiveImage(getRandomProductImage(product))
+      setBuyCount(1)
     }
   }, [product])
 
@@ -81,7 +88,11 @@ export default function ProductDetail() {
   }
 
   const chooseActive = (img: string) => {
-    setActiveImage(img)
+    console.log('Choosing active image:', {
+      imgUrl: img,
+      convertedUrl: convertToCallAssets(img)
+    })
+    setActiveImage(convertToCallAssets(img))
   }
 
   const handleZoom = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -180,14 +191,24 @@ export default function ProductDetail() {
                     <path strokeLinecap='round' strokeLinejoin='round' d='M15.75 19.5L8.25 12l7.5-7.5' />
                   </svg>
                 </button>
-                {currentImages.map((img) => {
-                  const isActive = img === activeImage
+                {currentImages.map((img, index) => {
+                  const isActive = img.media_meta.image_url === activeImage
                   return (
-                    <div className='relative w-full pt-[100%]' key={img} onMouseEnter={() => chooseActive(img)}>
+                    <div
+                      className='relative w-full pt-[100%]'
+                      key={img.media_meta.image_url + index}
+                      onMouseEnter={() => chooseActive(img.media_meta.image_url)}
+                    >
                       <img
-                        src={img}
+                        src={convertToCallAssets(img.media_meta.image_url)}
                         alt={product.name}
                         className='absolute top-0 left-0 h-full w-full cursor-pointer bg-white object-cover'
+                        onError={(e) => {
+                          console.error('Image hover error', {
+                            src: e.currentTarget.src,
+                            originalUrl: img.media_meta.image_url
+                          })
+                        }}
                       />
                       {isActive && <div className='absolute inset-0 border-2 border-orange' />}
                     </div>

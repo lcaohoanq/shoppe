@@ -4,6 +4,7 @@ import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import userImage from 'src/assets/images/user.svg'
 import { ErrorResponse } from 'src/types/utils.type'
 import { Product } from 'src/types/product.type'
+import { ProductImageReponse } from 'src/types/productimage.type'
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -62,6 +63,12 @@ export const getRandomProductImage = (product: Product) => {
   }
   // Fallback to a default image or empty string
   return 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lf8dkbwetifeee@resize_w450_nl.webp' // or you could use a default placeholder image URL
+}
+
+export const convertToCallAssets = (imgUrl: string) => {
+  return imgUrl != null
+    ? `${config.baseUrl}assets/images/${imgUrl}`
+    : 'https://support.heberjahiz.com/hc/article_attachments/21013076295570'
 }
 
 export const getAvatarUrl = (avatarName?: string) => (avatarName ? `${config.baseUrl}images/${avatarName}` : userImage)
