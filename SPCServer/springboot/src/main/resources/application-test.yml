@@ -1,0 +1,86 @@
+server:
+  port: 4000
+
+api:
+  prefix: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
+  data:
+    redis:
+      #spring.data.redis.use-redis-cache
+      use-redis-cache: false
+      host: ${REDIS_HOST:localhost} # Default to 'localhost' if not provided
+      port: ${REDIS_PORT:6379}      # Default to 6379 if not provided
+
+alert:
+  manager:
+    emails: ${ALERT_MANAGER_EMAILS}
+
+jwt:
+  expiration: ${JWT_EXPIRATION}
+  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN}
+  secretKey: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: ${api.prefix}/swagger-ui.html
+    enabled: true
+    disable-swagger-default-url: true
+    security:
+      basic:
+        enabled: true
+  api-docs:
+    path: ${api.prefix}/api-docs
+    enabled: true
+  show-actuator: true
+  paths-to-match: ${api.prefix}/**
+  
+#health check
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/actuator
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+
+vnpay:
+  api:
+    vnp_Version: ${VNPAY_VERSION}
+    vnp_Command: ${VNPAY_COMMAND}
+    vnp_OrderType: ${VNPAY_ORDER_TYPE}
+    vnp_PayUrl: ${VNPAY_PAY_URL}
+    vnp_Returnurl: ${VNPAY_RETURN_URL}
+    vnp_TmnCode: ${VNPAY_TMN_CODE}
+    vnp_HashSecret: ${VNPAY_HASH_SECRET}
+    vnp_apiUrl: ${VNPAY_API_URL}
