@@ -3,7 +3,7 @@ package com.lcaohoanq.shoppe.domain.order;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductRepository;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.OrderMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class OrderDetailService implements IOrderDetailService, DTOConverter {
+public class OrderDetailService implements IOrderDetailService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
+    private final OrderMapper orderMapper;
+    
     @Override
     @Transactional
     public OrderDetailResponse create(OrderDetailDTO orderDetailDTO) throws Exception {
@@ -31,14 +33,14 @@ public class OrderDetailService implements IOrderDetailService, DTOConverter {
                 .price(orderDetailDTO.price())
                 .totalMoney(orderDetailDTO.totalMoney())
                 .build();
-        return toOrderDetailResponse(orderDetailRepository.save(orderDetail));
+        return orderMapper.toOrderDetailResponse(orderDetailRepository.save(orderDetail));
     }
 
     @Override
     public OrderDetailResponse getById(Long id) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailRepository.findById(id)
                 .orElseThrow(()->new DataNotFoundException("Cannot find OrderDetail with id: "+id));
-        return toOrderDetailResponse(orderDetail);
+        return orderMapper.toOrderDetailResponse(orderDetail);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class OrderDetailService implements IOrderDetailService, DTOConverter {
         existingOrderDetail.setTotalMoney(orderDetailDTO.totalMoney());
         existingOrderDetail.setOrder(existingOrder);
         existingOrderDetail.setProduct(existingProduct);
-        return toOrderDetailResponse(orderDetailRepository.save(existingOrderDetail));
+        return orderMapper.toOrderDetailResponse(orderDetailRepository.save(existingOrderDetail));
     }
 
     @Override

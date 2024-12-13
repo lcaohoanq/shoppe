@@ -1,19 +1,12 @@
 package com.lcaohoanq.shoppe.domain.user;
 
-import com.lcaohoanq.shoppe.component.JwtTokenUtils;
-import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.api.PageResponse;
-import com.lcaohoanq.shoppe.exception.MalformDataException;
-import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
-import com.lcaohoanq.shoppe.domain.token.TokenService;
-import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
-import jakarta.servlet.http.HttpServletRequest;
+import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import jakarta.validation.Valid;
 import java.util.Objects;
-import javax.print.event.PrintJobAttributeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -37,13 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController implements DTOConverter {
+public class UserController {
 
     private final IUserService userService;
-    private final LocalizationUtils localizationUtils;
-    private final TokenService tokenService;
-    private final HttpServletRequest request;
-    private final JwtTokenUtils jwtTokenUtils;
     private final UserMapper userMapper;
 
     @GetMapping("")

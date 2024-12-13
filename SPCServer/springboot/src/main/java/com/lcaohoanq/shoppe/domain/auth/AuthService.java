@@ -4,9 +4,7 @@ import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.constant.Regex;
 import com.lcaohoanq.shoppe.domain.cart.Cart;
-import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.cart.CartRepository;
-import com.lcaohoanq.shoppe.domain.cart.CartResponse;
 import com.lcaohoanq.shoppe.domain.cart.CartService;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.enums.Country;
@@ -29,13 +27,11 @@ import com.lcaohoanq.shoppe.domain.role.RoleService;
 import com.lcaohoanq.shoppe.domain.token.TokenService;
 import com.lcaohoanq.shoppe.domain.user.UserService;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +48,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService, DTOConverter {
+public class AuthService implements IAuthService {
 
 
     private final UserRepository userRepository;

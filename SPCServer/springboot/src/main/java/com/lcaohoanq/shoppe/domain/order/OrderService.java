@@ -9,8 +9,7 @@ import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.product.ProductRepository;
 import com.lcaohoanq.shoppe.domain.user.UserRepository;
-import com.lcaohoanq.shoppe.domain.user.IUserService;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.OrderMapper;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService, DTOConverter, PaginationConverter {
+public class OrderService implements IOrderService, PaginationConverter {
 
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ModelMapper modelMapper;
-    private final IOrderMailService orderMailService;
-    private final IOrderDetailService orderDetailService;
-    private final IUserService userService;
+    private final OrderMapper orderMapper;
 
     @Override
     @Transactional
@@ -105,7 +101,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         log.info("Order created with ID: {}", order.getId());
         log.info("Number of OrderDetails: {}", order.getOrderDetails().size());
 
-        return toOrderResponse(order);
+        return orderMapper.toOrderResponse(order);
     }
 
     @Transactional
@@ -133,7 +129,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
 
     @Override
     public OrderResponse getById(Long id) {
-        return toOrderResponse(
+        return orderMapper.toOrderResponse(
             orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id)));
     }
@@ -207,7 +203,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         return mapPageResponse(
             orderRepository.findByUserIdAndStatus(userId, keyword, pageable),
             pageable,
-            this::toOrderResponse,
+            orderMapper::toOrderResponse,
             "Get orders by status successfully"
         );
     }
@@ -218,7 +214,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         return mapPageResponse(
             orderRepository.searchUserOrdersByKeyword(keyword, userId, pageable),
             pageable,
-            this::toOrderResponse,
+            orderMapper::toOrderResponse,
             "Search user orders successfully"
         );
     }
@@ -230,7 +226,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         return mapPageResponse(
             orderRepository.findOrdersByUserId(userId, pageable),
             pageable,
-            this::toOrderResponse,
+            orderMapper::toOrderResponse,
             "Get orders by user id successfully"
         );
     }
@@ -240,7 +236,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         return mapPageResponse(
             orderRepository.findByKeyword(keyword, pageable),
             pageable,
-            this::toOrderResponse,
+            orderMapper::toOrderResponse,
             "Get orders by keyword successfully"
         );
     }
@@ -257,7 +253,7 @@ public class OrderService implements IOrderService, DTOConverter, PaginationConv
         return mapPageResponse(
             orderRepository.findByKeywordAndStatus(keyword, status, pageable),
             pageable,
-            this::toOrderResponse,
+            orderMapper::toOrderResponse,
             "Get orders by keyword and status successfully"
         );
     }

@@ -2,7 +2,7 @@ package com.lcaohoanq.shoppe.domain.inventory;
 
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.enums.Country;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.WarehouseMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class WarehouseService implements IWarehouseService, DTOConverter {
+public class WarehouseService implements IWarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+    private final WarehouseMapper warehouseMapper;
 
     @Override
     public WarehouseResponse create(WarehouseDTO request) {
@@ -31,7 +32,7 @@ public class WarehouseService implements IWarehouseService, DTOConverter {
             .reorderPoint(request.reorderPoint() == null ? 0 : request.reorderPoint())
             .build();
         
-        return toWareHouseResponse(
+        return warehouseMapper.toWarehouseResponse(
             warehouseRepository.save(newWarehouse)
         );
     }
@@ -41,7 +42,7 @@ public class WarehouseService implements IWarehouseService, DTOConverter {
         return warehouseRepository
             .findAll()
             .stream()
-            .map(this::toWareHouseResponse)
+            .map(warehouseMapper::toWarehouseResponse)
             .toList();
     }
 
@@ -51,7 +52,7 @@ public class WarehouseService implements IWarehouseService, DTOConverter {
             .findById(id)
             .orElseThrow(() -> new DataNotFoundException("Warehouse not found"));
         
-        return toWareHouseResponse(warehouse);
+        return warehouseMapper.toWarehouseResponse(warehouse);
     }
 
     @Override

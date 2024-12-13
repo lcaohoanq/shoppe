@@ -10,7 +10,6 @@ import com.lcaohoanq.shoppe.domain.user.UserRepository;
 import com.lcaohoanq.shoppe.domain.wallet.WalletDTO.WalletResponse;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.mapper.WalletMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

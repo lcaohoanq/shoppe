@@ -5,22 +5,22 @@ import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.CartMapper;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CartService implements ICartService, DTOConverter, PaginationConverter {
+public class CartService implements ICartService, PaginationConverter {
 
     private final IUserService userService;
     private final CartRepository cartRepository;
+    private final CartMapper cartMapper;
 
     @Override
     public CartResponse create(long userId) {
@@ -49,7 +49,7 @@ public class CartService implements ICartService, DTOConverter, PaginationConver
 
         newCart.addCartProduct(cartItem);
 
-        return toCartResponse(cartRepository.save(newCart));
+        return cartMapper.toCartResponse(cartRepository.save(newCart));
 
     }
 
@@ -61,13 +61,13 @@ public class CartService implements ICartService, DTOConverter, PaginationConver
         return mapPageResponse(
             cartPage,
             pageable,
-            this::toCartResponse,
+            cartMapper::toCartResponse,
             "Get all carts successfully");
     }
 
     @Override
     public CartResponse findById(Long cartId) {
-        return toCartResponse(cartRepository
+        return cartMapper.toCartResponse(cartRepository
                                   .findById(cartId)
                                   .orElseThrow(() -> new DataNotFoundException(
                                       "Cart with id: " + cartId + " not found")));
@@ -129,6 +129,6 @@ public class CartService implements ICartService, DTOConverter, PaginationConver
             .findByUserId(userId)
             .orElseThrow(
                 () -> new MalformBehaviourException("Cart not found for user with id: " + userId));
-        return toCartResponse(existedCart);
+        return cartMapper.toCartResponse(existedCart);
     }
 }

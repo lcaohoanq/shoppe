@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
+import com.lcaohoanq.shoppe.enums.OrderStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,7 +71,7 @@ public class OrderResponse {
     private LocalDate orderDate;
 
     @JsonProperty("status")
-    private String status;
+    private OrderStatus status;
 
     @JsonProperty("total_money")
     private double totalMoney;
@@ -93,7 +94,7 @@ public class OrderResponse {
 
     @JsonProperty("order_details")
 //    @JsonIgnore
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailResponse> orderDetails;
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")

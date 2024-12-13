@@ -1,9 +1,18 @@
 package com.lcaohoanq.shoppe.domain.user;
 
+import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
+import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.domain.auth.UpdatePasswordDTO;
-import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.mail.IMailService;
+import com.lcaohoanq.shoppe.domain.otp.OtpService;
+import com.lcaohoanq.shoppe.domain.role.Role;
+import com.lcaohoanq.shoppe.domain.role.RoleRepository;
+import com.lcaohoanq.shoppe.domain.role.RoleService;
+import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccount;
+import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.enums.ProviderName;
 import com.lcaohoanq.shoppe.enums.UserRole;
@@ -14,27 +23,14 @@ import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.exception.PermissionDeniedException;
 import com.lcaohoanq.shoppe.exception.PhoneAlreadyUsedException;
 import com.lcaohoanq.shoppe.exception.UpdateEmailException;
-import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
-import com.lcaohoanq.shoppe.domain.role.Role;
-import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccount;
-import com.lcaohoanq.shoppe.domain.role.RoleRepository;
-import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
-import com.lcaohoanq.shoppe.domain.mail.IMailService;
-import com.lcaohoanq.shoppe.domain.otp.OtpService;
-import com.lcaohoanq.shoppe.domain.role.RoleService;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
-import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
-import jakarta.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +39,7 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService, PaginationConverter, DTOConverter {
+public class UserService implements IUserService, PaginationConverter {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
