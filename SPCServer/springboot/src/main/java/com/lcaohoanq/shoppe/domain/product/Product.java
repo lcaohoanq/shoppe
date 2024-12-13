@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.category.Category;
@@ -78,9 +79,11 @@ public class Product extends BaseEntity {
     private Warehouse warehouse;
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<ProductImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
+    @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
 
 }

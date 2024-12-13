@@ -1,29 +1,40 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lcaohoanq.shoppe.domain.user.UserResponse;
+import com.lcaohoanq.shoppe.enums.CartItemStatus;
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({
+    "id",
+    "total_quantity",
+    "total_price",
+    "user",
+    "cart_items",
+    "created_at",
+    "updated_at"
+})
 public record CartResponse(
     @JsonProperty("id")
     Long id,
-    
+
     @JsonProperty("total_quantity")
     Integer totalQuantity,
 
     @JsonProperty("total_price")
     Double totalPrice,
 
-    @JsonProperty("user_id")
-    @NotNull(message = "User id is required when creating a new cart")
-    Long userId,
+    @JsonProperty("user")
+    UserResponse user,
 
     @JsonProperty("cart_items")
-    List<CartItem> cartItems,
+    @JsonManagedReference
+    List<CartItemResponse> cartItems,
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")

@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -52,6 +53,7 @@ public class Cart extends BaseEntity {
     private User user;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
 
     public void addCartProduct(CartItem cartItem) {

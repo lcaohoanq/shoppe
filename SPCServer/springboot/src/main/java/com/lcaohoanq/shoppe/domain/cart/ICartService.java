@@ -27,4 +27,6 @@ public interface ICartService {
     Boolean existsById(Long cartId);
     
     void updateQuantity(Long cartId, Integer quantity, boolean isIncrease);
+
+    CartResponse getCartByUserId(Long userId);
 }

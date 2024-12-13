@@ -1,10 +1,14 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.enums.CartItemStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,12 +40,18 @@ public class CartItem extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
-
+    
     @Column(name = "quantity")
     private int quantity;
+    
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "status", nullable = false)
+    private CartItemStatus status;
 }

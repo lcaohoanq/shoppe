@@ -1,12 +1,14 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
 import com.lcaohoanq.shoppe.api.ApiResponse;
+import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,15 +31,40 @@ public class CartController {
 
     private final ICartItemService cartItemService;
     private final IUserService userService;
+    private final ICartService cartService;
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<CartResponse>> getAll(
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
+    public ResponseEntity<PageResponse<CartResponse>> getAll(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "limit", defaultValue = "10") int limit
     ) {
+        return ResponseEntity.ok(cartService.getAllCarts(PageRequest.of(page, limit)));
+    }
+    
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
+    public ResponseEntity<ApiResponse<CartResponse>> getCartById(
+        @PathVariable(value = "id") Long id
+    ) {
         return ResponseEntity.ok(
             ApiResponse.<CartResponse>builder()
-                .data(null)
+                .message("Get cart by id successfully")
+                .data(cartService.findById(id))
+                .statusCode(HttpStatus.OK.value())
+                .isSuccess(true)
+                .build()
+        );
+    }
+    
+    @GetMapping("/users")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF', 'ROLE_SHOP_OWNER')")
+    public ResponseEntity<ApiResponse<CartResponse>> getCartByUserId(
+        @RequestParam(value = "id") Long id
+    ){
+        return ResponseEntity.ok(
+            ApiResponse.<CartResponse>builder()
+                .data(cartService.getCartByUserId(id))
                 .build()
         );
     }

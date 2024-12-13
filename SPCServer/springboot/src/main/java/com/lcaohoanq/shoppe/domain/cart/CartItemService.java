@@ -7,6 +7,7 @@ import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductRepository;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
+import com.lcaohoanq.shoppe.enums.CartItemStatus;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import java.util.List;
@@ -71,6 +72,7 @@ public class CartItemService implements ICartItemService, DTOConverter {
             cartItem = CartItem.builder()
                 .cart(existedCart)
                 .product(existProduct)
+                .status(CartItemStatus.IN_CART)
                 .quantity(cartItemDTO.quantity())
                 .build();
         }

@@ -149,8 +149,8 @@ public interface DTOConverter {
             cart.getId(), 
             cart.getTotalQuantity(),
             cart.getTotalPrice(),
-            cart.getUser().getId(),
-            cart.getCartItems(),
+            toUserResponse(cart.getUser()),
+            cart.getCartItems().stream().map(this::toCartItemResponse).toList(),
             cart.getCreatedAt(),
             cart.getUpdatedAt()
         );
@@ -162,6 +162,7 @@ public interface DTOConverter {
             cartItem.getCart().getId(),
             this.toProductResponse(cartItem.getProduct()),
             cartItem.getQuantity(),
+            cartItem.getStatus(),
             cartItem.getCreatedAt(),
             cartItem.getUpdatedAt()
         );

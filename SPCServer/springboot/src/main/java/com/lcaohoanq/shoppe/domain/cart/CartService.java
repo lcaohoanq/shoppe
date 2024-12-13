@@ -1,12 +1,15 @@
 package com.lcaohoanq.shoppe.domain.cart;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -14,24 +17,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CartService implements ICartService, DTOConverter {
+public class CartService implements ICartService, DTOConverter, PaginationConverter {
 
     private final IUserService userService;
     private final CartRepository cartRepository;
 
     @Override
     public CartResponse create(long userId) {
-        
-        if(!userService.existsById(userId)){
+
+        if (!userService.existsById(userId)) {
             throw new MalformBehaviourException("User with id: " + userId + " not found");
         }
-        
-        if(cartRepository.existsByUserId(userId)){
+
+        if (cartRepository.existsByUserId(userId)) {
             throw new MalformBehaviourException("Cart existed for user with id: " + userId);
         }
 
         User existedUser = userService.findUserById(userId);
-        
+
         Cart newCart = Cart.builder()
             .user(existedUser)
             .totalPrice(0)
@@ -45,21 +48,29 @@ public class CartService implements ICartService, DTOConverter {
             .build();
 
         newCart.addCartProduct(cartItem);
-        
+
         return toCartResponse(cartRepository.save(newCart));
-        
+
     }
 
     @Override
     public PageResponse<CartResponse> getAllCarts(Pageable pageable) {
-        return null;
+
+        Page<Cart> cartPage = cartRepository.findAll(pageable);
+
+        return mapPageResponse(
+            cartPage,
+            pageable,
+            this::toCartResponse,
+            "Get all carts successfully");
     }
 
     @Override
     public CartResponse findById(Long cartId) {
         return toCartResponse(cartRepository
-                .findById(cartId)
-                .orElseThrow(() -> new MalformBehaviourException("Cart with id: " + cartId + " not found")));
+                                  .findById(cartId)
+                                  .orElseThrow(() -> new DataNotFoundException(
+                                      "Cart with id: " + cartId + " not found")));
     }
 
     @Override
@@ -105,10 +116,19 @@ public class CartService implements ICartService, DTOConverter {
     @Override
     @Transactional
     public void updateQuantity(Long cartId, Integer quantity, boolean isIncrease) {
-        if(isIncrease){
+        if (isIncrease) {
             cartRepository.increase(cartId, quantity);
         } else {
             cartRepository.decrease(cartId, quantity);
         }
+    }
+
+    @Override
+    public CartResponse getCartByUserId(Long userId) {
+        Cart existedCart = cartRepository
+            .findByUserId(userId)
+            .orElseThrow(
+                () -> new MalformBehaviourException("Cart not found for user with id: " + userId));
+        return toCartResponse(existedCart);
     }
 }
