@@ -37,6 +37,6 @@ public class Category extends BaseEntity {
     private String name;
     
     @OneToMany(mappedBy = "category")
-    private Set<Subcategory> subcategory;
+    private Set<Subcategory> subcategories;
 
 }

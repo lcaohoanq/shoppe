@@ -4,6 +4,7 @@ import com.lcaohoanq.shoppe.enums.UserRole;
 import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.mapper.RoleMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import java.util.Arrays;
 import java.util.List;
@@ -12,15 +13,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RoleService implements IRoleService, DTOConverter {
+public class RoleService implements IRoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleMapper roleMapper;
 
     @Override
     public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll()
             .stream()
-            .map(this::toRoleResponse)
+            .map(roleMapper::toRoleResponse)
             .toList();
     }
 
@@ -39,7 +41,7 @@ public class RoleService implements IRoleService, DTOConverter {
             .userRole(roleDTO.userRole())
             .build();
 
-        return toRoleResponse(roleRepository.save(newRole));
+        return roleMapper.toRoleResponse(roleRepository.save(newRole));
     }
 
     @Override
@@ -60,7 +62,7 @@ public class RoleService implements IRoleService, DTOConverter {
     @Override
     public RoleResponse getRoleById(Long id) {
         return roleRepository.findById(id)
-            .map(this::toRoleResponse)
+            .map(roleMapper::toRoleResponse)
             .orElseThrow(() -> new DataNotFoundException("Role with id " + id + " not found"));
     }
 }

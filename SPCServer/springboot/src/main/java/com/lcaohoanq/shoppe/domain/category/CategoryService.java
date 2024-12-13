@@ -13,6 +13,8 @@ import com.lcaohoanq.shoppe.exception.CategoryAlreadyExistException;
 import com.lcaohoanq.shoppe.exception.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.mapper.CategoryMapper;
+import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.HashSet;
@@ -25,12 +27,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService, DTOConverter,
-    PaginationConverter {
+public class CategoryService implements ICategoryService, PaginationConverter {
 
     private final CategoryRepository categoryRepository;
     private final SubcategoryRepository subcategoryRepository;
     private final ProductRepository productRepository;
+    private final CategoryMapper categoryMapper;
+    private final ProductMapper productMapper;
 
     @Override
     public List<CategoryResponse> createCategory(CategoryDTO category)
@@ -49,7 +52,7 @@ public class CategoryService implements ICategoryService, DTOConverter,
         });
 
         return categories.stream()
-            .map(name -> toCategoryResponse(categoryRepository.findByName(name).get()))
+            .map(name -> categoryMapper.toCategoryResponse(categoryRepository.findByName(name).get()))
             .collect(Collectors.toList());
     }
 
@@ -58,13 +61,13 @@ public class CategoryService implements ICategoryService, DTOConverter,
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryNotFoundException("Category not found"));
 
-        return toCategoryResponse(category);
+        return categoryMapper.toCategoryResponse(category);
     }
 
     @Override
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream()
-            .map(this::toCategoryResponse)
+            .map(categoryMapper::toCategoryResponse)
             .sorted((o1, o2) -> (int) (o1.id() - o2.id()))
             .toList();
     }
@@ -115,7 +118,7 @@ public class CategoryService implements ICategoryService, DTOConverter,
                     .build());
         });
 
-        return new CreateNewSubcategoryResponse(toCategoryResponse(category));
+        return new CreateNewSubcategoryResponse(categoryMapper.toCategoryResponse(category));
         
 
     }
@@ -129,8 +132,9 @@ public class CategoryService implements ICategoryService, DTOConverter,
         return mapPageResponse(
             productPage,
             pageable,
-            this::toProductResponse,
-            "Get products by category successfully"
+            productMapper::toProductResponse,
+            "Get products by category successfully",
+            HashSet::new
         );
     }
 }

@@ -9,6 +9,7 @@ import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserRepository;
 import com.lcaohoanq.shoppe.domain.wallet.WalletDTO.WalletResponse;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
+import com.lcaohoanq.shoppe.mapper.WalletMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +23,19 @@ import org.thymeleaf.context.Context;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class WalletService implements IWalletService, DTOConverter {
+public class WalletService implements IWalletService {
 
     private final WalletRepository walletRepository;
     private final IUserService userService;
     private final UserRepository userRepository;
     private final LocalizationUtils localizationUtils;
     private final IMailService mailService;
+    private final WalletMapper walletMapper;
 
     @Override
     public WalletResponse getByUserId(Long userId) {
         User existedUser = userService.findUserById(userId);
-        return toWalletResponse(walletRepository.findByUserId(existedUser.getId()));
+        return walletMapper.toWalletResponse(walletRepository.findByUserId(existedUser.getId()));
     }
 
     @Transactional

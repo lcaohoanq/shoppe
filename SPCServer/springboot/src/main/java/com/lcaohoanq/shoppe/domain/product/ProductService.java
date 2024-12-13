@@ -10,6 +10,7 @@ import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.exception.CategoryNotFoundException;
 import com.lcaohoanq.shoppe.exception.InvalidParamException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
+import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
@@ -23,17 +24,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService, DTOConverter, PaginationConverter {
+public class ProductService implements IProductService, PaginationConverter {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final ProductImageRepository productImageRepository;
+    private final ProductMapper productMapper;
 
     @Override
     public PageResponse<ProductResponse> getAll(PageRequest pageRequest) {
         Page<Product> productsPage = productRepository.findAll(pageRequest);
-        return mapPageResponse(productsPage, pageRequest, this::toProductResponse, "Get all products successfully");
+        return mapPageResponse(productsPage, pageRequest, productMapper::toProductResponse, "Get all products successfully");
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
         if(product.orElseThrow(() -> new DataNotFoundException("Product not exist")) == null){
             throw new DataNotFoundException("Product not exist");
         }
-        return toProductResponse(product.get());
+        return productMapper.toProductResponse(product.get());
     }
 
     @Transactional
@@ -84,7 +86,7 @@ public class ProductService implements IProductService, DTOConverter, Pagination
             .isActive(true) //default active
             .build();
 
-        return toProductResponse(productRepository.save(newProduct));
+        return productMapper.toProductResponse(productRepository.save(newProduct));
     }
 
     @Override

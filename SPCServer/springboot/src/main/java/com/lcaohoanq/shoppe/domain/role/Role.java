@@ -1,6 +1,8 @@
 package com.lcaohoanq.shoppe.domain.role;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.enums.UserRole;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -26,6 +28,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "roles")
 @Entity
 @SuperBuilder
+
 public class Role extends BaseEntity {
 
     @Id

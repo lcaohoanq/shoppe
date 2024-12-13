@@ -9,6 +9,7 @@ import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.domain.token.TokenService;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.Identifiable;
 import com.lcaohoanq.shoppe.constant.MessageKey;
@@ -43,6 +44,7 @@ public class AuthController implements Identifiable, DTOConverter {
     private final TokenService tokenService;
     private final HttpServletRequest request;
     private final IAuthService authService;
+    private final UserMapper userMapper;
 
     @Timed(
         value = "custom.login.requests",
@@ -105,7 +107,7 @@ public class AuthController implements Identifiable, DTOConverter {
                     localizationUtils.getLocalizedMessage(MessageKey.REGISTER_SUCCESSFULLY))
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)
-                .data(toUserResponse(user))
+                .data(userMapper.toUserResponse(user))
                 .build());
     }
 

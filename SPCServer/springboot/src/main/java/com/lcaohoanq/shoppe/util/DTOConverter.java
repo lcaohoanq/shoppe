@@ -46,7 +46,7 @@ public interface DTOConverter {
             user.getPhoneNumber(),
             user.getAddress(),
             user.getAvatar(),
-            user.getRole() != null ? user.getRole().getUserRole().name() : null,
+            user.getRole(),
             user.getWallet().getId(),
             user.getPreferredLanguage(),
             user.getPreferredCurrency(),
@@ -59,7 +59,7 @@ public interface DTOConverter {
         return new CategoryResponse(
             category.getId(),
             category.getName(),
-            new TreeSet<>(category.getSubcategory()), 
+            new TreeSet<>(category.getSubcategories()), 
             category.getCreatedAt(),
             category.getUpdatedAt()
         );

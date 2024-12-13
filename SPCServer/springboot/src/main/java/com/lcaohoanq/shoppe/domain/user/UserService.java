@@ -22,6 +22,7 @@ import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
 import com.lcaohoanq.shoppe.domain.mail.IMailService;
 import com.lcaohoanq.shoppe.domain.otp.OtpService;
 import com.lcaohoanq.shoppe.domain.role.RoleService;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
@@ -53,14 +54,15 @@ public class UserService implements IUserService, PaginationConverter, DTOConver
     private final IMailService mailService;
     private final OtpService otpService;
     private final RoleService roleService;
-
+    private final UserMapper userMapper;
+    
     @Override
     public PageResponse<UserResponse> fetchUser(Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(pageable);
         return mapPageResponse(
             usersPage,
             pageable,
-            this::toUserResponse,
+            userMapper::toUserResponse,
             "Get all users successfully");
     }
 

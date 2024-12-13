@@ -28,6 +28,7 @@ import com.lcaohoanq.shoppe.domain.otp.OtpService;
 import com.lcaohoanq.shoppe.domain.role.RoleService;
 import com.lcaohoanq.shoppe.domain.token.TokenService;
 import com.lcaohoanq.shoppe.domain.user.UserService;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import io.reactivex.rxjava3.core.Single;
@@ -69,6 +70,7 @@ public class AuthService implements IAuthService, DTOConverter {
     private final WalletRepository walletRepository;
     private final CartRepository cartRepository;
     private final CartService cartService;
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -182,7 +184,7 @@ public class AuthService implements IAuthService, DTOConverter {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isPresent()) {
-            return toUserResponse(user.get());
+            return userMapper.toUserResponse(user.get());
         } else {
             throw new Exception(
                 localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)

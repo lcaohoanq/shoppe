@@ -76,7 +76,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name="status")
-    @JsonProperty("status")
     private UserStatus status;
 
     @Column(name="date_of_birth")

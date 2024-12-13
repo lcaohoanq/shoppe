@@ -7,11 +7,13 @@ import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.domain.token.TokenService;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.Objects;
+import javax.print.event.PrintJobAttributeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -42,6 +44,7 @@ public class UserController implements DTOConverter {
     private final TokenService tokenService;
     private final HttpServletRequest request;
     private final JwtTokenUtils jwtTokenUtils;
+    private final UserMapper userMapper;
 
     @GetMapping("")
     //@PreAuthorize("permitAll()")
@@ -57,7 +60,7 @@ public class UserController implements DTOConverter {
     public ResponseEntity<UserResponse> getUserById(
         @PathVariable Long id
     ) {
-        return ResponseEntity.ok(toUserResponse(userService.findUserById(id)));
+        return ResponseEntity.ok(userMapper.toUserResponse(userService.findUserById(id)));
     }
 
     @PostMapping("/details")
@@ -66,7 +69,7 @@ public class UserController implements DTOConverter {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
         return ResponseEntity.ok(
-            toUserResponse(userService.findByUsername(userDetails.getUsername())));
+            userMapper.toUserResponse(userService.findByUsername(userDetails.getUsername())));
     }
 
     @PutMapping("/details/{userId}")
@@ -90,7 +93,7 @@ public class UserController implements DTOConverter {
         return ResponseEntity.ok(
             ApiResponse.<UserResponse>builder()
                 .message(MessageKey.UPDATE_USER_SUCCESSFULLY)
-                .data(toUserResponse(userService.updateUser(userId, updatedUserDTO)))
+                .data(userMapper.toUserResponse(userService.updateUser(userId, updatedUserDTO)))
                 .isSuccess(true)
                 .statusCode(HttpStatus.OK.value())
                 .build());

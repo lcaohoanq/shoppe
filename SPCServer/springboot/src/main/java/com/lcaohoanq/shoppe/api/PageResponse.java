@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.metadata.PaginationMeta;
+import java.util.Collection;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
@@ -14,12 +15,12 @@ import lombok.NoArgsConstructor;
     "is_success",
 })
 @NoArgsConstructor
-public class PageResponse<T> extends ApiResponse<List<T>> {
+public class PageResponse<T> extends ApiResponse<Collection<T>> {
     @JsonProperty("pagination")
     private PaginationMeta pagination;
 
     private PageResponse(Integer statusCode, String message, String reason,
-                         Boolean isSuccess, List<T> data, PaginationMeta pagination) {
+                         Boolean isSuccess, Collection<T> data, PaginationMeta pagination) {
         super(statusCode, message, reason, isSuccess, data);
         this.pagination = pagination;
     }
@@ -33,7 +34,7 @@ public class PageResponse<T> extends ApiResponse<List<T>> {
         private String message;
         private String reason;
         private Boolean isSuccess;
-        private List<T> data;
+        private Collection<T> data;
         private PaginationMeta pagination;
 
         PageResponseBuilder() {
@@ -59,7 +60,7 @@ public class PageResponse<T> extends ApiResponse<List<T>> {
             return this;
         }
 
-        public PageResponseBuilder<T> data(List<T> data) {
+        public PageResponseBuilder<T> data(Collection<T> data) {
             this.data = data;
             return this;
         }
