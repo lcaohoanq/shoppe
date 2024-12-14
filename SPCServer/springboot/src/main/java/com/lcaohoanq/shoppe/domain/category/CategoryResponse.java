@@ -17,12 +17,10 @@ import java.util.TreeSet;
     "updated_at"
 })
 public record CategoryResponse(
-    @JsonProperty("id")
     Long id,
-    @JsonProperty("name")
     String name,
 
-    @JsonProperty("subcategories") TreeSet<Subcategory> subcategories,
+    TreeSet<Subcategory> subcategories,
 
     @JsonIgnore
     @JsonProperty("created_at")

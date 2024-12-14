@@ -43,6 +43,4 @@ public class OrderDetailResponse {
 
     @JsonProperty("total_money")
     private Float totalMoney;
-
-    private String color;
 }

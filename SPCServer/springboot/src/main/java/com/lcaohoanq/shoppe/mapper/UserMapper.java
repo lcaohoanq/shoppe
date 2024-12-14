@@ -9,4 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     @Mapping(target = "walletId", source = "wallet.id")
     UserResponse toUserResponse(User user);
+
+    User toUser(UserResponse userResponse);
+    
 }

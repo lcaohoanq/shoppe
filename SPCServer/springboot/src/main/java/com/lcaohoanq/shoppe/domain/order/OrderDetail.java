@@ -55,7 +55,4 @@ public class OrderDetail extends BaseEntity {
     @Column(name = "total_money", nullable = false)
     private Float totalMoney;
 
-//    @Column(name = "color")
-//    private String color;
-
 }

@@ -4,8 +4,10 @@ import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.domain.user.User;
+import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.mapper.CartMapper;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class CartService implements ICartService, PaginationConverter {
     private final IUserService userService;
     private final CartRepository cartRepository;
     private final CartMapper cartMapper;
+    private final UserMapper userMapper;
 
     @Override
     public CartResponse create(long userId) {
@@ -33,10 +36,10 @@ public class CartService implements ICartService, PaginationConverter {
             throw new MalformBehaviourException("Cart existed for user with id: " + userId);
         }
 
-        User existedUser = userService.findUserById(userId);
+        UserResponse existedUser = userService.findUserById(userId);
 
         Cart newCart = Cart.builder()
-            .user(existedUser)
+            .user(userMapper.toUser(existedUser))
             .totalPrice(0)
             .totalQuantity(0)
             .cartItems(new ArrayList<>())

@@ -45,7 +45,7 @@ public record ProductResponse(
     Double rating,
     
     @JsonProperty("status") ProductStatus status,
-    @JsonProperty("is_active") Boolean isActive,
+    @JsonProperty("is_active") boolean isActive,
 
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")

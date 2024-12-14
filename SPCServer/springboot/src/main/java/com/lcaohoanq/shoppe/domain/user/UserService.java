@@ -95,8 +95,9 @@ public class UserService implements IUserService, PaginationConverter {
     }
 
     @Override
-    public User findUserById(long id) throws DataNotFoundException {
+    public UserResponse findUserById(long id) throws DataNotFoundException {
         return userRepository.findById(id)
+            .map(userMapper::toUserResponse)
             .orElseThrow(() -> new DataNotFoundException(
                 localizationUtils.getLocalizedMessage(MessageKey.USER_NOT_FOUND)));
     }
@@ -270,7 +271,7 @@ public class UserService implements IUserService, PaginationConverter {
     @Override
     @Transactional
     public void softDeleteUser(Long userId) throws DataNotFoundException {
-        User existingUser = findUserById(userId);
+        UserResponse existingUser = findUserById(userId);
         if (!existingUser.isActive()) {
             throw new MalformDataException("User is already deleted");
         }
@@ -280,7 +281,7 @@ public class UserService implements IUserService, PaginationConverter {
     @Override
     @Transactional
     public void restoreUser(Long userId) throws DataNotFoundException {
-        User existingUser = findUserById(userId);
+        UserResponse existingUser = findUserById(userId);
         if (existingUser.isActive()) {
             throw new MalformDataException("User is already active");
         }

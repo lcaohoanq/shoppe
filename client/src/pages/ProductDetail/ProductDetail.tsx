@@ -125,7 +125,7 @@ export default function ProductDetail() {
 
   const addToCart = () => {
     addToCartMutation.mutate(
-      { buy_count: buyCount, product_id: product?.id as string },
+      { quantity: buyCount, product_id: product?.id as string },
       {
         onSuccess: (data) => {
           toast.success(data.data.message, { autoClose: 1000 })
@@ -136,7 +136,7 @@ export default function ProductDetail() {
   }
 
   const buyNow = async () => {
-    const res = await addToCartMutation.mutateAsync({ buy_count: buyCount, product_id: product?._id as string })
+    const res = await addToCartMutation.mutateAsync({ quantity: buyCount, product_id: product?.id as string })
     const purchase = res.data.data
     navigate(path.cart, {
       state: {

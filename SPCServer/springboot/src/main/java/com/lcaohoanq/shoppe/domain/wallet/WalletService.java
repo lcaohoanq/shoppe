@@ -7,6 +7,7 @@ import com.lcaohoanq.shoppe.domain.mail.IMailService;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserRepository;
+import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.domain.wallet.WalletDTO.WalletResponse;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.mapper.WalletMapper;
@@ -33,8 +34,8 @@ public class WalletService implements IWalletService {
 
     @Override
     public WalletResponse getByUserId(Long userId) {
-        User existedUser = userService.findUserById(userId);
-        return walletMapper.toWalletResponse(walletRepository.findByUserId(existedUser.getId()));
+        UserResponse existedUser = userService.findUserById(userId);
+        return walletMapper.toWalletResponse(walletRepository.findByUserId(existedUser.id()));
     }
 
     @Transactional

@@ -5,6 +5,7 @@ import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +47,17 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(
         @PathVariable Long id
     ) {
-        return ResponseEntity.ok(userMapper.toUserResponse(userService.findUserById(id)));
+        return ResponseEntity.ok(
+            ApiResponse.<UserResponse>builder()
+                .message("Successfully get user by id")
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .data(userService.findUserById(id))
+                .build()
+        );
     }
 
     @PostMapping("/details")

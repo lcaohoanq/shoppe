@@ -14,7 +14,7 @@ public interface IUserService {
 
     String loginOrRegisterGoogle(String email, String name, String googleId, String avatarUrl) throws Exception;
 
-    User findUserById(long id) throws DataNotFoundException;
+    UserResponse findUserById(long id) throws DataNotFoundException;
 
     User findUserByEmail(String email) throws DataNotFoundException;
 

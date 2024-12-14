@@ -245,9 +245,9 @@ public class AuthService implements IAuthService {
     @Transactional
     @Override
     public void verifyOtpIsCorrect(Long userId, String otp) throws Exception {
-        User user = userService.findUserById(userId);
+        UserResponse user = userService.findUserById(userId);
 
-        Otp otpEntity = getOtpByEmailOtp(user.getEmail(), otp);
+        Otp otpEntity = getOtpByEmailOtp(user.email(), otp);
 
         //check the otp is expired or not
         if (otpEntity.getExpiredAt().isBefore(LocalDateTime.now())) {
