@@ -58,7 +58,7 @@ public class Product extends BaseEntity {
     private int view;
     private double rating;
     
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private ProductStatus status;
 
     @Column(name = "is_active")

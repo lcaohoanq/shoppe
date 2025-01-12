@@ -36,7 +36,7 @@ public class Headquarter extends BaseEntity {
     @JsonProperty("id")
     private Long id;
     
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "region")
     private Country region;
     

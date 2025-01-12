@@ -63,20 +63,18 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(name="password", length = 200)
-    @JsonProperty("password")
     private String password;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
     @Column(name="is_active", columnDefinition = "boolean default true")
     @JsonProperty("is_active")
     private boolean isActive;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Enumerated(EnumType.ORDINAL)
     private UserStatus status;
 
     @Column(name="date_of_birth")

@@ -11,6 +11,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +37,7 @@ public class UserController {
 
     private final IUserService userService;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @GetMapping("")
     //@PreAuthorize("permitAll()")
@@ -130,6 +133,12 @@ public class UserController {
     public ResponseEntity<?> restoreUser(@PathVariable long id) {
         userService.restoreUser(id);
         return ResponseEntity.ok("Restore user successfully");
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF')")
+    @QueryMapping
+    public User user(@Argument Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
 }

@@ -30,7 +30,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
 
@@ -67,8 +67,8 @@ spring:
   graphql:
     graphiql:
       enabled: true
-      path: ${api.prefix}/graphiql
-    path: ${api.prefix}/graphql
+      path: /graphiql
+    path: /graphql
     schema:
       printer:
         enabled: true

@@ -33,7 +33,7 @@ public class Warehouse extends BaseLocation {
     @JsonProperty("id")
     private Long id;
     
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private WarehouseName name;
     
 //    @OneToMany(mappedBy = "warehouse")

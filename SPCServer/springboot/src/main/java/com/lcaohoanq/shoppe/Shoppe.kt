@@ -18,6 +18,7 @@ open class Shoppe
 fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))
     SpringApplication.run(Shoppe::class.java, *args)
+    openHomePage("http://localhost:8080/graphiql")
     openHomePage("http://localhost:8080/swagger-ui/index.html")
 }
 

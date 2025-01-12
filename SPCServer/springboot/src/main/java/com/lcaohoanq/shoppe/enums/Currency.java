@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -121,6 +122,11 @@ public enum Currency {
     private final String code;
     private final String symbol;
 
+    @JsonValue
+    public int toValue() {
+        return ordinal();
+    }
+    
     // Optional method to get currency by code
     public static Currency fromCode(String code) {
         for (Currency currency : values()) {
