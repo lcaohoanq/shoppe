@@ -96,7 +96,7 @@ public class Order extends BaseEntity {
     @Column(name = "active")
     private Boolean active;//thuộc về admin
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
     private OrderStatus status;
 

@@ -12,7 +12,6 @@ import com.lcaohoanq.shoppe.exception.InvalidParamException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.HashSet;
 import java.util.Optional;

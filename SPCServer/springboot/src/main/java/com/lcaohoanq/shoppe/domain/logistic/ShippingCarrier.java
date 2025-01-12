@@ -35,7 +35,7 @@ public class ShippingCarrier extends BaseEntity {
     @JsonProperty("id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "name", length = 100)
     private ShippingCarrierName name;
     

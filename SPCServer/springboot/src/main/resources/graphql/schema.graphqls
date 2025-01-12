@@ -1,0 +1,54 @@
+# Enums
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum UserStatus {
+    UNVERIFIED
+    VERIFIED
+    BANNED
+}
+
+enum UserRole {
+    MEMBER
+    STAFF
+    MANAGER
+}
+
+enum CountryEnum {
+    VIETNAM
+    UNITED_STATES
+}
+
+# Types
+type Country {
+    countryName: String!
+    alpha2Code: String!
+    alpha3Code: String!
+    numericCode: String!
+    phoneCode: String!
+}
+
+type User {
+    id: ID!
+    email: String!
+    name: String!
+    gender: Gender
+    isActive: Boolean!
+    status: UserStatus!
+    dateOfBirth: String  # Format: yyyy-MM-dd
+    avatar: String!
+    phoneNumber: String!
+    role: UserRole!
+    preferredLanguage: CountryEnum!  # Changed this to CountryEnum
+    lastLoginTimestamp: String  # Format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    createdAt: String!  # Format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    updatedAt: String!  # Format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+}
+
+# Queries
+type Query {
+    user(id: ID!): User
+}

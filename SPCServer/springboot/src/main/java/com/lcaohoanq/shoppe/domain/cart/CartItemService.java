@@ -9,7 +9,7 @@ import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.enums.CartItemStatus;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.CartMapper;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CartItemService implements ICartItemService, DTOConverter {
+public class CartItemService implements ICartItemService {
 
     private final IUserService userService;
     private final ICartService cartService;
@@ -25,6 +25,7 @@ public class CartItemService implements ICartItemService, DTOConverter {
     private final CartItemRepository cartItemRepository;
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final CartMapper cartMapper;
 
     @Override
     public CartItemResponse createCartItem(long userId, CartItemDTO cartItemDTO) {
@@ -81,7 +82,7 @@ public class CartItemService implements ICartItemService, DTOConverter {
         productService.updateQuantity(cartItemDTO.productId(), cartItemDTO.quantity(), false);
         cartService.updateQuantity(existedCart.getId(), cartItemDTO.quantity(), true);
         
-        return toCartItemResponse(cartItemRepository.save(cartItem));
+        return cartMapper.toCartItemResponse(cartItemRepository.save(cartItem));
     }
 
     @Override

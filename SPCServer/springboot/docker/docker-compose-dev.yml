@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -37,7 +37,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./redis-data:/data # Mount a volume for Redis data persistence
+      - redis_data:/data # Mount a volume for Redis data persistence
     networks:
       - shoppe_network
 
@@ -70,8 +70,10 @@ services:
 #    networks:
 #      - shoppe_network
 
-#volumes:
-#  postgres_data:
-#    driver: local
-#  grafana_data:
-#    driver: local
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local

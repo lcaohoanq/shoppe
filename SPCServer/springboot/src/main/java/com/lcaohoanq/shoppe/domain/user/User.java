@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -62,20 +63,18 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @Column(name="password", length = 200)
-    @JsonProperty("password")
     private String password;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
     @Column(name="is_active", columnDefinition = "boolean default true")
     @JsonProperty("is_active")
     private boolean isActive;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Enumerated(EnumType.ORDINAL)
     private UserStatus status;
 
     @Column(name="date_of_birth")

@@ -1,8 +1,8 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductImageService implements IProductImageService, DTOConverter,
+public class ProductImageService implements IProductImageService,
     PaginationConverter {
 
     private final ProductImageRepository ProductImageRepository;
     private final IProductService productService;
+    private final ProductMapper productMapper;
 
     @Override
     public void create(long productId, String url) throws Exception {
@@ -61,13 +62,13 @@ public class ProductImageService implements IProductImageService, DTOConverter,
     public List<ProductImageResponse> findById(long id) throws Exception {
         ProductImage productImage = ProductImageRepository.findById(id)
             .orElseThrow(() -> new Exception("Product image not found"));
-        return List.of(toProductImageResponse(productImage));
+        return List.of(productMapper.toProductImageResponse(productImage));
     }
 
     @Override
     public PageResponse<ProductImageResponse> getAll(Pageable pageable) throws Exception {
         Page<ProductImage> productImages = ProductImageRepository.findAll(pageable);
-        return mapPageResponse(productImages, pageable, this::toProductImageResponse, "Get All product images successfully");
+        return mapPageResponse(productImages, pageable, productMapper::toProductImageResponse, "Get All product images successfully");
     }
 
     @Override
@@ -76,7 +77,7 @@ public class ProductImageService implements IProductImageService, DTOConverter,
             if (productImages.isEmpty()) {
                 throw new Exception("Product images not found");
             }
-        return productImages.stream().map(this::toProductImageResponse).toList();
+        return productImages.stream().map(productMapper::toProductImageResponse).toList();
 
     }
 

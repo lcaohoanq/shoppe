@@ -45,7 +45,7 @@ public class SocialAccount extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "provider_name")
     private ProviderName providerName;
 

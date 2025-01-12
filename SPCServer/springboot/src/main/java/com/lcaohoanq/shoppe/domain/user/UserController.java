@@ -1,22 +1,18 @@
 package com.lcaohoanq.shoppe.domain.user;
 
-import com.lcaohoanq.shoppe.component.JwtTokenUtils;
-import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.api.PageResponse;
-import com.lcaohoanq.shoppe.exception.MalformDataException;
-import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
-import com.lcaohoanq.shoppe.domain.token.TokenService;
-import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.constant.MessageKey;
-import jakarta.servlet.http.HttpServletRequest;
+import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
+import io.swagger.v3.oas.models.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Objects;
-import javax.print.event.PrintJobAttributeEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,14 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController implements DTOConverter {
+public class UserController {
 
     private final IUserService userService;
-    private final LocalizationUtils localizationUtils;
-    private final TokenService tokenService;
-    private final HttpServletRequest request;
-    private final JwtTokenUtils jwtTokenUtils;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @GetMapping("")
     //@PreAuthorize("permitAll()")
@@ -57,10 +50,17 @@ public class UserController implements DTOConverter {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(
         @PathVariable Long id
     ) {
-        return ResponseEntity.ok(userMapper.toUserResponse(userService.findUserById(id)));
+        return ResponseEntity.ok(
+            ApiResponse.<UserResponse>builder()
+                .message("Successfully get user by id")
+                .isSuccess(true)
+                .statusCode(HttpStatus.OK.value())
+                .data(userService.findUserById(id))
+                .build()
+        );
     }
 
     @PostMapping("/details")
@@ -133,6 +133,12 @@ public class UserController implements DTOConverter {
     public ResponseEntity<?> restoreUser(@PathVariable long id) {
         userService.restoreUser(id);
         return ResponseEntity.ok("Restore user successfully");
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_MEMBER', 'ROLE_STAFF')")
+    @QueryMapping
+    public User user(@Argument Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
 }

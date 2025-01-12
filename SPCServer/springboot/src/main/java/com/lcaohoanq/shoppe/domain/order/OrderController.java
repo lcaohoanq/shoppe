@@ -10,7 +10,7 @@ import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.exception.InvalidApiPathVariableException;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.OrderMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,12 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
-public class OrderController implements DTOConverter {
+public class OrderController  {
 
     private final IOrderService orderService;
     private final LocalizationUtils localizationUtils;
     private final IUserService userService;
     private final JwtTokenUtils jwtTokenUtils;
+    private final OrderMapper orderMapper;
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_MEMBER')")
@@ -126,7 +127,7 @@ public class OrderController implements DTOConverter {
             throw new MethodArgumentNotValidException(result);
         }
 
-        return ResponseEntity.ok(toOrderResponse(orderService.update(id, orderDTO)));
+        return ResponseEntity.ok(orderMapper.toOrderResponse(orderService.update(id, orderDTO)));
     }
 
     @DeleteMapping("/{id}")
@@ -183,7 +184,7 @@ public class OrderController implements DTOConverter {
             id,
             OrderStatus.valueOf(updateOrderStatusDTO.status()));
         
-        return ResponseEntity.ok(toOrderResponse(updatedOrder));
+        return ResponseEntity.ok(orderMapper.toOrderResponse(updatedOrder));
     }
 
 }

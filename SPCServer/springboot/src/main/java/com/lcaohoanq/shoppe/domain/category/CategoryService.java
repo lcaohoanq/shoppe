@@ -15,7 +15,6 @@ import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.mapper.CategoryMapper;
 import com.lcaohoanq.shoppe.mapper.ProductMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.HashSet;
 import java.util.List;

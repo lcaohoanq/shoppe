@@ -1,6 +1,6 @@
 import { ProductImageReponse } from './productimage.type'
 
-export interface Product {
+export type Product = {
   id: string
   images: ProductImageReponse[]
   price: number
@@ -21,7 +21,7 @@ export interface Product {
   updatedAt: string
 }
 
-export interface ProductList {
+export type ProductList = {
   products: Product[]
   pagination: {
     page: number
@@ -30,7 +30,7 @@ export interface ProductList {
   }
 }
 
-export interface ProductListConfig {
+export type ProductListConfig = {
   page?: number | string
   limit?: number | string
   sort_by?: 'createdAt' | 'view' | 'sold' | 'price'

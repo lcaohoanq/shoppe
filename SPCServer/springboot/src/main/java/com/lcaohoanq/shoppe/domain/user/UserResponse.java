@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
         "wallet_id",
         "preferred_language",
         "preferred_currency",
+        "last_login_timestamp",
         "created_at",
         "updated_at"
     }
@@ -39,14 +40,17 @@ public record UserResponse(
     @JsonProperty("is_active") boolean isActive,
     UserStatus status,
     @JsonProperty("date_of_birth") String dateOfBirth,
-    @JsonProperty("phone_number") String phone,
+    @JsonProperty("phone_number") String phoneNumber,
     @JsonProperty("address") String address,
     @JsonProperty("avatar") String avatar,
     @JsonProperty("role") Role role,
     @JsonIgnore @JsonProperty("wallet_id") Long walletId,
     @JsonProperty("preferred_language") String preferredLanguage,
     @JsonProperty("preferred_currency") String preferredCurrency,
-
+    
+    @JsonProperty("last_login_timestamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    LocalDateTime lastLoginTimestamp,
     @JsonProperty("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
     LocalDateTime createdAt,

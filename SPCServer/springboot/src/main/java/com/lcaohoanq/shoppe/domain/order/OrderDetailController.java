@@ -3,7 +3,7 @@ package com.lcaohoanq.shoppe.domain.order;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
-import com.lcaohoanq.shoppe.util.DTOConverter;
+import com.lcaohoanq.shoppe.mapper.OrderMapper;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -25,10 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("${api.prefix}/orders-details")
 @RequiredArgsConstructor
-public class OrderDetailController implements DTOConverter {
+public class OrderDetailController {
 
     private final IOrderDetailService orderDetailService;
     private final LocalizationUtils localizationUtils;
+    private final OrderMapper orderMapper;
 
     //Thêm mới 1 order detail
     @PostMapping("")
@@ -67,7 +68,7 @@ public class OrderDetailController implements DTOConverter {
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
         List<OrderDetailResponse> orderDetailResponses = orderDetails
             .stream()
-            .map(this::toOrderDetailResponse)
+            .map(orderMapper::toOrderDetailResponse)
             .toList();
 
         return ResponseEntity.ok(

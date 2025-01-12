@@ -10,13 +10,11 @@ import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.domain.token.TokenService;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import com.lcaohoanq.shoppe.util.Identifiable;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import io.micrometer.core.annotation.Timed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthController implements Identifiable, DTOConverter {
+public class AuthController implements Identifiable {
 
     private final IUserService userService;
     private final LocalizationUtils localizationUtils;

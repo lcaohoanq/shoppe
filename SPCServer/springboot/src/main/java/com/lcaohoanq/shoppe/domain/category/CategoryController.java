@@ -3,15 +3,12 @@ package com.lcaohoanq.shoppe.domain.category;
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiResponse;
-import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryDTO;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryResponse;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
-import com.lcaohoanq.shoppe.util.DTOConverter;
 import jakarta.validation.Valid;
-import java.util.HashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${api.prefix}/categories")
 @RequiredArgsConstructor
 @Slf4j
-public class CategoryController implements DTOConverter {
+public class CategoryController {
 
     private final ICategoryService categoryService;
     private final LocalizationUtils localizationUtils;

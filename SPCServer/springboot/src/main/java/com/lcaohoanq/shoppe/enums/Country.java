@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -240,4 +241,9 @@ public enum Country {
     private final String numericCode;
     private final String phoneCode;
 
+    @JsonValue
+    public int toValue() {
+        return ordinal();
+    }
+    
 }

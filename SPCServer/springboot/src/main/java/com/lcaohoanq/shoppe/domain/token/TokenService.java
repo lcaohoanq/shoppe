@@ -1,11 +1,13 @@
 package com.lcaohoanq.shoppe.domain.token;
 
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
+import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.TokenNotFoundException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserService;
+import com.lcaohoanq.shoppe.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +32,7 @@ public class TokenService implements ITokenService{
 
     private final TokenRepository tokenRepository;
     private final JwtTokenUtils jwtTokenUtil;
+    private final UserMapper userMapper;
 
     @Transactional
     @Override
@@ -74,8 +77,8 @@ public class TokenService implements ITokenService{
     @Transactional
     @Override
     public Token addToken(long userId, String token, boolean isMobileDevice) {
-        User existingUser = userService.findUserById(userId);
-        List<Token> userTokens = tokenRepository.findByUserId(existingUser.getId());
+        UserResponse existingUser = userService.findUserById(userId);
+        List<Token> userTokens = tokenRepository.findByUserId(existingUser.id());
         int tokenCount = userTokens.size();
         // Số lượng token vượt quá giới hạn, xóa một token cũ
         if (tokenCount >= MAX_TOKENS) {
@@ -99,7 +102,7 @@ public class TokenService implements ITokenService{
         LocalDateTime expirationDateTime = LocalDateTime.now().plusSeconds(expirationInSeconds);
         // Tạo mới một token cho người dùng
         Token newToken = Token.builder()
-                .user(existingUser)
+                .user(userMapper.toUser(existingUser))
                 .token(token)
                 .revoked(false)
                 .expired(false)
