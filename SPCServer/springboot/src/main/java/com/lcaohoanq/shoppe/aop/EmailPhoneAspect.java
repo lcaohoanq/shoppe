@@ -35,11 +35,16 @@ public class EmailPhoneAspect {
         request.setAttribute("validatedEmail", user);
     }
 
-    @Before("execution(* com.lcaohoanq.shoppe.domain.auth.ForgotPasswordController.*(..)) && args(toEmail,..)")
-    public void checkValidEmailForgotPassword(JoinPoint joinPoint, String toEmail) {
-        User user = userService.findUserByEmail(toEmail);
-
-        request.setAttribute("validatedEmail", user);
-    }
+//    @Before("execution(* com.lcaohoanq.shoppe.domain.auth.AuthController.forgotPassword(..)) && args"
+//        + "(toEmail,..)")
+//    public void checkValidEmailForgotPassword(JoinPoint joinPoint, String toEmail) {
+//        User user = userService.findUserByEmail(toEmail);
+//
+//        if (user == null) {
+//            throw new IllegalArgumentException("Email is not valid"); // Handle invalid email
+//        }
+//
+//        request.setAttribute("validatedEmail", user);
+//    }
 
 }

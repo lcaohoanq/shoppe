@@ -5,7 +5,7 @@ import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.constant.MessageKey;
-import com.lcaohoanq.shoppe.domain.auth.UpdatePasswordDTO;
+import com.lcaohoanq.shoppe.domain.auth.AuthPort.UpdatePasswordDTO;
 import com.lcaohoanq.shoppe.domain.mail.IMailService;
 import com.lcaohoanq.shoppe.domain.otp.OtpService;
 import com.lcaohoanq.shoppe.domain.role.Role;
@@ -13,21 +13,27 @@ import com.lcaohoanq.shoppe.domain.role.RoleRepository;
 import com.lcaohoanq.shoppe.domain.role.RoleService;
 import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccount;
 import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
+import com.lcaohoanq.shoppe.domain.token.Token;
+import com.lcaohoanq.shoppe.domain.token.TokenRepository;
 import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.enums.ProviderName;
 import com.lcaohoanq.shoppe.enums.UserRole;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.exception.EmailAlreadyUsedException;
+import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.exception.PermissionDeniedException;
 import com.lcaohoanq.shoppe.exception.PhoneAlreadyUsedException;
+import com.lcaohoanq.shoppe.exception.TokenNotFoundException;
 import com.lcaohoanq.shoppe.exception.UpdateEmailException;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.List;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,22 +42,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 
-@Slf4j
 @Service
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class UserService implements IUserService, PaginationConverter {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtils jwtTokenUtils;
-    private final RoleRepository roleRepository;
-    private final SocialAccountRepository socialAccountRepository;
-    private final LocalizationUtils localizationUtils;
-    private final IMailService mailService;
-    private final OtpService otpService;
-    private final RoleService roleService;
-    private final UserMapper userMapper;
-    
+    UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+    JwtTokenUtils jwtTokenUtils;
+    RoleRepository roleRepository;
+    SocialAccountRepository socialAccountRepository;
+    LocalizationUtils localizationUtils;
+    IMailService mailService;
+    OtpService otpService;
+    RoleService roleService;
+    UserMapper userMapper;
+    TokenRepository tokenRepository;
+
     @Override
     public PageResponse<UserResponse> fetchUser(Pageable pageable) {
         Page<User> usersPage = userRepository.findAll(pageable);
@@ -324,8 +332,8 @@ public class UserService implements IUserService, PaginationConverter {
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
-    
-    @Override 
+
+    @Override
     public Boolean existsByPhoneNumber(String phoneNumber) {
         return userRepository.existsByPhoneNumber(phoneNumber);
     }
@@ -334,5 +342,23 @@ public class UserService implements IUserService, PaginationConverter {
     public Boolean existsById(Long id) {
         return userRepository.existsById(id);
     }
+
+    @Override
+    public User getUserDetailsFromToken(String token) throws Exception {
+        if(jwtTokenUtils.isTokenExpired(token)) {
+            throw new ExpiredTokenException("Token is expired");
+        }
+        String email = jwtTokenUtils.extractEmail(token);
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new DataNotFoundException("User not found: " + email));
+    }
+    
+    @Override
+    public User getUserDetailsFromRefreshToken(String refreshToken) throws Exception {
+        Token existingToken = tokenRepository.findByRefreshToken(refreshToken)
+            .orElseThrow(() -> new TokenNotFoundException("Refresh token does not exist"));
+        return getUserDetailsFromToken(existingToken.getToken());
+    }
+
 
 }

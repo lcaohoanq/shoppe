@@ -1,8 +1,8 @@
 package com.lcaohoanq.shoppe.domain.category;
 
+import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
-import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryDTO;
@@ -10,7 +10,9 @@ import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryResponse;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -29,12 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${api.prefix}/categories")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryController {
 
-    private final ICategoryService categoryService;
-    private final LocalizationUtils localizationUtils;
+    ICategoryService categoryService;
+    LocalizationUtils localizationUtils;
 
     @GetMapping("")
     @PreAuthorize("permitAll()")

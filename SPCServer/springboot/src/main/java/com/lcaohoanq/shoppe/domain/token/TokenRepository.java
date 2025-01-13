@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.token;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,9 +13,9 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
     List<Token> findByUserId(Long userId);
 
-    Token findByToken(String token);
+    Optional<Token> findByToken(String token);
 
-    Token findByRefreshToken(String token);
+    Optional<Token> findByRefreshToken(String token);
 
     @Modifying
     @Transactional

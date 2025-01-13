@@ -1,10 +1,10 @@
 package com.lcaohoanq.shoppe.component;
 
+import com.lcaohoanq.shoppe.domain.token.Token;
+import com.lcaohoanq.shoppe.domain.token.TokenRepository;
+import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.exception.InvalidParamException;
 import com.lcaohoanq.shoppe.exception.JwtAuthenticationException;
-import com.lcaohoanq.shoppe.domain.token.Token;
-import com.lcaohoanq.shoppe.domain.user.User;
-import com.lcaohoanq.shoppe.domain.token.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -101,8 +101,10 @@ public class JwtTokenUtils {
     public boolean validateToken(String token, User userDetails) {
         try {
             String email = extractEmail(token);
-            Token existingToken = tokenRepository.findByToken(token);
-            
+            Token existingToken = tokenRepository.findByToken(token).orElseThrow(
+                () -> new JwtAuthenticationException("Token is invalid")
+            );
+
             // Check token existence and revocation
             if (existingToken == null || existingToken.isRevoked()) {
                 throw new JwtAuthenticationException("Token is invalid or has been revoked");

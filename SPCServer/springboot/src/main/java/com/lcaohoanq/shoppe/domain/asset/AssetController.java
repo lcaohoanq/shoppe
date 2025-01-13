@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.asset;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Tag(name = "Assets", description = "APIs for serving static assets")
 @RequestMapping("${api.prefix}/assets")
 @Slf4j
 public class AssetController {

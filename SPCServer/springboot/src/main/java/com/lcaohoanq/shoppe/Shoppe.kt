@@ -13,7 +13,7 @@ import java.util.*
 @EnableCaching
 @EnableRetry
 @EnableJpaRepositories(basePackages = ["com.lcaohoanq.shoppe.domain"])
-open class Shoppe
+class Shoppe
 
 fun main(args: Array<String>) {
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))

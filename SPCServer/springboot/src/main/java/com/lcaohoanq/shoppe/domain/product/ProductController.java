@@ -1,21 +1,23 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.github.javafaker.Faker;
-import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.component.LocalizationUtils;
+import com.lcaohoanq.shoppe.domain.asset.IFileStoreService;
+import com.lcaohoanq.shoppe.domain.category.Category;
+import com.lcaohoanq.shoppe.domain.category.CategoryRepository;
+import com.lcaohoanq.shoppe.domain.category.ICategoryService;
 import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
-import com.lcaohoanq.shoppe.domain.category.Category;
-import com.lcaohoanq.shoppe.domain.category.CategoryRepository;
-import com.lcaohoanq.shoppe.domain.category.CategoryService;
-import com.lcaohoanq.shoppe.domain.asset.IFileStoreService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -37,15 +39,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("${api.prefix}/products")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
 
-    private final IProductService productService;
-    private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
-    private final LocalizationUtils localizationUtils;
-    private final IFileStoreService fileStoreService;
+    IProductService productService;
+    ICategoryService categoryService;
+    CategoryRepository categoryRepository;
+    LocalizationUtils localizationUtils;
+    IFileStoreService fileStoreService;
 
     @GetMapping("")
     @PreAuthorize("permitAll()")

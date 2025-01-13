@@ -1,6 +1,8 @@
 package com.lcaohoanq.shoppe.domain.category;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
+import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductRepository;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
@@ -11,28 +13,31 @@ import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryRepository;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryResponse;
 import com.lcaohoanq.shoppe.exception.CategoryAlreadyExistException;
 import com.lcaohoanq.shoppe.exception.CategoryNotFoundException;
-import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
-import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.mapper.CategoryMapper;
 import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService, PaginationConverter {
 
-    private final CategoryRepository categoryRepository;
-    private final SubcategoryRepository subcategoryRepository;
-    private final ProductRepository productRepository;
-    private final CategoryMapper categoryMapper;
-    private final ProductMapper productMapper;
+    CategoryRepository categoryRepository;
+    SubcategoryRepository subcategoryRepository;
+    ProductRepository productRepository;
+    CategoryMapper categoryMapper;
+    ProductMapper productMapper;
 
     @Override
     public List<CategoryResponse> createCategory(CategoryDTO category)

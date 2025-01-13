@@ -8,4 +8,5 @@ public interface IOtpService {
     void disableOtp(long id);
     Optional<Otp> getOtpByEmailOtp(String email, String otp);
     void setOtpExpired();
+    String generateOtp();
 }

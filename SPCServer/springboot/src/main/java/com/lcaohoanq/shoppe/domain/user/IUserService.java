@@ -1,8 +1,8 @@
 package com.lcaohoanq.shoppe.domain.user;
 
-import com.lcaohoanq.shoppe.domain.auth.UpdatePasswordDTO;
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.domain.auth.AuthPort.UpdatePasswordDTO;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,4 +49,8 @@ public interface IUserService {
     Boolean existsByPhoneNumber(String phoneNumber);
     
     Boolean existsById(Long id);
+
+    User getUserDetailsFromRefreshToken(String refreshToken) throws Exception;
+
+    User getUserDetailsFromToken(String token) throws Exception;
 }

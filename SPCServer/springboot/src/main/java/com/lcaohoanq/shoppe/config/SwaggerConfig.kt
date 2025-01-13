@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class SwaggerConfig {
+class SwaggerConfig {
     @Bean
-    open fun customOpenAPI(): OpenAPI {
+    fun customOpenAPI(): OpenAPI {
         return OpenAPI()
             .info(
                 Info()
@@ -85,7 +85,7 @@ open class SwaggerConfig {
 
     @Bean
     @Disabled
-    open fun publicApi(): GroupedOpenApi {
+    fun publicApi(): GroupedOpenApi {
         return GroupedOpenApi.builder()
             .group("public")
             .addOpenApiCustomizer { openApi: OpenAPI ->

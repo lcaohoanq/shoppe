@@ -15,21 +15,26 @@ import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
 import java.util.HashSet;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ProductService implements IProductService, PaginationConverter {
 
-    private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
-    private final ProductImageRepository productImageRepository;
-    private final ProductMapper productMapper;
+    ProductRepository productRepository;
+    CategoryRepository categoryRepository;
+    UserRepository userRepository;
+    ProductImageRepository productImageRepository;
+    ProductMapper productMapper;
 
     @Override
     public PageResponse<ProductResponse> getAll(PageRequest pageRequest) {

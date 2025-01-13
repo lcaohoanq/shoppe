@@ -1,72 +1,87 @@
 package com.lcaohoanq.shoppe.domain.auth;
 
+import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.component.JwtTokenUtils;
 import com.lcaohoanq.shoppe.component.LocalizationUtils;
+import com.lcaohoanq.shoppe.constant.EmailSubject;
+import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.constant.Regex;
+import com.lcaohoanq.shoppe.domain.auth.AuthPort.AccountRegisterDTO;
+import com.lcaohoanq.shoppe.domain.auth.AuthPort.LoginResponse;
 import com.lcaohoanq.shoppe.domain.cart.Cart;
 import com.lcaohoanq.shoppe.domain.cart.CartRepository;
-import com.lcaohoanq.shoppe.domain.cart.CartService;
+import com.lcaohoanq.shoppe.domain.cart.ICartService;
+import com.lcaohoanq.shoppe.domain.mail.IMailService;
+import com.lcaohoanq.shoppe.domain.otp.IOtpService;
+import com.lcaohoanq.shoppe.domain.otp.Otp;
+import com.lcaohoanq.shoppe.domain.role.IRoleService;
+import com.lcaohoanq.shoppe.domain.role.RoleRepository;
+import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
+import com.lcaohoanq.shoppe.domain.token.ITokenService;
+import com.lcaohoanq.shoppe.domain.token.Token;
+import com.lcaohoanq.shoppe.domain.token.TokenPort.RefreshTokenDTO;
+import com.lcaohoanq.shoppe.domain.user.IUserService;
+import com.lcaohoanq.shoppe.domain.user.User;
+import com.lcaohoanq.shoppe.domain.user.UserRepository;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
+import com.lcaohoanq.shoppe.domain.wallet.Wallet;
+import com.lcaohoanq.shoppe.domain.wallet.WalletRepository;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.enums.Currency;
+import com.lcaohoanq.shoppe.enums.EmailCategoriesEnum;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.exception.PasswordWrongFormatException;
-import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
-import com.lcaohoanq.shoppe.domain.otp.Otp;
-import com.lcaohoanq.shoppe.domain.user.User;
-import com.lcaohoanq.shoppe.domain.wallet.Wallet;
-import com.lcaohoanq.shoppe.domain.role.RoleRepository;
-import com.lcaohoanq.shoppe.domain.socialaccount.SocialAccountRepository;
-import com.lcaohoanq.shoppe.domain.user.UserRepository;
-import com.lcaohoanq.shoppe.domain.wallet.WalletRepository;
-import com.lcaohoanq.shoppe.domain.mail.IMailService;
-import com.lcaohoanq.shoppe.domain.otp.OtpService;
-import com.lcaohoanq.shoppe.domain.role.RoleService;
-import com.lcaohoanq.shoppe.domain.token.TokenService;
-import com.lcaohoanq.shoppe.domain.user.UserService;
+import com.lcaohoanq.shoppe.mapper.TokenMapper;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
-import com.lcaohoanq.shoppe.constant.MessageKey;
+import com.lcaohoanq.shoppe.util.Identifiable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.thymeleaf.context.Context;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
-public class AuthService implements IAuthService {
-
-
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtils jwtTokenUtils;
-    private final RoleRepository roleRepository;
-    private final SocialAccountRepository socialAccountRepository;
-    private final LocalizationUtils localizationUtils;
-    private final IMailService mailService;
-    private final RoleService roleService;
-    private final TokenService tokenService;
-    private final OtpService otpService;
-    private final UserService userService;
-    private final WalletRepository walletRepository;
-    private final CartRepository cartRepository;
-    private final CartService cartService;
-    private final UserMapper userMapper;
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Service
+public class AuthService implements IAuthService, Identifiable {
+    
+    UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
+    AuthenticationManager authenticationManager;
+    JwtTokenUtils jwtTokenUtils;
+    RoleRepository roleRepository;
+    SocialAccountRepository socialAccountRepository;
+    LocalizationUtils localizationUtils;
+    IMailService mailService;
+    IRoleService roleService;
+    ITokenService tokenService;
+    IOtpService otpService;
+    IUserService userService;
+    WalletRepository walletRepository;
+    CartRepository cartRepository;
+    ICartService cartService;
+    UserMapper userMapper;
+    TokenMapper tokenMapper;
+    HttpServletRequest request;
 
     @Override
     @Transactional
@@ -137,7 +152,7 @@ public class AuthService implements IAuthService {
                 newWallet = walletRepository.save(newWallet);
 
                 Cart newCart = cartRepository.findById
-                    (cartService.create(newUser.getId()).id())
+                        (cartService.create(newUser.getId()).id())
                     .orElseThrow(() -> new DataNotFoundException("Cart not found"));
 
                 // Step 3: Set the wallet on the user and save the user again
@@ -153,21 +168,41 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public String login(String email, String password) throws Exception {
+    public AuthPort.LoginResponse login(String email, String password) throws Exception {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) {
-            throw new DataNotFoundException(
+            throw new BadCredentialsException(
                 localizationUtils.getLocalizedMessage(MessageKey.WRONG_PHONE_PASSWORD));
         }
+
         User existingUser = optionalUser.get();
 
         existingUser.setLastLoginTimestamp(LocalDateTime.now());
         userRepository.save(existingUser);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(email, password, existingUser.getAuthorities());
+            new UsernamePasswordAuthenticationToken(
+                email,
+                password,
+                existingUser.getAuthorities());
+
         authenticationManager.authenticate(authenticationToken);
-        return jwtTokenUtils.generateToken(existingUser);
+
+        String token = jwtTokenUtils.generateToken(existingUser);
+
+        UserResponse userDetail = getUserDetailsFromToken(token);
+
+        Token jwtToken = tokenService.addToken(
+            userDetail.id(),
+            token,
+            isMobileDevice(request.getHeader("User-Agent")));
+
+        log.info("New user logged in successfully");
+
+        return new LoginResponse(
+            tokenMapper.toTokenResponse(jwtToken)
+//            ,userDetail
+        );
     }
 
     //Token
@@ -264,6 +299,38 @@ public class AuthService implements IAuthService {
 
         otpEntity.setUsed(true);
         otpService.disableOtp(otpEntity.getId());
+    }
+
+    @Override
+    public AuthPort.LoginResponse refreshToken(RefreshTokenDTO refreshTokenDTO) throws Exception {
+        User userDetail = userService.getUserDetailsFromRefreshToken(
+            refreshTokenDTO.refreshToken());
+        Token jwtToken = tokenService.refreshToken(refreshTokenDTO.refreshToken(), userDetail);
+        return new AuthPort.LoginResponse(tokenMapper.toTokenResponse(jwtToken));
+    }
+
+    @Override
+    @Transactional
+    public void sendEmailOtp(User existingUser) throws MessagingException {
+        Context context = new Context();
+        String otp = otpService.generateOtp();
+        context.setVariable("name", existingUser.getName());
+        context.setVariable("otp", otp);
+
+        mailService.sendMail(existingUser.getEmail(),
+                             EmailSubject.subjectForgotPassword(existingUser.getName()),
+                             EmailCategoriesEnum.FORGOT_PASSWORD.getType(),
+                             context);
+
+        Otp otpEntity = Otp.builder()
+            .email(existingUser.getEmail())
+            .otp(otp)
+            .expiredAt(LocalDateTime.now().plusMinutes(5))
+            .isUsed(false)
+            .isExpired(false)
+            .build();
+
+        otpService.createOtp(otpEntity);
     }
 
 }

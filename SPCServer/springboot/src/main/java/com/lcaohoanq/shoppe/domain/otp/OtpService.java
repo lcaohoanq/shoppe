@@ -45,4 +45,9 @@ public class OtpService implements IOtpService{
         otpRepository.updateExpiredOtps(now);
     }
 
+    @Override
+    public String generateOtp() {
+        return String.valueOf((int) (Math.random() * 9000) + 1000);
+    }
+
 }

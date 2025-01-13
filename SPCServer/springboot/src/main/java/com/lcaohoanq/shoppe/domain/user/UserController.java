@@ -5,10 +5,11 @@ import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
-import io.swagger.v3.oas.models.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.Objects;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -31,13 +32,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
 
-    private final IUserService userService;
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
+    IUserService userService;
+    UserMapper userMapper;
+    UserRepository userRepository;
 
     @GetMapping("")
     //@PreAuthorize("permitAll()")
