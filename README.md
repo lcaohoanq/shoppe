@@ -1,4 +1,4 @@
-# Dự án Shopee Clone Typescript
+# Shopee Clone Cross-Platform [Web, Mobile]
 
 ## Preview
 
