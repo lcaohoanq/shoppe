@@ -1,6 +1,5 @@
 package com.lcaohoanq.shoppe.domain.subcategory;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -15,14 +14,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@Getter
-@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,5 +44,25 @@ public class Subcategory extends BaseEntity implements Comparable<Subcategory> {
     @Override
     public int compareTo(Subcategory that) {
         return this.id.compareTo(that.id);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
