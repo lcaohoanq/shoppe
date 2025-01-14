@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.otp;
 
+import com.lcaohoanq.shoppe.repository.OtpRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

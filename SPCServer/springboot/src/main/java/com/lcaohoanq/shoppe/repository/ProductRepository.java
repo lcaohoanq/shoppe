@@ -1,7 +1,7 @@
-package com.lcaohoanq.shoppe.domain.product;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.product.Product;
 import java.util.HashSet;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.subcategory;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;

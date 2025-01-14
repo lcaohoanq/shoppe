@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.headquarter;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.headquarter.Headquarter;
 import com.lcaohoanq.shoppe.enums.Country;
 import org.springframework.data.jpa.repository.JpaRepository;
 

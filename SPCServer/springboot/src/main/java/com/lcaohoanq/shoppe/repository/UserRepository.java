@@ -1,6 +1,7 @@
-package com.lcaohoanq.shoppe.domain.user;
+package com.lcaohoanq.shoppe.repository;
 
 import com.lcaohoanq.shoppe.domain.role.Role;
+import com.lcaohoanq.shoppe.domain.user.User;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

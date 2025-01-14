@@ -12,7 +12,7 @@ import java.util.*
 @SpringBootApplication
 @EnableCaching
 @EnableRetry
-@EnableJpaRepositories(basePackages = ["com.lcaohoanq.shoppe.domain"])
+@EnableJpaRepositories(basePackages = ["com.lcaohoanq.shoppe.repository"])
 class Shoppe
 
 fun main(args: Array<String>) {

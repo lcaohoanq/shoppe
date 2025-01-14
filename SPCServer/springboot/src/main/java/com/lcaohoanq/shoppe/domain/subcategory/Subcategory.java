@@ -44,7 +44,6 @@ public class Subcategory extends BaseEntity implements Comparable<Subcategory> {
     private String name;
     
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 

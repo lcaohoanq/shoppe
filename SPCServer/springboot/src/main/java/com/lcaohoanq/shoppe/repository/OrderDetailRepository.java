@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.order;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.order.OrderDetail;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

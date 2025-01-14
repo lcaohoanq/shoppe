@@ -1,10 +1,11 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductDTO;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageDTO;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import java.util.HashSet;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface IProductService {
 

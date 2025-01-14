@@ -5,6 +5,7 @@ networks:
 services:
   postgres:
     image: postgres:latest
+    restart: always
     container_name: postgres_shoppee
     environment:
       POSTGRES_USER: admin

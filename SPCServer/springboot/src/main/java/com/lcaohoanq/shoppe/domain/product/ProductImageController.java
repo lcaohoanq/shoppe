@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

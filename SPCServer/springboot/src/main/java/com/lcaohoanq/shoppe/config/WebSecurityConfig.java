@@ -1,8 +1,9 @@
 package com.lcaohoanq.shoppe.config;
 
+import com.lcaohoanq.shoppe.filter.JwtTokenFilter;
 import java.util.Arrays;
-
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.lcaohoanq.shoppe.filter.JwtTokenFilter;
-
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableMethodSecurity
 @EnableWebSecurity
@@ -38,12 +35,25 @@ public class WebSecurityConfig {
     @Value("${api.prefix}")
     private String apiPrefix;
 
+    private final String[] publicEndpoints = {
+        "/graphiql",
+        "/graphql",
+        "/error",
+        "/v3/api-docs/**",
+        "/v3/api-docs.yaml",
+        "/swagger-ui/**",
+        "/swagger-ui.html",
+        apiPrefix + "/swagger-ui/**",
+        apiPrefix + "/swagger-ui.html",
+        apiPrefix + "/api-docs/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session ->
+                                   session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
@@ -64,20 +74,10 @@ public class WebSecurityConfig {
                     String.format("%s/wallets/**", apiPrefix),
                     String.format("%s/warehouses/**", apiPrefix),
                     String.format("%s/payments/**", apiPrefix),
-                    String.format("%s/headquarters/**", apiPrefix),
-                    "/graphql",
-                    "/error"
-                ).permitAll()
+                    String.format("%s/headquarters/**", apiPrefix)
+                    ).permitAll()
                 // Swagger UI with basic auth
-                .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/v3/api-docs.yaml",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    apiPrefix + "/swagger-ui/**",
-                    apiPrefix + "/swagger-ui.html",
-                    apiPrefix + "/api-docs/**"
-                ).permitAll()
+                .requestMatchers(publicEndpoints).permitAll()
                 .anyRequest().authenticated()
             )
             .csrf(AbstractHttpConfigurer::disable)
@@ -97,7 +97,7 @@ public class WebSecurityConfig {
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

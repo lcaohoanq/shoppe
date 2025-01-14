@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.config;
 
-import com.lcaohoanq.shoppe.domain.user.UserRepository;
+import com.lcaohoanq.shoppe.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

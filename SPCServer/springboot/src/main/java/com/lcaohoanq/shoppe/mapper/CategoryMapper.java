@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.mapper;
 
 import com.lcaohoanq.shoppe.domain.category.Category;
-import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

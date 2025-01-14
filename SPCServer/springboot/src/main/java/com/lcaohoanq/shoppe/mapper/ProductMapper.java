@@ -1,10 +1,10 @@
 package com.lcaohoanq.shoppe.mapper;
 
 import com.lcaohoanq.shoppe.domain.category.Category;
-import com.lcaohoanq.shoppe.domain.category.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
 import com.lcaohoanq.shoppe.domain.product.Product;
 import com.lcaohoanq.shoppe.domain.product.ProductImage;
-import com.lcaohoanq.shoppe.domain.product.ProductImageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageResponse;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
 import java.util.Collections;
 import java.util.List;

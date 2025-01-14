@@ -3,12 +3,12 @@ package com.lcaohoanq.shoppe.domain.category;
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
-import com.lcaohoanq.shoppe.domain.product.Product;
+import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryDTO;
+import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.category.CategoryPort.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
-import com.lcaohoanq.shoppe.domain.subcategory.CreateNewSubcategoryResponse;
-import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryDTO;
-import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryResponse;
-import java.util.HashSet;
+import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryDTO;
+import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

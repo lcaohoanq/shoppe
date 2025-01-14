@@ -2,7 +2,9 @@ package com.lcaohoanq.shoppe.domain.order;
 
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.product.Product;
-import com.lcaohoanq.shoppe.domain.product.ProductRepository;
+import com.lcaohoanq.shoppe.repository.OrderDetailRepository;
+import com.lcaohoanq.shoppe.repository.OrderRepository;
+import com.lcaohoanq.shoppe.repository.ProductRepository;
 import com.lcaohoanq.shoppe.mapper.OrderMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

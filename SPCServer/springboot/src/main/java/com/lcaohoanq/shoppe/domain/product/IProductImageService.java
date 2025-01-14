@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageResponse;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 

@@ -1,6 +1,7 @@
-package com.lcaohoanq.shoppe.domain.payment;
+package com.lcaohoanq.shoppe.repository;
 
 import com.lcaohoanq.shoppe.domain.order.Order;
+import com.lcaohoanq.shoppe.domain.payment.Payment;
 import com.lcaohoanq.shoppe.enums.EPaymentStatus;
 import java.util.Optional;
 import org.springframework.data.domain.Page;

@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.cart;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.cart.Cart;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

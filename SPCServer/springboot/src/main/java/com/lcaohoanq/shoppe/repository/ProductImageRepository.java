@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.product;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.product.ProductImage;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

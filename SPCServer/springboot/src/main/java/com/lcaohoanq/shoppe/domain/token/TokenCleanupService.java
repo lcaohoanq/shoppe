@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.token;
 
+import com.lcaohoanq.shoppe.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;

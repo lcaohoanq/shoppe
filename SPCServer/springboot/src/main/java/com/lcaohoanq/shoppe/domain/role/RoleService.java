@@ -5,6 +5,7 @@ import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.mapper.RoleMapper;
+import com.lcaohoanq.shoppe.repository.RoleRepository;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

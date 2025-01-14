@@ -5,6 +5,7 @@ import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.constant.MessageKey;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
+import com.lcaohoanq.shoppe.repository.UserRepository;
 import jakarta.validation.Valid;
 import java.util.Objects;
 import lombok.AccessLevel;

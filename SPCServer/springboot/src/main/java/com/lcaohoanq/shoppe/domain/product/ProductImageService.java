@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageResponse;
 import com.lcaohoanq.shoppe.mapper.ProductMapper;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import com.lcaohoanq.shoppe.util.PaginationConverter;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class ProductImageService implements IProductImageService,
     PaginationConverter {
 
-    private final ProductImageRepository ProductImageRepository;
+    private final com.lcaohoanq.shoppe.repository.ProductImageRepository ProductImageRepository;
     private final IProductService productService;
     private final ProductMapper productMapper;
 

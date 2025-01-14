@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.review;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.review.Review;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.role;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.role.Role;
 import com.lcaohoanq.shoppe.enums.UserRole;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

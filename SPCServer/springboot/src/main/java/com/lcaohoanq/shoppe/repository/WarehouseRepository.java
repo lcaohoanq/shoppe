@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.inventory;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.inventory.Warehouse;
 import com.lcaohoanq.shoppe.domain.inventory.Warehouse.WarehouseName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

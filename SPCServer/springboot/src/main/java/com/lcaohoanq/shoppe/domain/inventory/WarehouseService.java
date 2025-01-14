@@ -3,6 +3,7 @@ package com.lcaohoanq.shoppe.domain.inventory;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.mapper.WarehouseMapper;
+import com.lcaohoanq.shoppe.repository.WarehouseRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

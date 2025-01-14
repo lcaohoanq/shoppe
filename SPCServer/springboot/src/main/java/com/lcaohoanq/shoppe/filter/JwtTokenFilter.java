@@ -58,7 +58,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             boolean isPublic = isPublicEndpoint(servletPath, request);
             log.info("Is public endpoint? {}", isPublic);
             
-            if (servletPath.equals("/error") || isSwaggerEndpoint(servletPath) || isGraphqlEndpoint(servletPath) || isPublic ) {
+            if (servletPath.equals("/error") || servletPath.equals("/favicon.ico") || isSwaggerEndpoint(servletPath) || isGraphqlEndpoint(servletPath) || isPublic ) {
                 log.info("Bypassing authentication for: {} {}", method, servletPath);
                 filterChain.doFilter(request, response);
                 return;
@@ -215,6 +215,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
     
     private boolean isGraphqlEndpoint(String path) {
-        return path.contains("/graphiql");
+        return path.contains("/graphiql") || path.contains("graphql");
     }
 }

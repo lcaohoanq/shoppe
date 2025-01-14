@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.otp;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.otp.Otp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

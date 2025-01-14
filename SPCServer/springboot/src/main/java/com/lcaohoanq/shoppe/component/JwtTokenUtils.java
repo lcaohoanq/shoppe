@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.component;
 
 import com.lcaohoanq.shoppe.domain.token.Token;
-import com.lcaohoanq.shoppe.domain.token.TokenRepository;
+import com.lcaohoanq.shoppe.repository.TokenRepository;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.exception.InvalidParamException;
 import com.lcaohoanq.shoppe.exception.JwtAuthenticationException;

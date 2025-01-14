@@ -8,6 +8,7 @@ import com.lcaohoanq.shoppe.domain.user.UserService;
 import com.lcaohoanq.shoppe.exception.ExpiredTokenException;
 import com.lcaohoanq.shoppe.exception.TokenNotFoundException;
 import com.lcaohoanq.shoppe.mapper.UserMapper;
+import com.lcaohoanq.shoppe.repository.TokenRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,5 +1,6 @@
-package com.lcaohoanq.shoppe.domain.token;
+package com.lcaohoanq.shoppe.repository;
 
+import com.lcaohoanq.shoppe.domain.token.Token;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
