@@ -1,5 +1,6 @@
 package com.lcaohoanq.shoppe.domain.subcategory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
@@ -39,6 +40,7 @@ public class Subcategory extends BaseEntity implements Comparable<Subcategory> {
     
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
 
     @Override
