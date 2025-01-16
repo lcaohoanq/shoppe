@@ -52,9 +52,12 @@ jobs:
     runs-on: ubuntu-24.04
     needs: cache-maven
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Docker stop old container
         run: docker container stop shoppe || true
-
+        
       - name: Docker Compose Up
         working-directory: SPCServer/springboot
         run: docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
