@@ -7,9 +7,13 @@ on:
     branches: [ "develop" ]
     
 jobs:
-  build:
+  run-tests:
     runs-on: ubuntu-24.04
-
+    strategy:
+      matrix:
+        project:
+         - SPCServer/springboot
+         
     steps:
       - uses: actions/checkout@v4
 
@@ -28,10 +32,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Run All Unit Tests
-        working-directory: ./SPCServer/springboot
-        run: mvn -B clean test --file pom.xml
+      - name: Run Unit Tests for ${{ matrix.project }}
+        run: mvn -B clean test --file ${{ matrix.project }}/pom.xml
         env:
-          SPRING_PROFILES_ACTIVE: test
+          SPRING_PROFILES_ACTIVE: ${{ contains(matrix.project, 'springboot') && 'test' || '' }}
 
 
