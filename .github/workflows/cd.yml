@@ -1,0 +1,60 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  REGISTRY: docker.io
+  IMAGE_NAME: lcaohoanq/shoppe
+
+jobs:
+  # Job 1: Checkout and create .env file
+  create-env:
+    runs-on: self-hosted
+    outputs:
+      env-file: ${{ steps.create-env.outputs.env-file }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create .env file
+        id: create-env
+        run: |
+          echo "POSTGRES_USER=${{ secrets.MYSQL_DATASOURCE }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.MYSQL_USER }}" >> .env
+          echo "MAIL_USERNAME=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "MAIL_PASSWORD=${{ secrets.MYSQL_DEV_USER }}" >> .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
+          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> .env
+          echo "JWT_EXPIRATION_REFRESH_TOKEN=${{ secrets.JWT_EXPIRATION_REFRESH_TOKEN }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+
+  cache-maven:
+    runs-on: self-hosted
+    needs: create-env
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            maven-${{ runner.os }}-
+            maven-
+
+  run-docker-compose:
+    runs-on: self-hosted
+    needs: cache-maven
+    steps:
+      - name: Docker stop old container
+        run: docker container stop shoppe || true
+
+      - name: Docker Compose Up
+        working-directory: ./SPCServer/springboot
+        run: docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
