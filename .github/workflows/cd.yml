@@ -12,7 +12,7 @@ env:
 jobs:
   # Job 1: Checkout and create .env file
   create-env:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     outputs:
       env-file: ${{ steps.create-env.outputs.env-file }}
     steps:
@@ -33,7 +33,7 @@ jobs:
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
 
   cache-maven:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: create-env
     steps:
       - name: Checkout code
@@ -49,7 +49,7 @@ jobs:
             maven-
 
   run-docker-compose:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: cache-maven
     steps:
       - name: Docker stop old container
