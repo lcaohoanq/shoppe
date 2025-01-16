@@ -25,6 +25,7 @@ const Cart = lazy(() => import('./pages/Cart'))
 const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
 const HistoryPurchase = lazy(() => import('./pages/User/pages/HistoryPurchase'))
 const NotFound = lazy(() => import('./pages/NotFound'))
+const Home = lazy(() => import('./pages/Home'))
 
 /**
  * Để tối ưu re-render thì nên ưu tiên dùng <Outlet /> thay cho {children}
@@ -148,6 +149,14 @@ export default function useRouteElements() {
       path: '',
       element: <MainLayout />,
       children: [
+        {
+          path: 'test',
+          element: (
+            <Suspense>
+              <Home />
+            </Suspense>
+          )
+        },
         {
           path: path.productDetail,
           element: (
