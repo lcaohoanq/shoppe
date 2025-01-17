@@ -20,8 +20,9 @@ jobs:
 
       - name: Create .env file
         id: create-env
+        working-directory: docker
         run: |
-          cat << EOF > ../docker/.env
+          cat << EOF > .env
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
@@ -33,8 +34,9 @@ jobs:
 
       - name: Create .env file
         id: create-env-spcserver-springboot
+        working-directory: spcserver/springboot
         run: |
-          cat << EOF > ../spcserver/springboot/.env
+          cat << EOF > .env
           
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
