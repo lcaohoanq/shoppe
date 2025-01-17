@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.domain.payment;
 
-import com.lcaohoanq.shoppe.enums.EPaymentStatus;
+import com.lcaohoanq.shoppe.domain.payment.Payment.EPaymentStatus;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Optional;

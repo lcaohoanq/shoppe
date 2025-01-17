@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
-import com.lcaohoanq.shoppe.enums.CartItemStatus;
-import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.lcaohoanq.shoppe.repository;
 
 import com.lcaohoanq.shoppe.domain.order.Order;
-import com.lcaohoanq.shoppe.enums.OrderStatus;
+import com.lcaohoanq.shoppe.domain.order.Order.OrderStatus;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

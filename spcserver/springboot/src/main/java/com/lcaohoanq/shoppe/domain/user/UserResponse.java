@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.role.Role;
-import com.lcaohoanq.shoppe.enums.Gender;
+import com.lcaohoanq.shoppe.domain.user.User.Gender;
 import com.lcaohoanq.shoppe.enums.UserStatus;
 import java.time.LocalDateTime;
 

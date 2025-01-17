@@ -108,4 +108,19 @@ public class Order extends BaseEntity {
     @JsonManagedReference
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @Getter
+    @AllArgsConstructor
+    public enum OrderStatus {
+
+        ALL("ALL"), // for view
+        PENDING("PENDING"),
+        PROCESSING("PROCESSING"),
+        SHIPPING("SHIPPING"),
+        DELIVERED("DELIVERED"),
+        CANCELLED("CANCELLED"),
+        COMPLETED("COMPLETED");
+
+        private final String status;
+    }
+    
  }

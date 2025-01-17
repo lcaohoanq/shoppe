@@ -2,7 +2,7 @@ package com.lcaohoanq.shoppe.domain.order;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
 import com.lcaohoanq.shoppe.domain.cart.CartItemDTO;
-import com.lcaohoanq.shoppe.enums.OrderStatus;
+import com.lcaohoanq.shoppe.domain.order.Order.OrderStatus;
 import com.lcaohoanq.shoppe.exception.MalformDataException;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.product.Product;

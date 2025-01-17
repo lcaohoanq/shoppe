@@ -1,11 +1,10 @@
 package com.lcaohoanq.shoppe.domain.order;
 
 import com.lcaohoanq.shoppe.api.PageResponse;
-import com.lcaohoanq.shoppe.enums.OrderStatus;
 import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
+import com.lcaohoanq.shoppe.domain.order.Order.OrderStatus;
 import com.lcaohoanq.shoppe.domain.user.User;
 import java.util.List;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface IOrderService {

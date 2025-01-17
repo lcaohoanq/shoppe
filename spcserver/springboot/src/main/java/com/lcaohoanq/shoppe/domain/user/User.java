@@ -1,16 +1,15 @@
 package com.lcaohoanq.shoppe.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.shoppe.domain.cart.Cart;
-import com.lcaohoanq.shoppe.domain.role.Role;
-import com.lcaohoanq.shoppe.enums.Gender;
-import com.lcaohoanq.shoppe.enums.UserStatus;
-import com.lcaohoanq.shoppe.domain.wallet.Wallet;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.lcaohoanq.shoppe.base.entity.BaseEntity;
+import com.lcaohoanq.shoppe.domain.cart.Cart;
 import com.lcaohoanq.shoppe.domain.chat.ChatRoom;
+import com.lcaohoanq.shoppe.domain.role.Role;
+import com.lcaohoanq.shoppe.domain.wallet.Wallet;
+import com.lcaohoanq.shoppe.enums.UserStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -118,6 +116,23 @@ public class User extends BaseEntity implements UserDetails {
     @JsonIgnore
     private List<ChatRoom> receivedChats = new ArrayList<>();
 
+    @Getter
+    @AllArgsConstructor
+    public enum Gender {
+
+        MALE("MALE"),
+        FEMALE("FEMALE"),
+        OTHER("OTHER");
+
+        private final String value;
+
+        @JsonValue
+        public int toValue() {
+            return ordinal();
+        }
+
+    }
+    
     //Spring Security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

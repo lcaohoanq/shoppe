@@ -3,8 +3,8 @@ package com.lcaohoanq.shoppe.domain.cart;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.lcaohoanq.shoppe.domain.cart.CartItem.CartItemStatus;
 import com.lcaohoanq.shoppe.domain.product.ProductResponse;
-import com.lcaohoanq.shoppe.enums.CartItemStatus;
 import java.time.LocalDateTime;
 
 @JsonPropertyOrder(

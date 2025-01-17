@@ -1,10 +1,9 @@
 package com.lcaohoanq.shoppe.domain.payment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.lcaohoanq.shoppe.domain.order.Order;
 import com.lcaohoanq.shoppe.domain.user.User;
-import com.lcaohoanq.shoppe.enums.EPaymentStatus;
-import com.lcaohoanq.shoppe.enums.EPaymentType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -86,5 +85,36 @@ public class Payment {
 //    public boolean isRefundable(Float refundAmount) {
 //        return paymentAmount >= getTotalRefundedAmount() + refundAmount;
 //    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EPaymentStatus {
+        PENDING("PENDING"),
+        SUCCESS("SUCCESS"),
+        REFUNDED("REFUNDED"),
+        ALL("ALL"); //for searching
+
+        private final String status;
+
+        @JsonValue
+        public int toValue() {
+            return ordinal();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public enum EPaymentType {
+        DEPOSIT("DEPOSIT"),
+        ORDER("ORDER"),
+        DRAW_OUT("DRAW_OUT");
+        
+        private final String type;
+
+        @JsonValue
+        public int toValue() {
+            return ordinal();
+        }
+    }
 }
 
