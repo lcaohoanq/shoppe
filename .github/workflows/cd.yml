@@ -8,10 +8,6 @@ on:
       - '**.md'
       - 'docs/**'
 
-env:
-  REGISTRY: docker.io
-  IMAGE_NAME: lcaohoanq/shoppe
-
 jobs:
   # Job 1: Checkout and create .env file
   create-env:
@@ -25,7 +21,7 @@ jobs:
       - name: Create .env file
         id: create-env
         run: |
-          cat << EOF > docker/.env
+          cat << EOF > ../docker/.env
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
@@ -38,7 +34,7 @@ jobs:
       - name: Create .env file
         id: create-env-spcserver-springboot
         run: |
-          cat << EOF > spcserver/springboot/.env
+          cat << EOF > ../spcserver/springboot/.env
           
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
