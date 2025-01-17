@@ -2,12 +2,10 @@
 FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy only the pom.xml and download dependencies (caching this layer)
-COPY pom.xml .
-RUN mvn dependency:go-offline
-
-# Now copy the rest of the source code and build
+# Copy the entire project first
 COPY . .
+
+# Run Maven build
 RUN mvn clean package -DskipTests
 
 # Runtime stage
@@ -22,5 +20,6 @@ ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.s
 RUN chmod +x /wait-for-it.sh
 
 EXPOSE 8080
-# Wait for MySQL to be ready before starting the application
+
+# Wait for Postgres to be ready before starting the application
 CMD ["/bin/sh", "-c", "/wait-for-it.sh postgres:5432 -t 60 -- java -jar app.jar"]
