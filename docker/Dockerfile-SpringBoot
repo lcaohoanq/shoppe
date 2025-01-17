@@ -2,10 +2,16 @@
 FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy the entire project first
-COPY . .
+# Copy the pom.xml from spcserver/springboot to /app
+COPY ../spcserver/springboot/pom.xml .
 
-# Run Maven build
+# Download dependencies (caching this layer)
+RUN mvn dependency:go-offline
+
+# Copy the rest of the source code from spcserver/springboot
+COPY ../spcserver/springboot .
+
+# Build the project
 RUN mvn clean package -DskipTests
 
 # Runtime stage
@@ -21,5 +27,5 @@ RUN chmod +x /wait-for-it.sh
 
 EXPOSE 8080
 
-# Wait for Postgres to be ready before starting the application
+# Wait for PostgreSQL to be ready before starting the application
 CMD ["/bin/sh", "-c", "/wait-for-it.sh postgres:5432 -t 60 -- java -jar app.jar"]

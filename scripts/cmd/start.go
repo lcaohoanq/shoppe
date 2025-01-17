@@ -63,7 +63,7 @@ func init() {
 func startDockerContainers() error {
 	// Command to start Docker containers
 	dockerCmd := exec.Command("docker", "compose", "-f", "docker-compose-dev.yml", "up", "-d")
-	dockerCmd.Dir = "../SPCServer/springboot/docker" // Path to your springboot folder
+	dockerCmd.Dir = "../spcserver/springboot/docker" // Path to your springboot folder
 
 	// Capture output
 	dockerCmd.Stdout = os.Stdout
@@ -83,7 +83,7 @@ func startBackendServer(ch chan<- error, wg *sync.WaitGroup) {
 
 	// Command to start the backend server (in the springboot folder)
 	backendCmd := exec.Command("mvn", "spring-boot:run")
-	backendCmd.Dir = "../SPCServer/springboot" // Path to your backend folder
+	backendCmd.Dir = "../spcserver/springboot" // Path to your backend folder
 
 	// Capture output
 	backendCmd.Stdout = os.Stdout

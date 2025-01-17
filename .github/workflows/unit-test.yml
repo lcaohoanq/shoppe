@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         project:
-         - SPCServer/springboot
+         - spcserver/springboot
          
     steps:
       - uses: actions/checkout@v4

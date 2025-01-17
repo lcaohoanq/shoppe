@@ -13,11 +13,8 @@ services:
       - "8080:8080"
     networks:
       - shoppe_network
-    environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shoppe
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=Iloveyou123!
+    env_file:
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
@@ -28,10 +25,8 @@ services:
     image: postgres:latest
     restart: always
     container_name: postgres_shoppee
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: Iloveyou123!
-      POSTGRES_DB: shoppe
+    env_file:
+      - .env
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
       interval: 30s
