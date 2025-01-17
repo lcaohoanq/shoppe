@@ -55,7 +55,7 @@ jobs:
           context: .
           file: ./SPCServer/springboot/docker/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME_NEW }}/shoppe:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/shoppe:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
 
