@@ -3,12 +3,12 @@ package com.lcaohoanq.shoppe.domain.product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.lcaohoanq.shoppe.base.entity.BaseEntity;
 import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.category.Category;
 import com.lcaohoanq.shoppe.domain.inventory.Warehouse;
-import com.lcaohoanq.shoppe.enums.ProductStatus;
 import com.lcaohoanq.shoppe.domain.user.User;
-import com.lcaohoanq.shoppe.base.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +24,6 @@ import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -85,5 +84,22 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product")
     @JsonManagedReference
     private List<CartItem> cartItems = new ArrayList<>();
+
+    @Getter
+    @AllArgsConstructor
+    public enum ProductStatus {
+
+        UNVERIFIED("UNVERIFIED"),
+        VERIFIED("VERIFIED"),
+        REJECTED("REJECTED");
+
+        private final String status;
+        
+        @JsonValue
+        public int toValue() {
+            return ordinal();
+        }
+
+    }
 
 }

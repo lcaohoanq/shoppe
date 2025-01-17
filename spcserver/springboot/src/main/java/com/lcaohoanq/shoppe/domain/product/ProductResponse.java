@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
+import com.lcaohoanq.shoppe.domain.product.Product.ProductStatus;
 import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductImageResponse;
-import com.lcaohoanq.shoppe.enums.ProductStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 

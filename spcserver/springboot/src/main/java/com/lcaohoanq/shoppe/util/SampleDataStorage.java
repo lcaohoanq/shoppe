@@ -1,6 +1,6 @@
 package com.lcaohoanq.shoppe.util;
 
-import com.lcaohoanq.shoppe.enums.ProductStatus;
+import com.lcaohoanq.shoppe.domain.product.Product.ProductStatus;
 import java.util.Arrays;
 import java.util.List;
 import lombok.Getter;

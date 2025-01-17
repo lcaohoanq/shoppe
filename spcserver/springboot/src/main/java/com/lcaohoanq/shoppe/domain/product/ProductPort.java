@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
-import com.lcaohoanq.shoppe.enums.ProductStatus;
+import com.lcaohoanq.shoppe.domain.product.Product.ProductStatus;
 import com.lcaohoanq.shoppe.metadata.MediaMeta;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

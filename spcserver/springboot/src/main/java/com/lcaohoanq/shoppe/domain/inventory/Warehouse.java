@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.inventory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.lcaohoanq.shoppe.base.entity.BaseLocation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,6 +58,11 @@ public class Warehouse extends BaseLocation {
         SOUTH("Southern warehouse");
         
         private final String name;
+
+        @JsonValue
+        public int toValue() {
+            return ordinal();
+        }
     }
     
 }
