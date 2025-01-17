@@ -53,6 +53,9 @@ jobs:
           JWT_EXPIRATION_REFRESH_TOKEN=${{ secrets.JWT_EXPIRATION_REFRESH_TOKEN }}
           JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
           EOF
+          
+      - name: Verify .env file creation
+        run: ls -l docker && ls -l spcserver/springboot/
 
   cache-maven:
     runs-on: ubuntu-24.04
@@ -92,6 +95,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
+        working-directory: docker
         run: docker build -f docker/Dockerfile-SpringBoot -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest .
 
   # Job 4: Push image to Docker Hub
