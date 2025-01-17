@@ -1,63 +1,73 @@
 name: Continuous Deployment
-
 on:
   push:
     branches:
       - develop
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
 env:
   REGISTRY: docker.io
   IMAGE_NAME: lcaohoanq/shoppe
 
 jobs:
-  # Job 1: Checkout and create .env file
-  create-env:
+  deploy:
     runs-on: ubuntu-24.04
-    outputs:
-      env-file: ${{ steps.create-env.outputs.env-file }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Create .env file
-        id: create-env
         run: |
-          echo "POSTGRES_USER=${{ secrets.MYSQL_DATASOURCE }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.MYSQL_USER }}" >> .env
-          echo "MAIL_USERNAME=${{ secrets.MYSQL_PASSWORD }}" >> .env
-          echo "MAIL_PASSWORD=${{ secrets.MYSQL_DEV_USER }}" >> .env
-          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
-          echo "DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}" >> .env
-          echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> .env
-          echo "JWT_EXPIRATION_REFRESH_TOKEN=${{ secrets.JWT_EXPIRATION_REFRESH_TOKEN }}" >> .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          cat << EOF > .env
+          POSTGRES_USER=${{ secrets.MYSQL_DATASOURCE }}
+          POSTGRES_PASSWORD=${{ secrets.MYSQL_USER }}
+          MAIL_USERNAME=${{ secrets.MYSQL_PASSWORD }}
+          MAIL_PASSWORD=${{ secrets.MYSQL_DEV_USER }}
+          DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }}
+          JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}
+          JWT_EXPIRATION_REFRESH_TOKEN=${{ secrets.JWT_EXPIRATION_REFRESH_TOKEN }}
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          EOF
 
-  cache-maven:
-    runs-on: ubuntu-24.04
-    needs: create-env
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Cache Maven dependencies
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Cache Docker layers
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
-          key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
-            maven-${{ runner.os }}-
-            maven-
+            ${{ runner.os }}-buildx-
 
-  run-docker-compose:
-    runs-on: ubuntu-24.04
-    needs: cache-maven
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Docker stop old container
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./SPCServer/springboot/docker/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME_NEW }}/shoppe:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Stop and remove old container
         run: docker container stop shoppe || true
         
-      - name: Docker Compose Up
+      - name: Deploy with Docker Compose
         working-directory: SPCServer/springboot
-        run: docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
+        run: |
+          docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
