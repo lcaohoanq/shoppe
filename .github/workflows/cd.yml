@@ -114,7 +114,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push built image to DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/shoppe:latest
+        run: docker push lcaohoanq/shoppe:latest
 
       - name: Log out from DockerHub
         run: docker logout

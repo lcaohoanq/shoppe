@@ -4,7 +4,8 @@ networks:
 
 services:
   shoppe:
-    container_name: shoppe
+    image: lcaohoanq/shoppe
+    container_name: shoppe_spcserver
     build:
       context: ..
       dockerfile: docker/Dockerfile
