@@ -25,7 +25,7 @@ jobs:
       - name: Create .env file
         id: create-env
         run: |
-          cat << EOF > .env
+          cat << EOF > docker/.env
           SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}
           SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}
