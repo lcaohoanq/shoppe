@@ -150,7 +150,7 @@ export default function useRouteElements() {
       element: <MainLayout />,
       children: [
         {
-          path: 'test',
+          path: 'home',
           element: (
             <Suspense>
               <Home />
