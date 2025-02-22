@@ -45,7 +45,7 @@ jobs:
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
 
       - name: Verify .env file creation
-        run: ls -al docker && ls -al spcserver/springboot
+        run: ls -al spcserver/springboot
 
   cache-maven:
     runs-on: self-hosted
