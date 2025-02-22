@@ -17,8 +17,6 @@ services:
     env_file:
       - .env
     depends_on:
-      postgres:
-        condition: service_healthy
       redis-container:
         condition: service_healthy
 
