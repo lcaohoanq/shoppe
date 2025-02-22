@@ -23,7 +23,7 @@ spring:
       location: uploads
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/shoppe
+    url: jdbc:postgresql://192.168.88.154:5432/shoppe
     username: ${POSTGRES_USER:PROD_DB_DEV_USER}
     password: ${POSTGRES_PASSWORD:PROD_DB_DEV_PASSWORD}
 
