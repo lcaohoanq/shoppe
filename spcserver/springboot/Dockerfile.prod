@@ -9,7 +9,7 @@ COPY ./pom.xml .
 RUN mvn dependency:go-offline
 
 # Copy the rest of the source code from spcserver/springboot
-COPY .. .
+COPY . .
 
 # Build the project
 RUN mvn clean package -DskipTests
