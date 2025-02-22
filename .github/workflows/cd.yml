@@ -93,7 +93,7 @@ jobs:
         uses: actions/checkout@v4 # Updated to v4
 
       - name: Build Docker image
-        run: docker build -f spcserver/springboot/Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest .
+        run: docker build -f spcserver/springboot/Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest spcserver/springboot
 
   push-docker-image:
     runs-on: self-hosted
