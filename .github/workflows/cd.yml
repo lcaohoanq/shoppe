@@ -11,7 +11,7 @@ on:
 jobs:
   # Job 1: Checkout and create .env file
   create-env:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     outputs:
       env-file: ${{ steps.create-env.outputs.env-file }}
     steps:
