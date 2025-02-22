@@ -11,35 +11,14 @@ services:
       dockerfile: docker/Dockerfile
     restart: on-failure
     ports:
-      - "8080:8080"
+      - "0.0.0.0:8080:8080"
     networks:
       - shoppe_network
     env_file:
       - .env
     depends_on:
-      postgres:
-        condition: service_healthy
       redis-container:
         condition: service_healthy
-  
-  postgres:
-    image: postgres:latest
-    restart: always
-    container_name: postgres_shoppee
-    env_file:
-      - .env
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
-      interval: 30s
-      timeout: 60s
-      retries: 5
-      start_period: 80s
-    networks:
-      - shoppe_network
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   redis-container:
     image: docker.io/redis:7.2.3
@@ -54,39 +33,6 @@ services:
     networks:
       - shoppe_network
 
-#  prometheus:
-#    image: prom/prometheus
-#    container_name: prometheus_shoppe
-#    ports:
-#      - "9090:9090"
-#    restart: unless-stopped
-#    volumes:
-#      - ./config/prometheus:/etc/prometheus
-#    networks:
-#      - shoppe_network
-#    extra_hosts:
-#      - "host.docker.internal:host-gateway"
-#
-#  # connection Prometheus server URL
-#  # http://prometheus:9090(prometheus is the service name)
-#  # not use localhost because localhost refer to grafana itself
-#  grafana:
-#    image: grafana/grafana
-#    container_name: grafana_shoppe
-#    ports:
-#      - "3001:3000"
-#    environment:
-#      - GF_SECURITY_ADMIN_USER=sysadmin
-#      - GF_SECURITY_ADMIN_PASSWORD=sysadmin
-#    volumes:
-#      - grafana_data:/var/lib/grafana
-#    networks:
-#      - shoppe_network
-
 volumes:
-  postgres_data:
-    driver: local
   redis_data:
-    driver: local
-  grafana_data:
     driver: local

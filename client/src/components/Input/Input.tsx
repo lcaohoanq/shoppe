@@ -24,7 +24,7 @@ export default function Input<TFieldValues extends FieldValues = FieldValues>({
   ...rest
 }: Props<TFieldValues>) {
   const [openEye, setOpenEye] = useState(false)
-  const registerResult = register && name ? register(name, rules) : null
+  const registerResult = register && name ? register(name, rules as RegisterOptions<TFieldValues>) : null
 
   const toggleEye = () => {
     setOpenEye((prev) => !prev)

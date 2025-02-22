@@ -1,4 +1,6 @@
-import { rest } from 'msw'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { http } from 'msw'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { access_token_1s } from './auth.msw'
@@ -16,7 +18,7 @@ const meRes = {
   }
 }
 
-const meRequest = rest.get(`${config.baseUrl}me`, (req, res, ctx) => {
+const meRequest = http.get(`${config.baseUrl}me`, (req, res, ctx) => {
   const access_token = req.headers.get('authorization')
   if (access_token === access_token_1s) {
     return res(

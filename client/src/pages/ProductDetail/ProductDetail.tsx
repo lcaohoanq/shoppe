@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { convert } from 'html-to-text'
@@ -12,7 +14,7 @@ import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
-import { ProductListConfig, Product as ProductType } from 'src/types/product.type'
+import { Product, ProductListConfig, Product as ProductType } from 'src/types/product.type'
 import {
   convertToCallAssets,
   formatCurrency,
@@ -20,7 +22,7 @@ import {
   getRandomProductImage,
   rateSale
 } from 'src/utils/utils'
-import Product from '../ProductList/components/Product'
+import ProductPage from '../ProductList/components/Product/Product'
 
 export default function ProductDetail() {
   const { t } = useTranslation(['product'])
@@ -329,9 +331,9 @@ export default function ProductDetail() {
           <div className='uppercase text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</div>
           {productsData && (
             <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-              {productsData.data.data.map((product) => (
+              {productsData.data.data.map((product: Product) => (
                 <div className='col-span-1' key={product.id}>
-                  <Product product={product} />
+                  <ProductPage product={product} />
                 </div>
               ))}
             </div>

@@ -118,7 +118,7 @@ export default function Cart() {
           draft[purchaseIndex].disabled = true
         })
       )
-      updatePurchaseMutation.mutate({ product_id: purchase.product._id, buy_count: value })
+      updatePurchaseMutation.mutate({ product_id: purchase.product.id, buy_count: value })
     }
   }
 
@@ -135,7 +135,7 @@ export default function Cart() {
   const handleBuyPurchases = () => {
     if (checkedPurchases.length > 0) {
       const body = checkedPurchases.map((purchase) => ({
-        product_id: purchase.product._id,
+        product_id: purchase.product.id,
         buy_count: purchase.buy_count
       }))
       buyProductsMutation.mutate(body)
@@ -195,7 +195,7 @@ export default function Cart() {
                                   className='h-20 w-20 flex-shrink-0'
                                   to={`${path.home}${generateNameId({
                                     name: purchase.product.name,
-                                    id: purchase.product._id
+                                    id: purchase.product.id
                                   })}`}
                                 >
                                   <img alt={purchase.product.name} src={purchase.product.image} />
@@ -204,7 +204,7 @@ export default function Cart() {
                                   <Link
                                     to={`${path.home}${generateNameId({
                                       name: purchase.product.name,
-                                      id: purchase.product._id
+                                      id: purchase.product.id
                                     })}`}
                                     className='text-left line-clamp-2'
                                   >

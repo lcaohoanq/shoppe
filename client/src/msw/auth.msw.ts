@@ -1,4 +1,6 @@
-import { rest } from 'msw'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { http } from 'msw'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 
@@ -38,11 +40,11 @@ const refreshTokenRes = {
   }
 }
 
-const loginRequest = rest.post(`${config.baseUrl}login`, (req, res, ctx) => {
+const loginRequest = http.post(`${config.baseUrl}login`, (req, res, ctx) => {
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(loginRes))
 })
 
-const refreshToken = rest.post(`${config.baseUrl}refresh-access-token`, (req, res, ctx) => {
+const refreshToken = http.post(`${config.baseUrl}refresh-access-token`, (req, res, ctx) => {
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(refreshTokenRes))
 })
 

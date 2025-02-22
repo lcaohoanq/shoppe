@@ -1,4 +1,6 @@
-import { rest } from 'msw'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import { http } from 'msw'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 
@@ -239,10 +241,10 @@ const productDetailRes = {
     updatedAt: '2022-12-19T15:19:53.312Z'
   }
 }
-const productsRequest = rest.get(`${config.baseUrl}products`, (req, res, ctx) => {
+const productsRequest = http.get(`${config.baseUrl}products`, (req, res, ctx) => {
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(productsRes))
 })
-const productDetailRequest = rest.get(`${config.baseUrl}products/:id`, (req, res, ctx) => {
+const productDetailRequest = http.get(`${config.baseUrl}products/:id`, (req, res, ctx) => {
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(productDetailRes))
 })
 

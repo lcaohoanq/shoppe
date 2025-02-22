@@ -12,7 +12,11 @@ export default defineConfig({
     setupFiles: path.resolve(__dirname, './vitest.setup.js')
   },
   server: {
-    port: 4000
+    host: true,
+    port: 4000,
+    watch: {
+      usePolling: true
+    }
   },
   css: {
     devSourcemap: true
