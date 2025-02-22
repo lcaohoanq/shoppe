@@ -36,55 +36,52 @@ public class WebSecurityConfig {
     private String apiPrefix;
 
     private final String[] publicEndpoints = {
-        "/graphiql",
-        "/graphql",
-        "/error",
-        "/v3/api-docs/**",
-        "/v3/api-docs.yaml",
-        "/swagger-ui/**",
-        "/swagger-ui.html",
-        apiPrefix + "/swagger-ui/**",
-        apiPrefix + "/swagger-ui.html",
-        apiPrefix + "/api-docs/**"
+            "/graphiql",
+            "/graphql",
+            "/error",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            apiPrefix + "/swagger-ui/**",
+            apiPrefix + "/swagger-ui.html",
+            apiPrefix + "/api-docs/**"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .sessionManagement(session ->
-                                   session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers(
-                    String.format("%s/auth/login", apiPrefix),
-                    String.format("%s/auth/register", apiPrefix),
-                    String.format("%s/roles/**", apiPrefix),
-                    String.format("%s/users", apiPrefix),
-                    String.format("%s/forgot-password", apiPrefix),
-                    String.format("%s/categories/**", apiPrefix),
-                    String.format("%s/products/**", apiPrefix),
-                    String.format("%s/product-images/**", apiPrefix),
-                    String.format("%s/forgot-password/**", apiPrefix),
-                    String.format("%s/orders-details/**", apiPrefix),
-                    String.format("%s/orders/**", apiPrefix),
-                    String.format("%s/assets/**", apiPrefix),
-                    String.format("%s/carts/**", apiPrefix),
-                    String.format("%s/wallets/**", apiPrefix),
-                    String.format("%s/warehouses/**", apiPrefix),
-                    String.format("%s/payments/**", apiPrefix),
-                    String.format("%s/headquarters/**", apiPrefix)
-                    ).permitAll()
-                // Swagger UI with basic auth
-                .requestMatchers(publicEndpoints).permitAll()
-                .anyRequest().authenticated()
-            )
-            .csrf(AbstractHttpConfigurer::disable)
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
-            );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
+                        .requestMatchers(
+                                String.format("%s/auth/login", apiPrefix),
+                                String.format("%s/auth/register", apiPrefix),
+                                String.format("%s/roles/**", apiPrefix),
+                                String.format("%s/users", apiPrefix),
+                                String.format("%s/forgot-password", apiPrefix),
+                                String.format("%s/categories/**", apiPrefix),
+                                String.format("%s/products/**", apiPrefix),
+                                String.format("%s/product-images/**", apiPrefix),
+                                String.format("%s/forgot-password/**", apiPrefix),
+                                String.format("%s/orders-details/**", apiPrefix),
+                                String.format("%s/orders/**", apiPrefix),
+                                String.format("%s/assets/**", apiPrefix),
+                                String.format("%s/carts/**", apiPrefix),
+                                String.format("%s/wallets/**", apiPrefix),
+                                String.format("%s/warehouses/**", apiPrefix),
+                                String.format("%s/payments/**", apiPrefix),
+                                String.format("%s/headquarters/**", apiPrefix))
+                        .permitAll()
+                        // Swagger UI with basic auth
+                        .requestMatchers(publicEndpoints).permitAll()
+                        .anyRequest().authenticated())
+                .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler));
 
         return http.build();
     }
@@ -92,7 +89,8 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4000"));
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:4000", "https://shoppe-git-develop-lcaohoanqs-projects.vercel.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("*"));
@@ -103,4 +101,3 @@ public class WebSecurityConfig {
         return source;
     }
 }
-

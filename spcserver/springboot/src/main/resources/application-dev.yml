@@ -1,4 +1,5 @@
 server:
+  adress: 0.0.0.0
   port: 8080
   error:
     include-message: always
@@ -37,16 +38,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
-
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: ${GOOGLE_OAUTH2_CLIENT_ID}
-            clientSecret: ${GOOGLE_OAUTH2_CLIENT_SECRET}
+    username: ${MAIL_USERNAME:lvhhoangg1@gmail.com}
+    password: ${MAIL_PASSWORD:wrongpassword}
   
   kafka:
     bootstrap-servers: localhost:9092
@@ -79,12 +72,12 @@ spring:
 
 alert:
   manager:
-    emails: ${ALERT_MANAGER_EMAILS}
+    emails: ${ALERT_MANAGER_EMAILS:hoangclw@gmail.com,manhduonglhp4@gmail.com}
 
 jwt:
-  expiration: ${JWT_EXPIRATION}
-  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN}
-  secretKey: ${JWT_SECRET_KEY}
+  expiration: ${JWT_EXPIRATION:2592000}
+  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN:5184000}
+  secretKey: ${JWT_SECRET_KEY:TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=}
 
 logging:
   level:
@@ -117,11 +110,11 @@ management:
 
 vnpay:
   api:
-    vnp_Version: ${VNPAY_VERSION}
-    vnp_Command: ${VNPAY_COMMAND}
-    vnp_OrderType: ${VNPAY_ORDER_TYPE}
-    vnp_PayUrl: ${VNPAY_PAY_URL}
-    vnp_Returnurl: ${VNPAY_RETURN_URL}
-    vnp_TmnCode: ${VNPAY_TMN_CODE}
-    vnp_HashSecret: ${VNPAY_HASH_SECRET}
-    vnp_apiUrl: ${VNPAY_API_URL}
+    vnp_Version: ${VNPAY_VERSION:2.0.0}
+    vnp_Command: ${VNPAY_COMMAND:pay}
+    vnp_OrderType: ${VNPAY_ORDER_TYPE:billpayment}
+    vnp_PayUrl: ${VNPAY_PAY_URL:https://sandbox.vnpayment.vn/paymentv2/vpcpay.html}
+    vnp_Returnurl: ${VNPAY_RETURN_URL:http://localhost:4000/api/v1/payments/vnpay/payment_return}
+    vnp_TmnCode: ${VNPAY_TMN_CODE:XM1B4C8V}
+    vnp_HashSecret: ${VNPAY_HASH_SECRET:JC3DPNWE1FO1PE8441MVDMCB77N16S71}
+    vnp_apiUrl: ${VNPAY_API_URL:https://sandbox.vnpayment.vn/merchant_webapi/api/transaction}
