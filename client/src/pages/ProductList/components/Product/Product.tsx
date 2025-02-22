@@ -8,7 +8,7 @@ interface Props {
   product: ProductType
 }
 
-export default function Product({ product }: Props) {
+export default function ProductPage({ product }: Props) {
   return (
     <Link to={`${path.home}${product.id}`}>
       <div className='overflow-hidden rounded-sm bg-white shadow transition-transform duration-100 hover:translate-y-[-0.04rem] hover:shadow-md'>

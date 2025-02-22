@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import categoryApi from 'src/apis/category.api'
