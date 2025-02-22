@@ -1,5 +1,11 @@
 name: Continuous Deployment
 
+# top-level permissions
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
 on:
   push:
     branches:
@@ -9,15 +15,19 @@ on:
       - 'docs/**'
 
 jobs:
-  # Job 1: Checkout and create .env file
   create-env:
     runs-on: self-hosted
+    # Add job-level permissions if needed
+    permissions:
+      contents: read
+      
     outputs:
       env-file: ${{ steps.create-env.outputs.env-file }}
+    
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4  # Pin to specific version
+        
       - name: Create .env file
         id: create-env
         working-directory: docker
@@ -28,7 +38,7 @@ jobs:
           echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-
+          
       - name: Create .env file
         id: create-env-spcserver-springboot
         working-directory: spcserver/springboot
@@ -51,12 +61,15 @@ jobs:
   cache-maven:
     runs-on: self-hosted
     needs: create-env
+    permissions:
+      contents: read
+      
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4  # Updated to v4
+        
       - name: Cache Maven dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v3.3.2  # Pin to specific version
         with:
           path: ~/.m2/repository
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
@@ -67,48 +80,54 @@ jobs:
   run-docker-compose:
     runs-on: self-hosted
     needs: cache-maven
+    permissions:
+      contents: read
+      
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4  # Updated to v4
+        
       - name: Docker stop old container
         run: docker container stop shoppe || true
-
+        
       - name: Docker Compose Up
         run: docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
-  
-  # Job 3: Build Docker image
+
   build-docker:
     runs-on: self-hosted
     needs: [ create-env , cache-maven ]
+    permissions:
+      contents: read
+      
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4  # Updated to v4
+        
       - name: Build Docker image
         run: docker build -f docker/Dockerfile-SpringBoot -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest .
 
-  # Job 4: Push image to Docker Hub
   push-docker-image:
     runs-on: self-hosted
     needs: build-docker
+    permissions:
+      contents: read
+      packages: write  # For Docker push
+      
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          node-version: '20'
-
+        uses: actions/checkout@v4  # Updated to v4
+        
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
+        uses: docker/setup-buildx-action@v3.0.0  # Pin to specific version
+        
       - name: Log in to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v3.0.0  # Pin to specific version
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+          
       - name: Push built image to DockerHub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/shoppe:latest
-
+        
       - name: Log out from DockerHub
         run: docker logout
