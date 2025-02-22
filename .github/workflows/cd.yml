@@ -92,6 +92,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4 # Updated to v4
 
+      - name: Copy .env file
+        run: cp spcserver/springboot/.env /DATA/actions-runner/_work/shoppe/shoppe/spcserver/springboot/.env
+
+      - name: Verify .env file exist
+        run: ls -al /DATA/actions-runner/_work/shoppe/shoppe/spcserver/springboot
+
       - name: Build Docker image
         run: docker build -f spcserver/springboot/Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest spcserver/springboot
 
