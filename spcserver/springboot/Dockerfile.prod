@@ -3,13 +3,13 @@ FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
 # Copy the pom.xml from spcserver/springboot to /app
-COPY ../spcserver/springboot/pom.xml .
+COPY ./pom.xml .
 
 # Download dependencies (caching this layer)
 RUN mvn dependency:go-offline
 
 # Copy the rest of the source code from spcserver/springboot
-COPY ../spcserver/springboot .
+COPY .. .
 
 # Build the project
 RUN mvn clean package -DskipTests

@@ -11,8 +11,8 @@ on:
     branches:
       - develop
     paths-ignore:
-      - '**.md'
-      - 'docs/**'
+      - "**.md"
+      - "docs/**"
 
 jobs:
   create-env:
@@ -20,14 +20,14 @@ jobs:
     # Add job-level permissions if needed
     permissions:
       contents: read
-      
+
     outputs:
       env-file: ${{ steps.create-env.outputs.env-file }}
-    
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Pin to specific version
-        
+        uses: actions/checkout@v4 # Pin to specific version
+
       - name: Create .env file
         id: create-env
         working-directory: docker
@@ -38,7 +38,7 @@ jobs:
           echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-          
+
       - name: Create .env file
         id: create-env-spcserver-springboot
         working-directory: spcserver/springboot
@@ -54,7 +54,7 @@ jobs:
           echo "JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }}" >> .env
           echo "JWT_EXPIRATION_REFRESH_TOKEN=${{ secrets.JWT_EXPIRATION_REFRESH_TOKEN }}" >> .env
           echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-            
+
       - name: Verify .env file creation
         run: ls -al docker && ls -al spcserver/springboot
 
@@ -63,13 +63,13 @@ jobs:
     needs: create-env
     permissions:
       contents: read
-      
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Updated to v4
-        
+        uses: actions/checkout@v4 # Updated to v4
+
       - name: Cache Maven dependencies
-        uses: actions/cache@v3.3.2  # Pin to specific version
+        uses: actions/cache@v3.3.2 # Pin to specific version
         with:
           path: ~/.m2/repository
           key: maven-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
@@ -82,52 +82,52 @@ jobs:
     needs: cache-maven
     permissions:
       contents: read
-      
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Updated to v4
-        
+        uses: actions/checkout@v4 # Updated to v4
+
       - name: Docker stop old container
-        run: docker container stop shoppe || true
-        
+        run: docker container stop shoppe_spcserver || true
+
       - name: Docker Compose Up
-        run: docker compose -f docker/docker-compose-prod.yml up -d --build --remove-orphans
+        run: docker compose -f spcserver/springboot/docker-compose-prod.yml up -d --build --remove-orphans
 
   build-docker:
     runs-on: self-hosted
-    needs: [ create-env , cache-maven ]
+    needs: [create-env, cache-maven]
     permissions:
       contents: read
-      
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4  # Updated to v4
-        
+        uses: actions/checkout@v4 # Updated to v4
+
       - name: Build Docker image
-        run: docker build -f docker/Dockerfile-SpringBoot -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest .
+        run: docker build -f spcserver/springboot/Dockerfile-SpringBoot -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest .
 
   push-docker-image:
     runs-on: self-hosted
     needs: build-docker
     permissions:
       contents: read
-      packages: write  # For Docker push
-      
+      packages: write # For Docker push
+
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4  # Updated to v4
-        
+        uses: actions/checkout@v4 # Updated to v4
+
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.0.0  # Pin to specific version
-        
+        uses: docker/setup-buildx-action@v3.0.0 # Pin to specific version
+
       - name: Log in to DockerHub
-        uses: docker/login-action@v3.0.0  # Pin to specific version
+        uses: docker/login-action@v3.0.0 # Pin to specific version
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
+
       - name: Push built image to DockerHub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/shoppe:latest
-        
+
       - name: Log out from DockerHub
         run: docker logout
