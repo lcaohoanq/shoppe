@@ -76,16 +76,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4 # Updated to v4
 
-      - name: Copy .env
-        working-directory: spcserver/springboot
-        run: cp .env /DATA/actions-runner/_work/shoppe/shoppe/spcserver/springboot/.env
+      #- name: Copy .env
+      #  working-directory: spcserver/springboot
+      #  run: cp .env /DATA/actions-runner/_work/shoppe/shoppe/spcserver/springboot/.env
 
       - name: Docker stop old container
         run: docker container stop shoppe_spcserver || true
 
       - name: Docker Compose Up
-        working-directory: spcserver/springboot
-        run: docker compose -f docker-compose-prod.yml up -d --build --remove-orphans
+        #working-directory: spcserver/springboot
+        run: docker compose -f spcserver/springboot/docker-compose-prod.yml up -d --build --remove-orphans
 
   build-docker:
     runs-on: self-hosted
@@ -98,8 +98,7 @@ jobs:
         uses: actions/checkout@v4 # Updated to v4
 
       - name: Build Docker image
-        working-directory: spcserver/springboot
-        run: docker build -f Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest spcserver/springboot
+        run: docker build -f spcserver/springboot/Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest spcserver/springboot
 
   push-docker-image:
     runs-on: self-hosted
