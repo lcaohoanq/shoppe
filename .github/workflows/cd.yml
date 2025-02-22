@@ -49,7 +49,7 @@ jobs:
         run: ls -al docker && ls -al spcserver/springboot
 
   cache-maven:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs: create-env
     steps:
       - name: Checkout code
@@ -65,7 +65,7 @@ jobs:
             maven-
 
   run-docker-compose:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs: cache-maven
     steps:
       - name: Checkout code
@@ -79,7 +79,7 @@ jobs:
   
   # Job 3: Build Docker image
   build-docker:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs: [ create-env , cache-maven ]
     steps:
       - name: Checkout code
@@ -90,7 +90,7 @@ jobs:
 
   # Job 4: Push image to Docker Hub
   push-docker-image:
-    runs-on: ubuntu-24.04
+    runs-on: self-hosted
     needs: build-docker
     steps:
       - name: Checkout Code
