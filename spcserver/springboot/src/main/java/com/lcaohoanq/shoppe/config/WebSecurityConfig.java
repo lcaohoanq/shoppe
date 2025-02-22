@@ -89,11 +89,38 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("*"));
-        //configuration.setAllowCredentials(true);
+
+        // Allow your Vercel domain and localhost for development
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://shoppe-git-develop-lcaohoanqs-projects.vercel.app",
+                "http://localhost:4000",
+                "http://localhost:5173"));
+
+        // Allow common HTTP methods
+        configuration.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
+
+        // Allow all headers
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With",
+                "Accept",
+                "Origin",
+                "Access-Control-Request-Method",
+                "Access-Control-Request-Headers"));
+
+        // Allow cookies if needed
+        configuration.setAllowCredentials(true);
+
+        // Expose headers that might be needed by the client
+        configuration.setExposedHeaders(Arrays.asList(
+                "Access-Control-Allow-Origin",
+                "Access-Control-Allow-Credentials",
+                "Authorization"));
+
+        // How long the browser should cache the CORS response
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
