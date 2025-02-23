@@ -1,6 +1,8 @@
 import { Divider, Typography } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import API_URL from 'src/env/env.config'
+import ENV from 'src/env/env.config'
 
 type SubcategoryResponse = {
   id: number
@@ -31,7 +33,7 @@ function CategoryList() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get<ApiResponse<CategoryResponse[]>>('http://localhost:8080/api/v1/categories')
+        const response = await axios.get<ApiResponse<CategoryResponse[]>>(`${API_URL}/categories`)
         setCategories(response.data.data)
       } catch (error) {
         console.error('Failed to fetch categories: ', error)
