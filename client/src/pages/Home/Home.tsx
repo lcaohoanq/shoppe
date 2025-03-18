@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material'
+import { Box, Card, CardActions, CardContent, Container, Divider, Typography } from '@mui/material'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Loading from 'src/components/Loading'
@@ -98,30 +98,57 @@ export default function Home() {
   }, [])
 
   return (
-    <>
-      <div>
-        <div className='m-40'>
-          {data ? (
-            <div className='grid grid-cols-6'>
-              {data.map((product) => (
-                <div className='mb-3 p-3' key={product.id}>
-                  <h1>{product.name}</h1>
-                  <p>{product.description}</p>
-                  <p>Price: ${product.price}</p>
-                  <p>Sold: {product.sold ? 'Yes' : 'No'}</p>
-                  <p>Rating: {product.rating}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <Loading />
-          )}
-          <div className='bg-[#808080]'>
-            <p className='text text-center text-3xl mb-3 text-[#FFA500]'>Goi y hom nay</p>
-            <Divider />
-          </div>
-        </div>
-      </div>
-    </>
+    <Container maxWidth='lg' sx={{ mt: 3 }}>
+      {data ? (
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gap: 2
+          }}
+        >
+          {data.map((product) => (
+            <Card
+              sx={{
+                ':hover': {
+                  border: '1px solid #f53d2d'
+                }
+              }}
+              key={product.id}
+            >
+              <CardContent>
+                <Box
+                  component='img'
+                  sx={{
+                    height: 233,
+                    width: 350,
+                    maxHeight: { xs: 233, md: 167 },
+                    maxWidth: { xs: 350, md: 250 }
+                  }}
+                  alt='The house from the offer.'
+                  src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
+                />
+                <Typography variant='h5' component='div'>
+                  {product.name}
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  {product.description}
+                </Typography>
+                <Typography variant='body1'>Price: ${product.price}</Typography>
+                <Typography variant='body1'>Sold: {product.sold ? 'Yes' : 'No'}</Typography>
+                <Typography variant='body1'>Rating: {product.rating}</Typography>
+              </CardContent>
+              <CardActions>{/* Add actions here if needed */}</CardActions>
+            </Card>
+          ))}
+        </Box>
+      ) : (
+        <Loading />
+      )}
+      <Box className='bg-[#808080]'>
+        <p className='text text-center text-3xl mb-3 text-[#FFA500]'>Goi y hom nay</p>
+        <Divider />
+      </Box>
+    </Container>
   )
 }

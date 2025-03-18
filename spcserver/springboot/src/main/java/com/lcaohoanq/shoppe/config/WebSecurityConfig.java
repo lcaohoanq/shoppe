@@ -101,23 +101,10 @@ public class WebSecurityConfig {
                 "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
 
         // Allow all headers
-        configuration.setAllowedHeaders(Arrays.asList(
-                "Authorization",
-                "Content-Type",
-                "X-Requested-With",
-                "Accept",
-                "Origin",
-                "Access-Control-Request-Method",
-                "Access-Control-Request-Headers"));
+        configuration.addAllowedHeader("*");
 
         // Allow cookies if needed
         configuration.setAllowCredentials(true);
-
-        // Expose headers that might be needed by the client
-        configuration.setExposedHeaders(Arrays.asList(
-                "Access-Control-Allow-Origin",
-                "Access-Control-Allow-Credentials",
-                "Authorization"));
 
         // How long the browser should cache the CORS response
         configuration.setMaxAge(3600L);

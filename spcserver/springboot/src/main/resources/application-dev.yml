@@ -24,9 +24,9 @@ spring:
       location: uploads
 
   datasource:
-    url: jdbc:postgresql://192.168.88.154:5432/shoppe
-    username: ${POSTGRES_USER:PROD_DB_DEV_USER}
-    password: ${POSTGRES_PASSWORD:PROD_DB_DEV_PASSWORD}
+    url: jdbc:postgresql://192.168.88.155:5432/shoppe
+    username: ${POSTGRES_USER:casaos}
+    password: ${POSTGRES_PASSWORD:casaos}
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -69,7 +69,8 @@ spring:
       allowed-origins: "*"
       allowed-methods: GET,POST,PUT,DELETE,OPTIONS
       allowed-headers: "*"
-      allow-credentials: true
+      allow-credentials: false
+      max-age: 3600
 
 alert:
   manager:
