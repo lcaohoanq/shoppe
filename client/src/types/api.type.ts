@@ -3,5 +3,5 @@ export type ApiResponse<Data> = {
   data: Data
   status_code: number
   is_success: boolean
-  reason: string
+  reason?: string
 }

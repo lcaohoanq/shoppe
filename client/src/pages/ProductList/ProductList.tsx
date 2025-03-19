@@ -10,11 +10,13 @@ import { ProductListConfig } from 'src/types/product.type'
 import AsideFilter from './components/AsideFilter'
 import Product from './components/Product/Product'
 import SortProductList from './components/SortProductList'
+import useCategories from 'src/hooks/useCategories'
+import Loading from 'src/components/Loading'
 
 export default function ProductList() {
   const queryConfig = useQueryConfig()
 
-  const { data: productsData } = useQuery({
+  const { data: productsData, isLoading } = useQuery({
     queryKey: ['products', queryConfig],
     queryFn: () => {
       return productApi.getProducts(queryConfig as ProductListConfig)
@@ -23,16 +25,9 @@ export default function ProductList() {
     staleTime: 3 * 60 * 1000
   })
 
-  const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => {
-      return categoryApi.getCategories()
-    }
-  })
+  const { data: categoriesData } = useCategories()
 
-  // Debugging: log the categoryData and productData
-  console.log('categoriesData:', categoriesData?.data.data)
-  console.log('productsData:', productsData)
+  if (isLoading) return <Loading />
 
   return (
     <div className='bg-gray-200 py-6'>
@@ -44,7 +39,7 @@ export default function ProductList() {
         {productsData && (
           <div className='grid grid-cols-12 gap-6'>
             <div className='col-span-3'>
-              <AsideFilter queryConfig={queryConfig} categories={categoriesData?.data.data || []} />
+              <AsideFilter queryConfig={queryConfig} categories={categoriesData || []} />
             </div>
             <div className='col-span-9'>
               <SortProductList queryConfig={queryConfig} pageSize={productsData.data.pagination.page_size} />

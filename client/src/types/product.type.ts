@@ -42,3 +42,12 @@ export type ProductListConfig = {
   name?: string
   category?: string
 }
+
+export type ProductResponse = {
+  id: string
+  name: string
+  description: string
+  price: number
+  sold: boolean
+  rating: number
+}

@@ -1,9 +1,10 @@
 import { Link } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import API_URL from 'src/env/env.config'
+import { API_URL } from 'src/env/env.config'
 import Loading from '../Loading'
-import CategoryList, { ApiResponse } from './CategoryList'
+import CategoryList from './CategoryList'
+import { ApiResponse } from 'src/types/api.type'
 
 type HeadQuarter = {
   id: number

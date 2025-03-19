@@ -1,23 +1,9 @@
-import { Box, Card, CardActions, CardContent, Container, Divider, Grid, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { CategoryResponse } from 'src/components/Footer/CategoryList'
+import { Box, Card, CardActions, CardContent, Container, Divider, Typography } from '@mui/material'
 import HomeShoppeMall from 'src/components/Grid/HomeShoppeMall/HomeShoppeMall'
 import HomeSlider from 'src/components/HomeSlider/HomeSlider'
 import Loading from 'src/components/Loading'
 import HomeCategorySlider from 'src/components/Slider/HomeCategorySlider/HomeCategorySlider'
-import CategoryGridSlider from 'src/components/Slider/HomeCategorySlider/HomeCategorySlider'
-import API_URL from 'src/env/env.config'
-import { ApiResponse } from 'src/types/api.type'
-
-type ProductResponse = {
-  id: string
-  name: string
-  description: string
-  price: number
-  sold: boolean
-  rating: number
-}
+import useProducts from 'src/hooks/useProducts'
 
 const images = [
   {
@@ -50,26 +36,8 @@ const images = [
   }
 ]
 
-const fetchProducts = async () => {
-  const response = await axios.post<{ data: { products: ProductResponse[] } }>('http://localhost:8080/graphql', {
-    query: ` 
-        query {
-          products {
-            id
-            name
-            description
-            price
-            sold
-            rating
-          }
-        }
-      `
-  })
-  return response.data.data.products
-}
-
 export default function Home() {
-  const { data: products, error, isLoading } = useQuery<ProductResponse[]>(['products'], fetchProducts)
+  const { data: products, error, isLoading } = useProducts()
 
   if (isLoading) return <Loading />
   if (error) return <div>Error loading products...</div>
