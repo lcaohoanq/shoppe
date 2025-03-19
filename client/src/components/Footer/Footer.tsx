@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
-import CategoryList, { ApiResponse } from './CategoryList'
-import axios from 'axios'
 import { Link } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import API_URL from 'src/env/env.config'
+import Loading from '../Loading'
+import CategoryList, { ApiResponse } from './CategoryList'
 
 type HeadQuarter = {
   id: number
@@ -12,20 +14,13 @@ type HeadQuarter = {
 }
 
 export default function Footer() {
-  const [headQuarters, setHeadQuarters] = useState<HeadQuarter[]>([])
+  const { data, isLoading, error } = useQuery<HeadQuarter[]>(['headQuarters'], async () => {
+    const response = await axios.get<ApiResponse<HeadQuarter[]>>(`${API_URL}/headquarters`)
+    return response.data.data
+  })
 
-  useEffect(() => {
-    const fetchHeadQuarters = async () => {
-      try {
-        const response = await axios.get<ApiResponse<HeadQuarter[]>>('http://localhost:8080/api/v1/headquarters')
-        setHeadQuarters(response.data.data)
-      } catch (error) {
-        console.error('Failed to fetch head quarters', error)
-      }
-    }
-
-    fetchHeadQuarters()
-  }, [])
+  if (isLoading) return <Loading />
+  if (error) return <div>Something went wrong</div>
 
   return (
     <footer className='bg-neutral-100 py-16'>
@@ -38,11 +33,12 @@ export default function Footer() {
           <div className='lg:col-span-2'>
             <div>
               Quốc gia & Khu vực:{' '}
-              {headQuarters.map((headQuarter) => (
-                <Link key={headQuarter.id} href={headQuarter.domain_url} target='_blank' rel='noreferrer'>
-                  {headQuarter.region} |{' '}
-                </Link>
-              ))}
+              {data &&
+                data.map((headQuarter) => (
+                  <Link key={headQuarter.id} href={headQuarter.domain_url} target='_blank' rel='noreferrer'>
+                    {headQuarter.region} |{' '}
+                  </Link>
+                ))}
             </div>
           </div>
         </div>

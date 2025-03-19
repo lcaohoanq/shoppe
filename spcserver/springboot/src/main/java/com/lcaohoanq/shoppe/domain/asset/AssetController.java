@@ -1,5 +1,8 @@
 package com.lcaohoanq.shoppe.domain.asset;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,27 +32,41 @@ public class AssetController {
 
     @GetMapping("/images/{filename:.+}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Resource> serveImage(@PathVariable String filename) throws IOException {
+    public ResponseEntity<Resource> serveImage(
+        @PathVariable
+        @Parameter(description = "Example image", required =
+            true,
+            content = @Content(examples = @ExampleObject(
+                value = "2dc73f81-2a42-4924-a580-76209df6a4db_DSCF1023.JPG",
+                description = "The name of the image file"
+            ))
+        )
+        String filename) throws IOException {
         Path filePath = Paths.get(imageDirectory).resolve(filename).normalize();
         Resource resource = new UrlResource(filePath.toUri());
 
-        if (resource.exists() && resource.isReadable()) {
-            // Automatically determine the content type
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream"; // Fallback to binary stream if unknown
-            }
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
-
-            return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .headers(headers)
-                .body(resource);
-        } else {
+        if (!resource.exists()) {
             throw new IOException("File not found: " + filename);
         }
+
+        if (!resource.isReadable()) {
+            throw new IOException("File is not readable: " + filename);
+        }
+
+        // Automatically determine the content type
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream"; // Fallback to binary stream if unknown
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"");
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .headers(headers)
+            .body(resource);
+
     }
 
 }

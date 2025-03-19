@@ -5,6 +5,6 @@ declare module 'i18next' {
   // Kế thừa (thêm vào type)
   interface CustomTypeOptions {
     defaultNS: typeof defaultNS
-    resources: typeof resources['vi']
+    resources: (typeof resources)['vi']
   }
 }

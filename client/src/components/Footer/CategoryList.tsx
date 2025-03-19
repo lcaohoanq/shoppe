@@ -1,8 +1,8 @@
 import { Divider, Typography } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
 import API_URL from 'src/env/env.config'
-import ENV from 'src/env/env.config'
+import Loading from '../Loading'
 
 type SubcategoryResponse = {
   id: number
@@ -12,7 +12,7 @@ type SubcategoryResponse = {
   updated_at: string
 }
 
-type CategoryResponse = {
+export type CategoryResponse = {
   id: number
   name: string
   subcategories: SubcategoryResponse[]
@@ -28,20 +28,13 @@ export type ApiResponse<T> = {
 }
 
 function CategoryList() {
-  const [categories, setCategories] = useState<CategoryResponse[]>([])
+  const { data, isLoading, error } = useQuery<CategoryResponse[]>(['categories'], async () => {
+    const response = await axios.get<ApiResponse<CategoryResponse[]>>(`${API_URL}/categories`)
+    return response.data.data
+  })
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get<ApiResponse<CategoryResponse[]>>(`${API_URL}/categories`)
-        setCategories(response.data.data)
-      } catch (error) {
-        console.error('Failed to fetch categories: ', error)
-      }
-    }
-
-    fetchCategories()
-  }, [])
+  if (isLoading) return <Loading />
+  if (error) return <div>Something went wrong</div>
 
   return (
     <div>
@@ -60,22 +53,25 @@ function CategoryList() {
         Danh Mục
       </Typography>
       <div className='grid grid-cols-5 gap-6'>
-        {categories.map((category) => (
-          <div key={category.id} className='p-4'>
-            <Typography
-              variant='body2'
-              className=' text-gray-500'
-              sx={{
-                fontWeight: 'bold',
-                margin: '1rem 0 0.5rem 0'
-              }}
-            >
-              {category.name}
-            </Typography>
+        {data &&
+          data.map((category) => (
+            <div key={category.id} className='p-4'>
+              <Typography
+                variant='body2'
+                className=' text-gray-500'
+                sx={{
+                  fontWeight: 'bold',
+                  margin: '1rem 0 0.5rem 0'
+                }}
+              >
+                {category.name}
+              </Typography>
 
-            <p className='text-gray-700'>{category.subcategories.map((subcategory) => subcategory.name).join(' | ')}</p>
-          </div>
-        ))}
+              <p className='text-gray-700'>
+                {category.subcategories.map((subcategory) => subcategory.name).join(' | ')}
+              </p>
+            </div>
+          ))}
       </div>
     </div>
   )

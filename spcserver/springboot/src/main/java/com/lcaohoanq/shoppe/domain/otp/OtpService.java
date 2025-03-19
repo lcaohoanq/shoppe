@@ -14,7 +14,7 @@ public class OtpService implements IOtpService{
     private final OtpRepository otpRepository;
 
     @Override
-    public Otp createOtp(Otp otp) {
+    public void createOtp(Otp otp) {
         Otp newOtp = Otp.builder()
                 .email(otp.getEmail())
                 .otp(otp.getOtp())
@@ -22,7 +22,7 @@ public class OtpService implements IOtpService{
                 .isUsed(otp.isUsed())
                 .isExpired(otp.isExpired())
                 .build();
-        return otpRepository.save(newOtp);
+        otpRepository.save(newOtp);
     }
 
     @Override

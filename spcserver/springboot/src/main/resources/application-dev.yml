@@ -1,5 +1,5 @@
 server:
-  adress: 0.0.0.0
+  address: 0.0.0.0
   port: 8080
   error:
     include-message: always
@@ -24,7 +24,7 @@ spring:
       location: uploads
 
   datasource:
-    url: jdbc:postgresql://192.168.88.155:5432/shoppe
+    url: jdbc:postgresql://zimacube.tail21fc44.ts.net:5432/shoppe
     username: ${POSTGRES_USER:casaos}
     password: ${POSTGRES_PASSWORD:casaos}
 
