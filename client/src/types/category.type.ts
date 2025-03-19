@@ -16,7 +16,7 @@ type SubcategoryResponse = {
 export type CategoryResponse = {
   id: number
   name: string
-  subcategories: SubcategoryResponse[]
-  created_at: string
-  updated_at: string
+  subcategories?: SubcategoryResponse[]
+  created_at?: string
+  updated_at?: string
 }

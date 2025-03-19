@@ -47,7 +47,7 @@ export type ProductResponse = {
   id: string
   name: string
   description: string
-  price: number
+  price_before_discount: number
   sold: boolean
   rating: number
 }

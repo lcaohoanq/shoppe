@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { GRAPHQL_URL } from 'src/env/env.config'
+import { API_URL, GRAPHQL_URL } from 'src/env/env.config'
+import { ApiResponse } from 'src/types/api.type'
 import { ProductResponse } from 'src/types/product.type'
 
-const fetchProducts = async () => {
+const fetchProducts_GRAPHQL = async () => {
   const response = await axios.post<{ data: { products: ProductResponse[] } }>(`${GRAPHQL_URL}`, {
     query: ` 
         query {
@@ -21,8 +22,13 @@ const fetchProducts = async () => {
   return response.data.data.products
 }
 
+const fetchProducts_REST = async (): Promise<ProductResponse[]> => {
+  const response = await axios.get<ApiResponse<ProductResponse[]>>(`/products?page=1&limit=60`)
+  return response.data.data
+}
+
 const useProducts = () => {
-  return useQuery<ProductResponse[]>({ queryKey: ['productsHome'], queryFn: fetchProducts })
+  return useQuery({ queryKey: ['productsHome'], queryFn: fetchProducts_REST })
 }
 
 export default useProducts

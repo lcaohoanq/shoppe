@@ -138,7 +138,7 @@ export default function Home() {
                 <Typography variant='body2' color='text.secondary'>
                   {product.description}
                 </Typography>
-                <Typography variant='body1'>Price: ${product.price}</Typography>
+                <Typography variant='body1'>Price: ${product.price_before_discount}</Typography>
                 <Typography variant='body1'>Sold: {product.sold ? 'Yes' : 'No'}</Typography>
                 <Typography variant='body1'>Rating: {product.rating}</Typography>
               </CardContent>

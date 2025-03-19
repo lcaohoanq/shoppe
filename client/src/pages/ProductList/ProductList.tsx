@@ -14,24 +14,24 @@ import useCategories from 'src/hooks/useCategories'
 import Loading from 'src/components/Loading'
 
 export default function ProductList() {
-  const queryConfig = useQueryConfig()
+  // const queryConfig = useQueryConfig()
 
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', queryConfig],
-    queryFn: () => {
-      return productApi.getProducts(queryConfig as ProductListConfig)
-    },
-    keepPreviousData: true,
-    staleTime: 3 * 60 * 1000
-  })
+  // const { data: productsData, isLoading } = useQuery({
+  //   queryKey: ['products', queryConfig],
+  //   queryFn: () => {
+  //     return productApi.getProducts(queryConfig as ProductListConfig)
+  //   },
+  //   keepPreviousData: true,
+  //   staleTime: 3 * 60 * 1000
+  // })
 
-  const { data: categoriesData } = useCategories()
+  // const { data: categoriesData } = useCategories()
 
-  if (isLoading) return <Loading />
+  // if (isLoading) return <Loading />
 
   return (
     <div className='bg-gray-200 py-6'>
-      <Helmet>
+      {/* <Helmet>
         <title>Trang chủ | Shopee Clone</title>
         <meta name='description' content='Trang chủ dự án Shopee Clone' />
       </Helmet>
@@ -54,7 +54,7 @@ export default function ProductList() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }
