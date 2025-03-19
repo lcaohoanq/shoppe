@@ -1,39 +1,20 @@
-import React, { useEffect, useState } from "react";
+import useProfiles from "@/hooks/useProfiles";
+import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  Linking,
-  TouchableOpacity,
   ActivityIndicator,
+  FlatList,
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import axios from "axios";
-import { Profile } from "@/types";
 
 export default function ProfileScreen() {
-  const [sampleData, setSampleData] = useState<Profile[]>([]);
-  const [loading, setLoading] = useState(true); // State for loading spinner
+  const { data, isLoading, error } = useProfiles();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<Profile[]>(
-          `https://6512cbd2b8c6ce52b3963937.mockapi.io/api/v1/profiles`
-        );
-        setSampleData(response.data); // Set the fetched data
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-      } finally {
-        setLoading(false); // Stop loading after the API call
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -43,7 +24,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      {sampleData.map((userProfile) => (
+      {data?.map((userProfile) => (
         <View key={userProfile.githubAccount} style={styles.profileContainer}>
           {/* User Avatar */}
           <Image
