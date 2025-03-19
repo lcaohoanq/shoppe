@@ -33,7 +33,7 @@ public class ProductRedisService implements IProductRedisService{
     }
 
     @Override
-    public List<ProductResponse> getAllProducts(String keyword,
+    public List<ProductPort.ProductResponse> getAllProducts(String keyword,
                                                 Long categoryId,
                                                 PageRequest pageRequest) throws JsonProcessingException {
 
@@ -43,7 +43,7 @@ public class ProductRedisService implements IProductRedisService{
         String key = this.getKeyFrom(keyword, categoryId, pageRequest);
         String json = (String) redisTemplate.opsForValue().get(key);
         return json != null ?
-            redisObjectMapper.readValue(json, new TypeReference<List<ProductResponse>>() {})
+            redisObjectMapper.readValue(json, new TypeReference<List<ProductPort.ProductResponse>>() {})
             : null;
     }
 
@@ -55,7 +55,7 @@ public class ProductRedisService implements IProductRedisService{
 
     @Override
     //save to Redis
-    public void saveAllProducts(List<ProductResponse> productResponses,
+    public void saveAllProducts(List<ProductPort.ProductResponse> productResponses,
                                 String keyword,
                                 Long categoryId,
                                 PageRequest pageRequest) throws JsonProcessingException {

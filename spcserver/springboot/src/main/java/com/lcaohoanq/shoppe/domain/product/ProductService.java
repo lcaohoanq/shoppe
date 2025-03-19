@@ -41,13 +41,13 @@ public class ProductService implements IProductService, PaginationConverter {
     ProductMapper productMapper;
 
     @Override
-    public PageResponse<ProductResponse> getAll(PageRequest pageRequest) {
+    public PageResponse<ProductPort.ProductResponse> getAll(PageRequest pageRequest) {
         Page<Product> productsPage = productRepository.findAll(pageRequest);
         return mapPageResponse(productsPage, pageRequest, productMapper::toProductResponse, "Get all products successfully");
     }
 
     @Override
-    public ProductResponse getById(long id) {
+    public ProductPort.ProductResponse getById(long id) {
         Optional<Product> product = productRepository.findById(id);
         if(product.orElseThrow(() -> new DataNotFoundException("Product not exist")) == null){
             throw new DataNotFoundException("Product not exist");
@@ -66,7 +66,7 @@ public class ProductService implements IProductService, PaginationConverter {
     }
 
     @Override
-    public ProductResponse create(ProductDTO productDTO) {
+    public ProductPort.ProductResponse create(ProductDTO productDTO) {
 
         Optional<Category> category = categoryRepository.findByName(productDTO.category());
 

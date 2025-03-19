@@ -22,7 +22,7 @@ public class ProductImageService implements IProductImageService,
 
     @Override
     public void create(long productId, String url) throws Exception {
-        ProductResponse productResponse =  productService.getById(productId);
+        ProductPort.ProductResponse productResponse =  productService.getById(productId);
 
         Product product = Product.builder()
             .id(productResponse.id())

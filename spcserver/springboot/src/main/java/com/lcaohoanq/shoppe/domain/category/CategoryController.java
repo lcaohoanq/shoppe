@@ -6,7 +6,7 @@ import com.lcaohoanq.shoppe.component.LocalizationUtils;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryDTO;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CreateNewSubcategoryResponse;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryDTO;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryResponse;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;

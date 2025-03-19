@@ -7,8 +7,9 @@ import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryDTO;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CreateNewSubcategoryResponse;
 import com.lcaohoanq.shoppe.domain.product.Product;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
 import com.lcaohoanq.shoppe.repository.ProductRepository;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.shoppe.domain.subcategory.Subcategory;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryDTO;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryResponse;
@@ -131,7 +132,7 @@ public class CategoryService implements ICategoryService, PaginationConverter {
     }
 
     @Override
-    public PageResponse<ProductResponse> findByCategoryId(Long categoryId, Pageable pageable) {
+    public PageResponse<ProductPort.ProductResponse> findByCategoryId(Long categoryId, Pageable pageable) {
         if(getById(categoryId) == null){
             throw new DataNotFoundException("Category not found");
         }

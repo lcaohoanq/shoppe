@@ -1,6 +1,7 @@
 package com.lcaohoanq.shoppe.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -99,26 +100,41 @@ public interface ProductPort {
         String name,
         String description,
 
+        @JsonIgnore
         List<ProductImageResponse> images,
 
+        @JsonIgnore
         CategoryResponse category,
         Double price,
+
+        @JsonIgnore
         @JsonProperty("shop_owner_id") Long shopOwnerId,
 
         @JsonProperty("price_before_discount")
         Double priceBeforeDiscount,
+
+        @JsonIgnore
         Integer quantity,
+
         Integer sold,
+
+        @JsonIgnore
         Integer view,
+
         Double rating,
 
+        @JsonIgnore
         @JsonProperty("status") ProductStatus status,
+
+        @JsonIgnore
         @JsonProperty("is_active") boolean isActive,
 
+        @JsonIgnore
         @JsonProperty("created_at")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
         LocalDateTime createdAt,
 
+        @JsonIgnore
         @JsonProperty("updated_at")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
         LocalDateTime updatedAt

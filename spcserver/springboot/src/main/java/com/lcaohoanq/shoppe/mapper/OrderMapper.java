@@ -5,7 +5,8 @@ import com.lcaohoanq.shoppe.domain.order.OrderDetail;
 import com.lcaohoanq.shoppe.domain.order.OrderDetailResponse;
 import com.lcaohoanq.shoppe.domain.order.OrderResponse;
 import com.lcaohoanq.shoppe.domain.product.Product;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import org.mapstruct.Mapper;
@@ -42,7 +43,7 @@ public interface OrderMapper {
     OrderDetailResponse toOrderDetailResponse(OrderDetail orderDetail);
 
     @Named("mapProductToProductResponse")
-    default ProductResponse mapProduct(Product product) {
+    default ProductPort.ProductResponse mapProduct(Product product) {
         return product == null ? null : Mappers.getMapper(ProductMapper.class).toProductResponse(product);
     }
 }

@@ -9,11 +9,11 @@ import org.springframework.data.domain.PageRequest;
 
 public interface IProductService {
 
-    PageResponse<ProductResponse> getAll(PageRequest pageRequest);
+    PageResponse<ProductPort.ProductResponse> getAll(PageRequest pageRequest);
 
-    ProductResponse create(ProductDTO productDTO);
+    ProductPort.ProductResponse create(ProductDTO productDTO);
 
-    ProductResponse getById(long id);
+    ProductPort.ProductResponse getById(long id);
 
     void delete(long id);
     

@@ -6,7 +6,7 @@ import com.lcaohoanq.shoppe.base.exception.DataNotFoundException;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryDTO;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CategoryResponse;
 import com.lcaohoanq.shoppe.domain.category.CategoryPort.CreateNewSubcategoryResponse;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryDTO;
 import com.lcaohoanq.shoppe.domain.subcategory.SubcategoryPort.SubcategoryResponse;
 import java.util.List;
@@ -21,5 +21,5 @@ public interface ICategoryService {
     void delete(long id);
     SubcategoryResponse getSubCategory(long subcategoryId) throws DataNotFoundException;
     CreateNewSubcategoryResponse createSubCategory(SubcategoryDTO subcategoryDTO) throws DataNotFoundException, DataAlreadyExistException;
-    PageResponse<ProductResponse> findByCategoryId(Long categoryId, Pageable pageable);
+    PageResponse<ProductPort.ProductResponse> findByCategoryId(Long categoryId, Pageable pageable);
 }

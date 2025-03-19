@@ -2,7 +2,7 @@ package com.lcaohoanq.shoppe.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

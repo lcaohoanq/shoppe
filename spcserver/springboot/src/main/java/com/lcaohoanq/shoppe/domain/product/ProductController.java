@@ -54,7 +54,7 @@ public class ProductController {
 
     @GetMapping("")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<PageResponse<ProductResponse>> getAll(
+    public ResponseEntity<PageResponse<ProductPort.ProductResponse>> getAll(
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "60") int limit
     ) {
@@ -67,11 +67,11 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(
+    public ResponseEntity<ApiResponse<ProductPort.ProductResponse>> getProductById(
         @PathVariable long id
     ) {
         return ResponseEntity.ok(
-            ApiResponse.<ProductResponse>builder()
+            ApiResponse.<ProductPort.ProductResponse>builder()
                 .message("Get Product success")
                 .isSuccess(true)
                 .statusCode(HttpStatus.OK.value())
@@ -82,7 +82,7 @@ public class ProductController {
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
+    public ResponseEntity<ApiResponse<ProductPort.ProductResponse>> createProduct(
         @Valid @RequestBody ProductDTO productDTO,
         BindingResult result
     ) {
@@ -92,7 +92,7 @@ public class ProductController {
         }
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(
-            ApiResponse.<ProductResponse>builder()
+            ApiResponse.<ProductPort.ProductResponse>builder()
                 .message("Create new product success")
                 .statusCode(HttpStatus.CREATED.value())
                 .isSuccess(true)
@@ -111,7 +111,7 @@ public class ProductController {
         @PathVariable("id") Long productId,
         @ModelAttribute("files") List<MultipartFile> files
     ) throws Exception {
-        ProductResponse existingProduct = productService.getById(productId);
+        ProductPort.ProductResponse existingProduct = productService.getById(productId);
         List<ProductImage> productImages = new ArrayList<>();
         for (MultipartFile file : fileStoreService.validateListProductImage(files)) {
             // Lưu file và cập nhật thumbnail trong DTO
@@ -146,12 +146,12 @@ public class ProductController {
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(
+    public ResponseEntity<ApiResponse<ProductPort.ProductResponse>> deleteProduct(
         @PathVariable long id
     ) {
         productService.delete(id);
         return ResponseEntity.ok(
-            ApiResponse.<ProductResponse>builder()
+            ApiResponse.<ProductPort.ProductResponse>builder()
                 .message("Delete product success")
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)

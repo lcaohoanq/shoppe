@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.shoppe.domain.cart.CartItem.CartItemStatus;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
 import java.time.LocalDateTime;
 
 @JsonPropertyOrder(
@@ -23,7 +23,7 @@ public record CartItemResponse(
     @JsonProperty("cart_id")
     Long cartId,
     @JsonProperty("product")
-    ProductResponse product,
+    ProductPort.ProductResponse product,
     @JsonProperty("quantity")
     int quantity,
     CartItemStatus status,

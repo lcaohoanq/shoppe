@@ -5,7 +5,8 @@ import com.lcaohoanq.shoppe.domain.cart.CartItem;
 import com.lcaohoanq.shoppe.domain.cart.CartItemResponse;
 import com.lcaohoanq.shoppe.domain.cart.CartResponse;
 import com.lcaohoanq.shoppe.domain.product.Product;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.shoppe.domain.user.User;
 import com.lcaohoanq.shoppe.domain.user.UserResponse;
 import org.mapstruct.Mapper;
@@ -65,7 +66,7 @@ public interface CartMapper {
     CartItemResponse toCartItemResponse(CartItem cartItem);
 
     @Named("mapProductToProductResponse")
-    default ProductResponse mapProduct(Product product) {
+    default ProductPort.ProductResponse mapProduct(Product product) {
         return product == null ? null : Mappers.getMapper(ProductMapper.class).toProductResponse(product);
     }
 }

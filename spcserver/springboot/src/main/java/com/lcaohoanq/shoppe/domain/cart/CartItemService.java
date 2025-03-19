@@ -5,7 +5,8 @@ import com.lcaohoanq.shoppe.base.exception.OutOfStockException;
 import com.lcaohoanq.shoppe.domain.cart.CartItem.CartItemStatus;
 import com.lcaohoanq.shoppe.domain.product.IProductService;
 import com.lcaohoanq.shoppe.domain.product.Product;
-import com.lcaohoanq.shoppe.domain.product.ProductResponse;
+import com.lcaohoanq.shoppe.domain.product.ProductPort;
+import com.lcaohoanq.shoppe.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.shoppe.domain.user.IUserService;
 import com.lcaohoanq.shoppe.exception.MalformBehaviourException;
 import com.lcaohoanq.shoppe.mapper.CartMapper;
@@ -50,7 +51,7 @@ public class CartItemService implements ICartItemService {
             .orElseThrow(() ->
                              new DataNotFoundException("Product with id " + cartItemDTO.productId() + " does not exist"));
 
-        ProductResponse product = productService.getById(cartItemDTO.productId());
+        ProductPort.ProductResponse product = productService.getById(cartItemDTO.productId());
         
         if (cartItemDTO.quantity() >= product.quantity()) {
             throw new OutOfStockException(String.format(
