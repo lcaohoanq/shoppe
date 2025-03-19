@@ -40,7 +40,7 @@ function CategoryList() {
               </Typography>
 
               <p className='text-gray-700'>
-                {category.subcategories.map((subcategory) => subcategory.name).join(' | ')}
+                {category.subcategories?.map((subcategory) => subcategory.name).join(' | ')}
               </p>
             </div>
           ))}
