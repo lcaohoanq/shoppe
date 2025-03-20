@@ -2,6 +2,7 @@ package com.lcaohoanq.shoppe.domain.headquarter;
 
 import com.lcaohoanq.shoppe.api.ApiResponse;
 import com.lcaohoanq.shoppe.constant.Regex;
+import com.lcaohoanq.shoppe.domain.headquarter.HeadquarterPort.HeadquarterResponse;
 import com.lcaohoanq.shoppe.enums.Country;
 import com.lcaohoanq.shoppe.exception.MethodArgumentNotValidException;
 import jakarta.validation.Valid;
@@ -29,9 +30,9 @@ public class HeadquarterController {
     private final IHeadquarterService headquarterService;
     
     @GetMapping("")
-    public ResponseEntity<ApiResponse<List<Headquarter>>> getAll(){
+    public ResponseEntity<ApiResponse<List<HeadquarterResponse>>> getAll(){
         return ResponseEntity.ok(
-            ApiResponse.<List<Headquarter>>builder()
+            ApiResponse.<List<HeadquarterResponse>>builder()
                 .message("Get all headquarters successfully")
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)
@@ -41,7 +42,7 @@ public class HeadquarterController {
     
     @PostMapping("")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<ApiResponse<List<Headquarter>>> create(
+    public ResponseEntity<ApiResponse<List<HeadquarterResponse>>> create(
         @Valid @RequestBody List<HeadquarterDTO> headquarterList,
         BindingResult result
     ){
@@ -50,7 +51,7 @@ public class HeadquarterController {
         }
         
         return ResponseEntity.ok(
-            ApiResponse.<List<Headquarter>>builder()
+            ApiResponse.<List<HeadquarterResponse>>builder()
                 .message("Create headquarter successfully")
                 .statusCode(HttpStatus.OK.value())
                 .isSuccess(true)

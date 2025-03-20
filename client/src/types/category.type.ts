@@ -1,6 +1,6 @@
 import { ApiResponse } from './api.type'
 
-export interface Category {
+export type CategoryEntity = {
   id: string
   name: string
 }

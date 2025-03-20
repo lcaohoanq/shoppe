@@ -1,3 +1,5 @@
+import { ApiResponse } from './api.type'
+import { CategoryResponse } from './category.type'
 import { ProductImageReponse } from './productimage.type'
 
 export type Product = {
@@ -48,6 +50,12 @@ export type ProductResponse = {
   name: string
   description: string
   price_before_discount: number
-  sold: boolean
+  category: CategoryResponse
+  sold: number
   rating: number
+  price: number
+  quantity?: number
+  images: ProductImageReponse[]
 }
+
+export type ProductResponseWithPagination = ApiResponse<ProductResponse[]>

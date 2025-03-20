@@ -1886,9 +1886,11 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
   ]
 }
 
-export const getAllCategoryRequest = http.get(`/categories`, () => {
-  return HttpResponse.json([categoriesRes])
-})
+export const getAllCategoryRequest = () => {
+  return http.get('/api/categories', () => {
+    return HttpResponse.json(categoriesRes)
+  })
+}
 
 const categoryRequests = [getAllCategoryRequest]
 

@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import ProductRating from 'src/components/ProductRating'
 import path from 'src/constants/path'
-import { Product as ProductType } from 'src/types/product.type'
-import { formatCurrency, formatNumberToSocialStyle, generateNameId, getRandomProductImage } from 'src/utils/utils'
+import { ProductResponse, Product as ProductType } from 'src/types/product.type'
+import { formatCurrency, formatNumberToSocialStyle, getRandomProductImage } from 'src/utils/utils'
 
 interface Props {
-  product: ProductType
+  product: ProductResponse
 }
 
 export default function ProductPage({ product }: Props) {

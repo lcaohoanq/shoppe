@@ -12,9 +12,10 @@ import Product from './components/Product/Product'
 import SortProductList from './components/SortProductList'
 import useCategories from 'src/hooks/useCategories'
 import Loading from 'src/components/Loading'
+import useProducts from 'src/hooks/useProducts'
 
 export default function ProductList() {
-  // const queryConfig = useQueryConfig()
+  const queryConfig = useQueryConfig()
 
   // const { data: productsData, isLoading } = useQuery({
   //   queryKey: ['products', queryConfig],
@@ -24,14 +25,16 @@ export default function ProductList() {
   //   keepPreviousData: true,
   //   staleTime: 3 * 60 * 1000
   // })
+  const { data: productsData, isLoading, error } = useProducts()
 
-  // const { data: categoriesData } = useCategories()
+  const { data: categoriesData } = useCategories()
 
-  // if (isLoading) return <Loading />
+  if (isLoading) return <Loading />
+  if (error) return <div>Error when load Product List</div>
 
   return (
     <div className='bg-gray-200 py-6'>
-      {/* <Helmet>
+      <Helmet>
         <title>Trang chủ | Shopee Clone</title>
         <meta name='description' content='Trang chủ dự án Shopee Clone' />
       </Helmet>
@@ -42,19 +45,19 @@ export default function ProductList() {
               <AsideFilter queryConfig={queryConfig} categories={categoriesData || []} />
             </div>
             <div className='col-span-9'>
-              <SortProductList queryConfig={queryConfig} pageSize={productsData.data.pagination.page_size} />
+              <SortProductList queryConfig={queryConfig} pageSize={productsData?.pagination?.page_size || 0} />
               <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-                {productsData.data.data.map((product, index: number) => (
-                  <div className='col-span-1' key={product._id + index}>
+                {productsData.data.map((product, index: number) => (
+                  <div className='col-span-1' key={product.id + index}>
                     <Product product={product} />
                   </div>
                 ))}
               </div>
-              <Pagination queryConfig={queryConfig} pageSize={productsData.data.pagination.page_size} />
+              <Pagination queryConfig={queryConfig} pageSize={productsData?.pagination?.page_size || 0} />
             </div>
           </div>
         )}
-      </div> */}
+      </div>
     </div>
   )
 }

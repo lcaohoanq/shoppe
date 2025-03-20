@@ -3,7 +3,7 @@ import { createSearchParams, Link, useNavigate } from 'react-router-dom'
 import Button from 'src/components/Button'
 import InputNumber from 'src/components/InputNumber'
 import path from 'src/constants/path'
-import { Category } from 'src/types/category.type'
+import { Category, CategoryResponse } from 'src/types/category.type'
 import { useForm, Controller } from 'react-hook-form'
 import { Schema, schema } from 'src/utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -17,7 +17,7 @@ import InputV2 from 'src/components/InputV2'
 
 interface Props {
   queryConfig: QueryConfig
-  categories: Category[]
+  categories: CategoryResponse[]
 }
 
 type FormData = NoUndefinedField<Pick<Schema, 'price_max' | 'price_min'>>
@@ -111,7 +111,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       <div className='my-4 h-[1px] bg-gray-300' />
       <ul>
         {categories.map((categoryItem) => {
-          const isActive = category === categoryItem.id
+          const isActive = category === categoryItem.id.toString()
           return (
             <li className='py-2 pl-2' key={categoryItem.id}>
               <Link
@@ -119,7 +119,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                   pathname: path.home,
                   search: createSearchParams({
                     ...queryConfig,
-                    category: categoryItem.id
+                    category: categoryItem.id.toString()
                   }).toString()
                 }}
                 className={classNames('relative px-2', {

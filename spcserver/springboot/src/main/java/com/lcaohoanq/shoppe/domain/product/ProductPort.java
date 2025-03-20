@@ -100,10 +100,8 @@ public interface ProductPort {
         String name,
         String description,
 
-        @JsonIgnore
         List<ProductImageResponse> images,
 
-        @JsonIgnore
         CategoryResponse category,
         Double price,
 

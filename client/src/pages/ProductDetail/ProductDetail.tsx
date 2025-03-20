@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { convert } from 'html-to-text'
@@ -14,7 +12,8 @@ import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
-import { Product, ProductListConfig, Product as ProductType } from 'src/types/product.type'
+import useProducts, { useProductDetail } from 'src/hooks/useProducts'
+import { ProductListConfig, ProductResponse } from 'src/types/product.type'
 import {
   convertToCallAssets,
   formatCurrency,
@@ -30,19 +29,10 @@ export default function ProductDetail() {
   const [buyCount, setBuyCount] = useState(1)
   const { nameId } = useParams()
   const id = Number(nameId)
-  const { data: productDetailData } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => {
-      if (isNaN(id)) {
-        throw new Error('Invalid product ID')
-      }
-      return productApi.getProductDetail(id)
-    },
-    enabled: !isNaN(id)
-  })
+  const { data: productDetailData } = useProductDetail(id)
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
-  const product = productDetailData?.data.data
+  const product = productDetailData?.data
   const imageRef = useRef<HTMLImageElement>(null)
   const currentImages = useMemo(() => {
     if (!product || !product.images) return []
@@ -50,21 +40,13 @@ export default function ProductDetail() {
     const endIndex = currentIndexImages[1]
     return product.images.slice(startIndex, endIndex)
   }, [product, currentIndexImages])
-  const queryConfig: ProductListConfig = { limit: '20', page: '1', category: product?.category._id }
 
   console.log('Data nameId: ' + nameId)
   console.log('Data id: ' + id)
   console.log('Data productDetailData: ' + JSON.stringify(product))
   console.log('current images: ' + JSON.stringify(currentImages))
 
-  const { data: productsData } = useQuery({
-    queryKey: ['products', queryConfig],
-    queryFn: () => {
-      return productApi.getProducts(queryConfig)
-    },
-    staleTime: 3 * 60 * 1000,
-    enabled: Boolean(product)
-  })
+  const { data: productsData } = useProducts()
   const addToCartMutation = useMutation(purchaseApi.addToCart)
   const navigate = useNavigate()
 
@@ -78,7 +60,7 @@ export default function ProductDetail() {
   }, [product])
 
   const next = () => {
-    if (currentIndexImages[1] < (product as ProductType).images.length) {
+    if (currentIndexImages[1] < (product as ProductResponse).images.length) {
       setCurrentIndexImages((prev) => [prev[0] + 1, prev[1] + 1])
     }
   }
@@ -331,7 +313,7 @@ export default function ProductDetail() {
           <div className='uppercase text-gray-400'>CÓ THỂ BẠN CŨNG THÍCH</div>
           {productsData && (
             <div className='mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'>
-              {productsData.data.data.map((product: Product) => (
+              {productsData.data.map((product: ProductResponse) => (
                 <div className='col-span-1' key={product.id}>
                   <ProductPage product={product} />
                 </div>

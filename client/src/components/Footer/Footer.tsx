@@ -1,24 +1,16 @@
 import { Link } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 import { API_URL } from 'src/env/env.config'
+import { ApiResponse } from 'src/types/api.type'
+import { HeadquarterRes } from 'src/types/headquarter.type'
 import Loading from '../Loading'
 import CategoryList from './CategoryList'
-import { ApiResponse } from 'src/types/api.type'
-
-type HeadQuarter = {
-  id: number
-  region: string
-  domain_url: string
-  created_at: string
-  updated_at: string
-}
+import useHeadquarters from 'src/hooks/useHeadquarters'
 
 export default function Footer() {
-  const { data, isLoading, error } = useQuery<HeadQuarter[]>(['headQuarters'], async () => {
-    const response = await axios.get<ApiResponse<HeadQuarter[]>>(`${API_URL}/headquarters`)
-    return response.data.data
-  })
+  const { data, isLoading, error } = useHeadquarters()
 
   if (isLoading) return <Loading />
   if (error) return <div>Something went wrong</div>

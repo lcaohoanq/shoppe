@@ -111,7 +111,7 @@ export default function Home() {
             backgroundColor: '#f5f5f5'
           }}
         >
-          {products.map((product) => (
+          {products.data.map((product) => (
             <Card
               sx={{
                 ':hover': {

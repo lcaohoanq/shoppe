@@ -9,7 +9,7 @@ type MediaMeta = {
   file_type: string
   file_size: number
   image_url: string
-  video_url: string
+  video_url?: string
   created_at: string
   updated_at: string
 }

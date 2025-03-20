@@ -18,6 +18,7 @@ public interface CategoryPort {
     @JsonPropertyOrder({
         "id",
         "name",
+        "subcategories",
         "created_at",
         "updated_at"
     })
@@ -25,6 +26,7 @@ public interface CategoryPort {
         Long id,
         String name,
 
+        @JsonIgnore
         TreeSet<Subcategory> subcategories,
 
         @JsonIgnore

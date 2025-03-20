@@ -3,7 +3,7 @@ import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import userImage from 'src/assets/images/user.svg'
 import { ErrorResponse } from 'src/types/utils.type'
-import { Product } from 'src/types/product.type'
+import { Product, ProductResponse } from 'src/types/product.type'
 import { ProductImageReponse } from 'src/types/productimage.type'
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
@@ -55,7 +55,7 @@ export const getIdFromNameId = (nameId: string) => {
   return arr[arr.length - 1]
 }
 
-export const getRandomProductImage = (product: Product) => {
+export const getRandomProductImage = (product: ProductResponse) => {
   // Check if the product has images
   if (product.images && product.images.length > 0) {
     // Return the first image's URL
