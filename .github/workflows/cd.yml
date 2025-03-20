@@ -16,7 +16,7 @@ on:
 
 jobs:
   create-env:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     # Add job-level permissions if needed
     permissions:
       contents: read
