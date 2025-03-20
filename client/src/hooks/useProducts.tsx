@@ -41,9 +41,10 @@ const useProducts = () => {
 export const useProductDetail = (id: number) => {
   return useQuery({
     queryKey: ['productDetail', id],
-    queryFn: () => {
+    queryFn: async () => {
       if (isNaN(id)) throw new Error('Invalid product id')
-      return axios.get<ProductResponse>(`${mockUrl}/${id}`)
+      const res = await axios.get<ApiResponse<ProductResponse>>(`${mockUrl}/${id}`)
+      return res.data.data
     },
     enabled: !isNaN(id)
   })

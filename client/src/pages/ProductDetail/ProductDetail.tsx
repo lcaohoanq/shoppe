@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 import { convert } from 'html-to-text'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -6,14 +6,13 @@ import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import productApi from 'src/apis/product.api'
 import purchaseApi from 'src/apis/purchase.api'
 import ProductRating from 'src/components/ProductRating'
 import QuantityController from 'src/components/QuantityController'
 import path from 'src/constants/path'
 import { purchasesStatus } from 'src/constants/purchase'
 import useProducts, { useProductDetail } from 'src/hooks/useProducts'
-import { ProductListConfig, ProductResponse } from 'src/types/product.type'
+import { ProductResponse } from 'src/types/product.type'
 import {
   convertToCallAssets,
   formatCurrency,
@@ -21,6 +20,7 @@ import {
   getRandomProductImage,
   rateSale
 } from 'src/utils/utils'
+import NotFound from '../NotFound'
 import ProductPage from '../ProductList/components/Product/Product'
 
 export default function ProductDetail() {
@@ -32,7 +32,7 @@ export default function ProductDetail() {
   const { data: productDetailData } = useProductDetail(id)
   const [currentIndexImages, setCurrentIndexImages] = useState([0, 5])
   const [activeImage, setActiveImage] = useState('')
-  const product = productDetailData?.data
+  const product = productDetailData || null
   const imageRef = useRef<HTMLImageElement>(null)
   const currentImages = useMemo(() => {
     if (!product || !product.images) return []
@@ -41,20 +41,15 @@ export default function ProductDetail() {
     return product.images.slice(startIndex, endIndex)
   }, [product, currentIndexImages])
 
-  console.log('Data nameId: ' + nameId)
-  console.log('Data id: ' + id)
-  console.log('Data productDetailData: ' + JSON.stringify(product))
-  console.log('current images: ' + JSON.stringify(currentImages))
-
   const { data: productsData } = useProducts()
   const addToCartMutation = useMutation(purchaseApi.addToCart)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (product && product.images.length > 0) {
+    if (product && product?.images?.length > 0) {
       // Reset to initial state
       setCurrentIndexImages([0, 5])
-      setActiveImage(getRandomProductImage(product))
+      setActiveImage(getRandomProductImage(product, true))
       setBuyCount(1)
     }
   }, [product])
@@ -129,11 +124,12 @@ export default function ProductDetail() {
     })
   }
 
-  if (!product) return null
+  if (!product) return <NotFound />
+
   return (
     <div className='bg-gray-200 py-6'>
       <Helmet>
-        <title>{product.name} | Shopee Clone</title>
+        <title>{`${product.name} | Shopee Clone`}</title>
         <meta
           name='description'
           content={convert(product.description, {

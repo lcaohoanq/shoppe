@@ -1,6 +1,6 @@
 import { Box, Card, CardActions, CardContent, Container, Divider, Typography } from '@mui/material'
 import HomeShoppeMall from 'src/components/Grid/HomeShoppeMall/HomeShoppeMall'
-import HomeSlider from 'src/components/HomeSlider/HomeSlider'
+import HomeSlider from 'src/components/Slider/HomeSlider/HomeSlider'
 import Loading from 'src/components/Loading'
 import HomeCategorySlider from 'src/components/Slider/HomeCategorySlider/HomeCategorySlider'
 import useProducts from 'src/hooks/useProducts'

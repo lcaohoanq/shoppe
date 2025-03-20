@@ -1,5 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 
 interface Props {
   children?: ReactNode
@@ -7,11 +7,13 @@ interface Props {
 
 interface State {
   hasError: boolean
+  errorType?: 'InternalServerError' | 'NotFound' | null
 }
 
 export default class ErrorBoundary extends Component<Props, State> {
   public state: State = {
-    hasError: false
+    hasError: false,
+    errorType: null
   }
 
   public static getDerivedStateFromError(_: Error): State {
@@ -22,10 +24,27 @@ export default class ErrorBoundary extends Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // You can also log the error to an error reporting service
     console.error('Uncaught error: ', error, errorInfo)
+
+    // Handle different error types based on error message or status
+    if (error.message === 'Invalid product id') {
+      this.setState({ errorType: 'NotFound' })
+    } else if (error.message === 'Internal Server Error') {
+      this.setState({ errorType: 'InternalServerError' })
+    } else {
+      this.setState({ errorType: 'InternalServerError' }) // Default case
+    }
   }
 
   public render() {
     if (this.state.hasError) {
+      // Navigate to different error pages based on the error type
+      if (this.state.errorType === 'InternalServerError') {
+        return <Navigate to='/500' />
+      }
+      if (this.state.errorType === 'NotFound') {
+        return <Navigate to='/404' />
+      }
+
       // You can render any custom fallback UI
       return (
         <main className='flex h-screen w-full flex-col items-center justify-center'>

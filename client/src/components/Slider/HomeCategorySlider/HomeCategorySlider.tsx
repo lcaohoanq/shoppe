@@ -9,6 +9,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import '../HomeSlider/Swiper.css'
 
 const CategoryGridSlider = () => {
   const { data: categories } = useQuery<CategoryResponse[]>(['categories'], async () => {
@@ -48,6 +49,7 @@ const CategoryGridSlider = () => {
         pagination={{ clickable: true }}
         loop={false}
         style={{ width: '100%' }} // Add padding for pagination bullets
+        className='custom-swiper'
       >
         {categoryChunks.map((chunk, index) => (
           <SwiperSlide key={index}>

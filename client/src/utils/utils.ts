@@ -55,12 +55,19 @@ export const getIdFromNameId = (nameId: string) => {
   return arr[arr.length - 1]
 }
 
-export const getRandomProductImage = (product: ProductResponse) => {
-  // Check if the product has images
-  if (product.images && product.images.length > 0) {
-    // Return the first image's URL
-    return `${config.baseUrl}assets/images/${product.images[0].media_meta.image_url}`
+export const getRandomProductImage = (product: ProductResponse, isMock: boolean) => {
+  if (isMock) {
+    if (product.images && product.images.length > 0) {
+      return `https://raw.githubusercontent.com/lcaohoanq/shoppe/refs/heads/develop/spcserver/springboot/uploads/${product.images[0].media_meta.image_url}`
+    }
+  } else {
+    // Check if the product has images
+    if (product.images && product.images.length > 0) {
+      // Return the first image's URL
+      return `${config.baseUrl}/assets/images/${product.images[0].media_meta.image_url}`
+    }
   }
+
   // Fallback to a default image or empty string
   return 'https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lf8dkbwetifeee@resize_w450_nl.webp' // or you could use a default placeholder image URL
 }
