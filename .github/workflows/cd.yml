@@ -48,7 +48,7 @@ jobs:
         run: ls -al spcserver/springboot
 
   cache-maven:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: create-env
     permissions:
       contents: read
@@ -67,7 +67,7 @@ jobs:
             maven-
 
   run-docker-compose:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: cache-maven
     permissions:
       contents: read
@@ -88,7 +88,7 @@ jobs:
         run: docker compose -f spcserver/springboot/docker-compose-prod.yml up -d --build --remove-orphans
 
   build-docker:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: [create-env, cache-maven]
     permissions:
       contents: read
@@ -101,7 +101,7 @@ jobs:
         run: docker build -f spcserver/springboot/Dockerfile.prod -t ${{ secrets.DOCKER_USERNAME }}/shoppe:latest spcserver/springboot
 
   push-docker-image:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04
     needs: build-docker
     permissions:
       contents: read
