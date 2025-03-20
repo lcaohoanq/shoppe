@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { memo } from 'react'
 import { API_URL } from 'src/env/env.config'
-import { Category, CategoryResponse } from 'src/types/category.type'
+import { CategoryEntity, CategoryResponse } from 'src/types/category.type'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -32,7 +32,7 @@ const CategoryGridSlider = () => {
         })
 
         return resultArray
-      }, [] as Category[][])
+      }, [] as CategoryEntity[][])
     : []
 
   return (
