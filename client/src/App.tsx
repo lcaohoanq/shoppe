@@ -7,6 +7,7 @@ import { AppContext } from './contexts/app.context'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import ErrorBoundary from './components/ErrorBoundary'
 import { HelmetProvider } from 'react-helmet-async'
+import {LanguageProvider} from "./contexts/LanguageContext";
 
 /**
  * Khi url thay đổi thì các component nào dùng các hook như
@@ -29,8 +30,10 @@ function App() {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        {routeElements}
-        <ToastContainer />
+        <LanguageProvider>
+          {routeElements}
+          <ToastContainer />
+        </LanguageProvider>
       </ErrorBoundary>
       <ReactQueryDevtools initialIsOpen={false} />
     </HelmetProvider>
