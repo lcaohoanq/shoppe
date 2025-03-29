@@ -1,0 +1,3 @@
+package com.lcaohoanq.kotlinbasics.exceptions
+
+class InvalidParamException(message: String?) : Exception(message)
