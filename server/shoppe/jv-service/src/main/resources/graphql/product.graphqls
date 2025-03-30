@@ -1,0 +1,79 @@
+type Product {
+    id: ID!
+    name: String!
+    description: String
+    price: Float!
+    priceBeforeDiscount: Float!
+    quantity: Int!
+    sold: Int!
+    view: Int!
+    rating: Float!
+    status: ProductStatus!
+    isActive: Boolean!
+    category: Category!
+    shopOwner: User!
+    warehouse: Warehouse!
+    images: [ProductImage]!
+    cartItems: [CartItem!]!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+extend type Query {
+    products: [Product!]!
+    product(id: ID!): Product
+}
+
+type Warehouse {
+    id: ID!
+    name: WarehouseName!
+    quantity: Int!
+    reserved: Int!
+    reorderPoint: Int!
+}
+
+type ProductImage {
+    id: ID!
+    product: Product!
+    fileName: String
+    fileType: String
+    fileSize: Int
+    imageUrl: String
+    videoUrl: String
+}
+
+type Cart {
+    id: ID!
+    totalQuantity: Int!
+    totalPrice: Float!
+    user: User!
+    cartItems: [CartItem!]!
+}
+
+type CartItem {
+    id: ID!
+    cart: Cart!
+    product: Product!
+    quantity: Int!
+    status: CartItemStatus!
+}
+
+enum ProductStatus {
+    UNVERIFIED, VERIFIED, REJECTED
+}
+
+enum CartItemStatus {
+    IN_CART,
+    ALL,
+    WAIT_FOR_CONFIRMATION,
+    WAIT_FOR_GETTING,
+    IN_PROGRESS,
+    DELIVERED,
+    CANCELLED,
+}
+
+enum WarehouseName {
+    NORTH, CENTRAL, SOUTH
+}
+
+scalar DateTime

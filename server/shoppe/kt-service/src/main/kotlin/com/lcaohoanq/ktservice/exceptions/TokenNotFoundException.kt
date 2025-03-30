@@ -1,0 +1,5 @@
+package com.lcaohoanq.ktservice.exceptions
+
+import com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException
+
+class TokenNotFoundException(message: String?) : DataNotFoundException(message)

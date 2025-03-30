@@ -1,0 +1,16 @@
+# Types
+type Category {
+    id: ID!
+    name: String!
+    subcategories: [Subcategory]
+}
+
+type Subcategory{
+    id: ID!
+    name: String!
+    category: Category
+}
+
+extend type Query {
+    getSubcategoriesByCategoryId(id: ID!): [Subcategory]
+}

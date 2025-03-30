@@ -1,0 +1,65 @@
+package com.lcaohoanq.jvservice.domain.inventory;
+
+import com.lcaohoanq.jvservice.base.exception.DataNotFoundException;
+import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.jvservice.mapper.WarehouseMapper;
+import com.lcaohoanq.jvservice.repository.WarehouseRepository;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class WarehouseService implements IWarehouseService {
+
+    private final WarehouseRepository warehouseRepository;
+    private final WarehouseMapper warehouseMapper;
+
+    @Override
+    public WarehouseResponse create(WarehouseDTO request) {
+        if(warehouseRepository.existsByName(request.name())) {
+            throw new IllegalArgumentException("Warehouse name already exists");
+        }
+        
+        Warehouse newWarehouse = Warehouse.builder()
+            .name(request.name())
+            .address(request.address())
+            .name(request.name())
+            .city(request.city())
+            .country(Country.VIETNAM)
+            .quantity(request.quantity() == null ? 0 : request.quantity())
+            .reserved(request.reserved() == null ? 0 : request.reserved())
+            .reorderPoint(request.reorderPoint() == null ? 0 : request.reorderPoint())
+            .build();
+        
+        return warehouseMapper.toWarehouseResponse(
+            warehouseRepository.save(newWarehouse)
+        );
+    }
+
+    @Override
+    public List<WarehouseResponse> findAll() {
+        return warehouseRepository
+            .findAll()
+            .stream()
+            .map(warehouseMapper::toWarehouseResponse)
+            .toList();
+    }
+
+    @Override
+    public WarehouseResponse findById(Long id) {
+        Warehouse warehouse = warehouseRepository
+            .findById(id)
+            .orElseThrow(() -> new DataNotFoundException("Warehouse not found"));
+        
+        return warehouseMapper.toWarehouseResponse(warehouse);
+    }
+
+    @Override
+    @Transactional
+    public void updateQuantity(Long warehouseId, Long totalQuantity) {
+        warehouseRepository.updateQuantity(warehouseId, totalQuantity);
+    }
+    
+}
