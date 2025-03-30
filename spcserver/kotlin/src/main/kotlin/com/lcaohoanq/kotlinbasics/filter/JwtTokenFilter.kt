@@ -199,6 +199,12 @@ class JwtTokenFilter(
             return isGet
         }
 
+        if (path.startsWith("$apiPrefix/categories")) {
+            val isGet = request.method == "GET"
+            log.debug("Categories endpoint - Is GET? {}", isGet)
+            return isGet
+        }
+
         return false
     }
 

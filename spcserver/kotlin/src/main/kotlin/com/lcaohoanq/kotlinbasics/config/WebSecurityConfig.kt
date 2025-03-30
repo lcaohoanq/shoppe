@@ -61,7 +61,8 @@ class WebSecurityConfig(
                     "$apiPrefix/auth/login",
                     "$apiPrefix/auth/register",
                     "$apiPrefix/users/**",
-                    "$apiPrefix/students/**"
+                    "$apiPrefix/students/**",
+                    "$apiPrefix/categories/**"
                 ).permitAll()
 
                 // Swagger and public documentation endpoints
