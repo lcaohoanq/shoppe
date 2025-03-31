@@ -3,51 +3,73 @@ import {Link, NavLink} from 'react-router-dom';
 import path from 'src/constants/path';
 import {getAvatarUrl} from 'src/utils/utils'
 import {AppContext} from 'src/contexts/app.context'
+import {useTranslation} from "react-i18next";
 
+// Define the translation keys type to match exactly what's expected
+type TranslationKey =
+  | 'side_nav.edit_profile'
+  | 'side_nav.notify'
+  | 'side_nav.my_account'
+  | 'side_nav.history_purchase'
+  | 'side_nav.voucher'
+  | 'side_nav.shopee_coin'
+  | 'side_nav.sale';
 
-const menuItems = [
-  {
-    title: 'Thông Báo',
-    icon: 'https://down-vn.img.susercontent.com/file/e10a43b53ec8605f4829da5618e0717c',
-    path: path.user_detail.notify
-  }, {
-    title: 'Tài Khoản Của Tôi',
-    icon: 'https://cf.shopee.vn/file/ba61750a46794d8847c3f463c5e71cc4',
-    subItems: [
-      {title: 'Hồ Sơ', path: path.profile},
-      {title: 'Ngân Hàng', path: path.user_detail.bank},
-      {title: 'Địa Chỉ', path: path.user_detail.address},
-      {title: 'Đổi Mật Khẩu', path: path.user_detail.change_password},
-      {title: 'Cài Đặt Thông Báo', path: path.user_detail.settings_notify},
-      {title: 'Những Thiết Lập Riêng Tư', path: path.user_detail.privacy}
-    ]
-  },
-  {
-    title: 'Đơn Mua',
-    icon: 'https://cf.shopee.vn/file/f0049e9df4e536bc3e7f140d071e9078',
-    path: path.historyPurchase
-  },
-  {
-    title: 'Kho Voucher',
-    icon: 'https://down-vn.img.susercontent.com/file/84feaa363ce325071c0a66d3c9a88748',
-    path: path.user_detail.voucher
-  },
-  {
-    title: 'Shopee Xu',
-    icon: 'https://down-vn.img.susercontent.com/file/a0ef4bd8e16e481b4253bd0eb563f784',
-    path: path.user_detail.shopee_xu
-  },
-  {
-    title: '4.4 Siêu Sale',
-    icon: 'https://down-vn.img.susercontent.com/file/sg-11134004-7rd5o-m7ul39h98ol498',
-    path: path.user_detail.sale
-  }
-];
+interface SubMenuItem {
+  title: string;
+  path: string;
+}
+
+interface MenuItem {
+  titleKey: TranslationKey;
+  icon: string;
+  path?: string;
+  subItems?: SubMenuItem[];
+}
 
 export default function UserSideNav() {
   const {profile} = useContext(AppContext)
-
+  const { t } = useTranslation(['user_detail'])
   const [expandedMenu, setExpandedMenu] = useState<number | null>(null);
+
+  const menuItems: MenuItem[] = [
+    {
+      titleKey: 'side_nav.notify',
+      icon: 'https://down-vn.img.susercontent.com/file/e10a43b53ec8605f4829da5618e0717c',
+      path: path.user_detail.notify
+    }, {
+      titleKey: 'side_nav.my_account',
+      icon: 'https://cf.shopee.vn/file/ba61750a46794d8847c3f463c5e71cc4',
+      subItems: [
+        {title: 'Hồ Sơ', path: path.profile},
+        {title: 'Ngân Hàng', path: path.user_detail.bank},
+        {title: 'Địa Chỉ', path: path.user_detail.address},
+        {title: 'Đổi Mật Khẩu', path: path.user_detail.change_password},
+        {title: 'Cài Đặt Thông Báo', path: path.user_detail.settings_notify},
+        {title: 'Những Thiết Lập Riêng Tư', path: path.user_detail.privacy}
+      ]
+    },
+    {
+      titleKey: 'side_nav.history_purchase',
+      icon: 'https://cf.shopee.vn/file/f0049e9df4e536bc3e7f140d071e9078',
+      path: path.historyPurchase
+    },
+    {
+      titleKey: 'side_nav.voucher',
+      icon: 'https://down-vn.img.susercontent.com/file/84feaa363ce325071c0a66d3c9a88748',
+      path: path.user_detail.voucher
+    },
+    {
+      titleKey: 'side_nav.shopee_coin',
+      icon: 'https://down-vn.img.susercontent.com/file/a0ef4bd8e16e481b4253bd0eb563f784',
+      path: path.user_detail.shopee_xu
+    },
+    {
+      titleKey: 'side_nav.sale',
+      icon: 'https://down-vn.img.susercontent.com/file/sg-11134004-7rd5o-m7ul39h98ol498',
+      path: path.user_detail.sale
+    }
+  ];
 
   const toggleExpand = (index: number) => {
     setExpandedMenu(expandedMenu === index ? null : index);
@@ -77,7 +99,7 @@ export default function UserSideNav() {
                 fillRule='evenodd'
               />
             </svg>
-            Sửa hồ sơ
+            {t('side_nav.edit_profile')}
           </Link>
         </div>
       </div>
@@ -93,12 +115,12 @@ export default function UserSideNav() {
               </div>
               {item.subItems ? (
                 <>
-                  <span>{item.title}</span>
+                  <span>{t(item.titleKey)}</span>
                   {/*<span className='ml-auto'>{expandedMenu === index ? '▲' : '▼'}</span>*/}
                 </>
               ) : (
-                <NavLink to={item.path} className='flex-grow'>
-                  {item.title}
+                <NavLink to={item.path || ''} className='flex-grow'>
+                  {t(item.titleKey)}
                 </NavLink>
               )}
             </div>
