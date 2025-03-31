@@ -95,7 +95,7 @@ export default function useRouteElements() {
     },
     {
       path: '',
-      element: <ProtectedRoute />,
+      // element: <ProtectedRoute />,
       children: [
         {
           path: path.cart,
