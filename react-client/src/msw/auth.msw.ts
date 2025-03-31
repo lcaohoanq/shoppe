@@ -1,8 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { http } from 'msw'
+import { http, HttpResponse } from 'msw'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
+import {AuthResponse} from "../types/auth.type";
 
 export const access_token_1s =
   'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzNmY5MzVlNWZkYzVmMDM3ZTZmNjhkMyIsImVtYWlsIjoiZDNAZ21haWwuY29tIiwicm9sZXMiOlsiVXNlciJdLCJjcmVhdGVkX2F0IjoiMjAyMi0xMi0xNVQxNDowMzoyMy41NzdaIiwiaWF0IjoxNjcxMTEzMDAzLCJleHAiOjE2NzExMTMwMDR9.-gQIpbbKFlRqBlpiiAOBD4puP8jcMtZ2lobXPcy1zmU'
@@ -40,14 +41,42 @@ const refreshTokenRes = {
   }
 }
 
-const loginRequest = http.post(`${config.baseUrl}login`, (req, res, ctx) => {
-  return res(ctx.status(HttpStatusCode.Ok), ctx.json(loginRes))
-})
+// const loginRequest = http.post(`${config.baseUrl}login`, (req, res, ctx) => {
+//   return res(ctx.status(HttpStatusCode.Ok), ctx.json(loginRes))
+// })
 
 const refreshToken = http.post(`${config.baseUrl}refresh-access-token`, (req, res, ctx) => {
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(refreshTokenRes))
 })
 
-const authRequests = [loginRequest, refreshToken]
+//
 
-export default authRequests
+type LoginRequest = {
+  email: string,
+  password: string,
+}
+
+export const handleLogin = () => {
+  return http.post("/api/auth/login", async ({ request }) => {
+    const body = (await request.json()) as LoginRequest;
+    const { email, password } = body;
+
+    if (
+      (email === "hoangdz1604@gmail.com" && password === "12345678") ||
+      (email === "admin@gmail.com" && password === "Iloveyou123")
+    ) {
+      return HttpResponse.json<AuthResponse>(loginRes);
+    } else {
+      return HttpResponse.json({
+        message: "Wrong email or password",
+        statusCode: 400,
+        isSuccess: false,
+        reason: "Bad credentials",
+      });
+    }
+  });
+};
+
+// const authRequests = [loginRequest, refreshToken]
+
+// export default authRequests

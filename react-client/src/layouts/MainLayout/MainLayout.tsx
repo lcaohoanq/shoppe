@@ -11,7 +11,7 @@ function MainLayoutInner({ children }: Props) {
       <Header />
       {children}
       <Outlet />
-      <Footer />
+      <Footer  />
     </div>
   )
 }
