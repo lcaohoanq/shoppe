@@ -99,6 +99,9 @@ export default function NavHeader() {
                 <button className='mt-2 py-2 px-3 text-left hover:text-orange' onClick={() => changeLanguage('en')}>
                   English
                 </button>
+                <button className='mt-2 py-2 px-3 text-left hover:text-orange' onClick={() => changeLanguage('en')}>
+                  日本語
+                </button>
               </div>
             </div>
           }

@@ -7,7 +7,7 @@ interface LanguageContextType {
 }
 
 const LanguageContext = createContext<LanguageContextType>({
-  currentLanguage: "en",
+  currentLanguage: "vi",
   changeLanguage: () => {},
 });
 

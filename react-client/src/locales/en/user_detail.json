@@ -1,0 +1,11 @@
+{
+  "side_nav": {
+    "edit_profile": "Edit Profile",
+    "notify":  "Notification",
+    "my_account":  "My Account",
+    "history_purchase": "Purchase History",
+    "voucher": "Voucher",
+    "shopee_coin": "Shopee Coin",
+    "sale": "Sale"
+  }
+}
