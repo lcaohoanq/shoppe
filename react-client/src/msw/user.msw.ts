@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { http } from 'msw'
+import {http, HttpResponse} from 'msw'
 import config from 'src/constants/config'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { access_token_1s } from './auth.msw'
@@ -34,6 +34,12 @@ const meRequest = http.get(`${config.baseUrl}me`, (req, res, ctx) => {
   }
   return res(ctx.status(HttpStatusCode.Ok), ctx.json(meRes))
 })
+
+export const getMeRequest_Mock = () => {
+  return http.get('/api/me', () => {
+    return HttpResponse.json(meRes)
+  })
+}
 
 const userRequests = [meRequest]
 

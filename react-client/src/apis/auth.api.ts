@@ -1,5 +1,6 @@
 import { AuthResponse } from 'src/types/auth.type'
 import http from 'src/utils/http'
+import axios from "axios";
 
 export const URL_LOGIN = 'auth/login'
 export const URL_REGISTER = 'auth/register'
@@ -12,6 +13,9 @@ const authApi = {
   },
   login(body: { email: string; password: string }) {
     return http.post<AuthResponse>(URL_LOGIN, body)
+  },
+  loginMock(body: { email: string; password: string }) {
+    return axios.post<AuthResponse>('/api/auth/login', body)
   },
   logout() {
     return http.post(URL_LOGOUT)

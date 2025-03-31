@@ -1,19 +1,12 @@
-import { Link } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
-import { toast } from 'react-toastify'
-import { API_URL } from 'src/env/env.config'
-import { ApiResponse } from 'src/types/api.type'
-import { HeadquarterRes } from 'src/types/headquarter.type'
-import Loading from '../Loading'
 import CategoryList from './CategoryList'
-import useHeadquarters from 'src/hooks/useHeadquarters'
+import Headquarter from "../Headquarter";
 
-export default function Footer() {
-  const { data, isLoading, error } = useHeadquarters()
+interface Props {
+  categoryList?: Element,
+  headquarter?: Element
+}
 
-  if (isLoading) return <Loading />
-  if (error) return <div>Something went wrong</div>
+export default function Footer({categoryList, headquarter}: Props) {
 
   return (
     <footer className='bg-neutral-100 py-16'>
@@ -23,17 +16,7 @@ export default function Footer() {
           <div className='lg:col-span-1'>
             <div>© 2022 Shopee. Tất cả các quyền được bảo lưu.</div>
           </div>
-          <div className='lg:col-span-2'>
-            <div>
-              Quốc gia & Khu vực:{' '}
-              {data &&
-                data.map((headQuarter) => (
-                  <Link key={headQuarter.id} href={headQuarter.domain_url} target='_blank' rel='noreferrer'>
-                    {headQuarter.region} |{' '}
-                  </Link>
-                ))}
-            </div>
-          </div>
+          <Headquarter/>
         </div>
         <div className='mt-10 text-center text-sm'>
           <div>Công ty TNHH Shopee</div>

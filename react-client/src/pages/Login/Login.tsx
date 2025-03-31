@@ -29,14 +29,9 @@ export default function Login() {
   })
 
   const loginMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.login(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.loginMock(body)
   })
   const onSubmit = handleSubmit((data) => {
-
-    if (data.email === 'admin@gmail.com' && data.password === 'Iloveyou123') {
-      navigate('/user/profile')
-    }
-
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setIsAuthenticated(true)
