@@ -16,6 +16,9 @@ import { setProfileToLS } from 'src/utils/auth'
 import { userSchema, UserSchema } from 'src/utils/rules'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import DateSelect from '../../components/DateSelect'
+import {Gender} from "../../../../types/user.type";
+
+
 
 function Info() {
   const {
@@ -49,6 +52,7 @@ function Info() {
                 placeholder='Số điện thoại'
                 errorMessage={errors.phone?.message}
                 {...field}
+                value={field.value || "0123456789"}
                 onChange={field.onChange}
               />
             )}
@@ -59,7 +63,7 @@ function Info() {
   )
 }
 
-type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
+type FormData = Pick<UserSchema, 'name' | 'username' | 'phone' | 'date_of_birth' | 'avatar' | 'gender'>
 type FormDataError = Omit<FormData, 'date_of_birth'> & {
   date_of_birth?: string
 }
@@ -90,10 +94,11 @@ export default function Profile() {
   const uploadAvatarMutaion = useMutation(userApi.uploadAvatar)
   const methods = useForm<FormData>({
     defaultValues: {
+      username: '',
       name: '',
       phone: '',
-      address: '',
       avatar: '',
+      gender: '',
       date_of_birth: new Date(1990, 0, 1)
     },
     resolver: yupResolver<FormData>(profileSchema)
@@ -112,11 +117,12 @@ export default function Profile() {
 
   useEffect(() => {
     if (profile) {
+      setValue('username', profile.username || '')
       setValue('name', profile.name || '')
       setValue('phone', profile.phone || '')
-      setValue('address', profile.address || '')
       setValue('avatar', profile.avatar || '')
       setValue('date_of_birth', profile.date_of_birth ? new Date(profile.date_of_birth) : new Date(1990, 0, 1))
+      setValue('gender', profile.gender || '')
     }
   }, [profile, setValue])
   console.log(profile)
@@ -168,24 +174,68 @@ export default function Profile() {
         <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={onSubmit}>
           <div className='mt-6 flex-grow md:mt-0 md:pr-12'>
             <div className='flex flex-col flex-wrap sm:flex-row'>
+              <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Tên đăng nhập</div>
+              <div className='sm:w-[80%] sm:pl-5'>
+                <div className='pt-3 text-gray-700'>{profile?.username || "andrewtate19776"}</div>
+              </div>
+            </div>
+            <div className='flex flex-col flex-wrap sm:flex-row'>
               <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Email</div>
               <div className='sm:w-[80%] sm:pl-5'>
-                <div className='pt-3 text-gray-700'>{profile?.email}</div>
+                <div className='pt-3 text-gray-700'>{profile?.email || "anonymous@example.com"}</div>
               </div>
             </div>
             <Info />
-            <div className='mt-2 flex flex-col flex-wrap sm:flex-row'>
-              <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Địa chỉ</div>
+            <div className='mt-2 flex flex-col flex-wrap sm:flex-row mb-6'>
+              <div className='truncate capitalize sm:w-[20%] sm:text-right'>Giới tính</div>
               <div className='sm:w-[80%] sm:pl-5'>
-                <Input
-                  classNameInput='w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:border-gray-500 focus:shadow-sm'
-                  register={register}
-                  name='address'
-                  placeholder='Địa chỉ'
-                  errorMessage={errors.address?.message}
+                <Controller
+                  control={control}
+                  name='gender'
+                  render={({ field }) => (
+                    <div className='flex gap-8'>
+                      <div className='flex items-center'>
+                        <input
+                          id='gender-male'
+                          type='radio'
+                          className='h-4 w-4 accent-orange'
+                          checked={field.value === Gender.MALE}
+                          onChange={() => field.onChange(Gender.MALE)}
+                        />
+                        <label htmlFor='gender-male' className='ml-2 cursor-pointer'>
+                          Nam
+                        </label>
+                      </div>
+                      <div className='flex items-center'>
+                        <input
+                          id='gender-female'
+                          type='radio'
+                          className='h-4 w-4 accent-orange'
+                          checked={field.value === Gender.FEMALE}
+                          onChange={() => field.onChange(Gender.FEMALE)}
+                        />
+                        <label htmlFor='gender-female' className='ml-2 cursor-pointer'>
+                          Nữ
+                        </label>
+                      </div>
+                      <div className='flex items-center'>
+                        <input
+                          id='gender-others'
+                          type='radio'
+                          className='h-4 w-4 accent-orange'
+                          checked={field.value === Gender.OTHERS}
+                          onChange={() => field.onChange(Gender.OTHERS)}
+                        />
+                        <label htmlFor='gender-others' className='ml-2 cursor-pointer'>
+                          Khác
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 />
               </div>
             </div>
+
             <Controller
               control={control}
               name='date_of_birth'

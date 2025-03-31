@@ -1,11 +1,19 @@
 type Role = 'User' | 'Admin'
 
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHERS = 'OTHERS'
+}
+
 export interface User {
   _id: string
+  username: string,
   roles: Role[]
   email: string
   name?: string
   date_of_birth?: string // ISO 8610
+  gender?: Gender
   avatar?: string
   address?: string
   phone?: string
