@@ -119,11 +119,11 @@ export default function UserSideNav() {
               </div>
               {item.subItems ? (
                 <>
-                  <span>{t(item.titleKey)}</span>
+                  <span className="text-black">{t(item.titleKey)}</span>
                   {/*<span className='ml-auto'>{expandedMenu === index ? '▲' : '▼'}</span>*/}
                 </>
               ) : (
-                <NavLink to={item.path || ''} className='flex-grow'>
+                <NavLink to={item.path || ''} className='flex-grow text-black'>
                   {t(item.titleKey)}
                 </NavLink>
               )}

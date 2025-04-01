@@ -3,7 +3,7 @@ import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import axios from "axios";
 
-interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email'> {
+interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email' | 'username' > {
   password?: string
   newPassword?: string
 }
