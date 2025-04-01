@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -80,7 +81,9 @@ public class User extends BaseEntity implements UserDetails {
 
     private String avatar;
 
-    private String address;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Address> address;
 
     @Unique
     @Column(name="phone_number",nullable = false, length = 100)
