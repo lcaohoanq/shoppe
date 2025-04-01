@@ -1,0 +1,3 @@
+import UserNotificationShopeeUpdate from './UserNotificationShopeeUpdate'
+
+export default UserNotificationShopeeUpdate
