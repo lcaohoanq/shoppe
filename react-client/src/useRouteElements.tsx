@@ -1,6 +1,6 @@
-import path from 'src/constants/path'
-import { useContext, lazy, Suspense } from 'react'
+import { lazy, Suspense, useContext } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import path from 'src/constants/path'
 import { AppContext } from './contexts/app.context'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
@@ -11,6 +11,7 @@ import RegisterLayout from './layouts/RegisterLayout'
 // import ProductDetail from './pages/ProductDetail'
 // import Cart from './pages/Cart'
 import CartLayout from './layouts/CartLayout'
+import MainLayoutCompact from './layouts/MainLayoutCompact'
 import UserLayout from './pages/User/layouts/UserLayout'
 // import ChangePassword from './pages/User/pages/ChangePassword'
 // import HistoryPurchase from './pages/User/pages/HistoryPurchase'
@@ -18,14 +19,32 @@ import UserLayout from './pages/User/layouts/UserLayout'
 
 const Login = lazy(() => import('./pages/Login'))
 const ProductList = lazy(() => import('./pages/ProductList'))
-const Profile = lazy(() => import('./pages/User/pages/Profile'))
 const Register = lazy(() => import('./pages/Register'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Cart = lazy(() => import('./pages/Cart'))
-const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
 const HistoryPurchase = lazy(() => import('./pages/User/pages/HistoryPurchase'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Home = lazy(() => import('./pages/Home'))
+
+//UserPage
+/** Account */
+const ChangePassword = lazy(() => import('./pages/User/pages/Account/ChangePassword'))
+const Profile = lazy(() => import('./pages/User/pages/Account/Profile'))
+const UserAddress = lazy(() => import('./pages/User/pages/Account/Address/UserAddress'))
+const UserBank = lazy(() => import('./pages/User/pages/Account/Bank/UserAccountBank'))
+const UserSettingNotify = lazy(() => import('./pages/User/pages/Account/SettingNotify/UserSettingNotify'))
+const UserPrivacySetting = lazy(() => import('./pages/User/pages/Account/PrivacySetting/UserPrivacySetting'))
+
+const UserNotificationPromotion = lazy(() => import('./pages/User/pages/Notification/Promotion'))
+const UserNotificationOrder = lazy(() => import('./pages/User/pages/Notification/Order'))
+const UserNotificationWallet = lazy(() => import('./pages/User/pages/Notification/Wallet'))
+const UserNotificationShopeeUpdate = lazy(() => import('./pages/User/pages/Notification/ShopeeUpdate'))
+
+/** Coin */
+const UserCoin = lazy(() => import('./pages/User/pages/UserCoin'))
+
+/** Voucher */
+const UserVoucher = lazy(() => import('./pages/User/pages/Voucher'))
 
 /**
  * Để tối ưu re-render thì nên ưu tiên dùng <Outlet /> thay cho {children}
@@ -109,7 +128,7 @@ export default function useRouteElements() {
         },
         {
           path: path.user,
-          element: <MainLayout />,
+          element: <MainLayoutCompact />,
           children: [
             {
               path: '',
@@ -123,6 +142,91 @@ export default function useRouteElements() {
                     </Suspense>
                   )
                 },
+                {
+                  path: path.user_detail.shopee_xu,
+                  element: (
+                    <Suspense>
+                      <UserCoin />
+                    </Suspense>
+                  )
+                },
+                {
+                  path: path.user_detail.voucher,
+                  element: (
+                    <Suspense>
+                      <UserVoucher />
+                    </Suspense>
+                  )
+                },
+                {
+                  path: path.user_detail.notify.order,
+                  element: (
+                    <Suspense>
+                      <UserNotificationOrder />
+                    </Suspense>
+                  )
+                },
+                {
+                  path: path.user_detail.notify.promotion,
+                  element: (
+                    <Suspense>
+                      <UserNotificationPromotion />
+                    </Suspense>
+                  )
+                },
+                {
+                  path: path.user_detail.notify.wallet,
+                  element: (
+                    <Suspense>
+                      <UserNotificationWallet />
+                    </Suspense>
+                  )
+                },
+                {
+                  path: path.user_detail.notify.shopee,
+                  element: (
+                    <Suspense>
+                      <UserNotificationShopeeUpdate />
+                    </Suspense>
+                  )
+                },
+
+                {
+                  path: path.user_detail.account.address,
+                  element: (
+                    <Suspense>
+                      <UserAddress />
+                    </Suspense>
+                  )
+                },
+
+                {
+                  path: path.user_detail.account.bank,
+                  element: (
+                    <Suspense>
+                      <UserBank />
+                    </Suspense>
+                  )
+                },
+
+                {
+                  path: path.user_detail.account.settings_notify,
+                  element: (
+                    <Suspense>
+                      <UserSettingNotify />
+                    </Suspense>
+                  )
+                },
+
+                {
+                  path: path.user_detail.account.privacy,
+                  element: (
+                    <Suspense>
+                      <UserPrivacySetting />
+                    </Suspense>
+                  )
+                },
+
                 {
                   path: path.changePassword,
                   element: (

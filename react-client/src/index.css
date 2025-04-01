@@ -10,4 +10,5 @@ html {
 body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
+  background-color: #ffffff; /* Màu nền xám nhạt */
 }
