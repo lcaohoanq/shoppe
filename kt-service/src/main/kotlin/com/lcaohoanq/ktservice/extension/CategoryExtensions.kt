@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.extension
 
-import com.lcaohoanq.ktservice.domain.category.CatePort
-import com.lcaohoanq.ktservice.domain.category.Category
+import com.lcaohoanq.common.dto.CatePort
+import com.lcaohoanq.ktservice.entities.Category
 
 fun Category.toResponse() = CatePort.CategoryResponse(
     id = this.id!!,

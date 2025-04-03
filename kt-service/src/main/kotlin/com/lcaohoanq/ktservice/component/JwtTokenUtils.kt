@@ -1,10 +1,10 @@
 package com.lcaohoanq.ktservice.component
 
-import com.lcaohoanq.ktservice.domain.token.Token
-import com.lcaohoanq.ktservice.domain.user.User
-import com.lcaohoanq.ktservice.exceptions.InvalidParamException
-import com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException
-import com.lcaohoanq.ktservice.repository.TokenRepository
+import com.lcaohoanq.ktservice.entities.Token
+import com.lcaohoanq.ktservice.entities.User
+import com.lcaohoanq.common.exceptions.InvalidParamException
+import com.lcaohoanq.common.exceptions.JwtAuthenticationException
+import com.lcaohoanq.ktservice.repositories.TokenRepository
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.io.Encoders

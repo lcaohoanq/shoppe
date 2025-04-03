@@ -1,13 +1,14 @@
 package com.lcaohoanq.ktservice.domain.user
 
-import com.lcaohoanq.ktservice.api.ApiResponse
-import com.lcaohoanq.ktservice.api.PageResponse
-import com.lcaohoanq.ktservice.base.QueryCriteria
+import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.common.api.ApiResponse
+import com.lcaohoanq.common.api.PageResponse
+import com.lcaohoanq.common.bases.QueryCriteria
 import com.lcaohoanq.ktservice.domain.auth.IAuthService
 import com.lcaohoanq.ktservice.domain.quota.ApiQuotaService
 import com.lcaohoanq.ktservice.extension.toUserResponse
-import com.lcaohoanq.ktservice.utils.SortOrder
-import com.lcaohoanq.ktservice.utils.Sortable
+import com.lcaohoanq.common.utils.SortOrder
+import com.lcaohoanq.common.utils.Sortable
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.PageRequest

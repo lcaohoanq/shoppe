@@ -1,6 +1,6 @@
 package com.lcaohoanq.ktservice.component
 
-import com.lcaohoanq.ktservice.WebUtil
+import com.lcaohoanq.common.utils.WebUtil
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Component

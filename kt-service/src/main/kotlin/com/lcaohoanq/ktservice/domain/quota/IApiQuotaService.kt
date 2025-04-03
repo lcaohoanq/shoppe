@@ -1,6 +1,8 @@
 package com.lcaohoanq.ktservice.domain.quota
 
-import com.lcaohoanq.ktservice.domain.user.User
+import com.lcaohoanq.common.dto.QuotaPort
+import com.lcaohoanq.ktservice.entities.ApiQuota
+import com.lcaohoanq.ktservice.entities.User
 
 interface IApiQuotaService: IApiQuotaUtil {
 

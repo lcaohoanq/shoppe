@@ -1,7 +1,8 @@
 package com.lcaohoanq.ktservice.domain.category
 
+import com.lcaohoanq.common.dto.CatePort
+import com.lcaohoanq.ktservice.repositories.CategoryRepository
 import com.lcaohoanq.ktservice.extension.toResponse
-import com.lcaohoanq.ktservice.repository.CategoryRepository
 import org.springframework.stereotype.Service
 
 @Service

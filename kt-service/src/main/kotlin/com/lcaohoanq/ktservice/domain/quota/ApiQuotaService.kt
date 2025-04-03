@@ -1,7 +1,10 @@
 package com.lcaohoanq.ktservice.domain.quota
 
-import com.lcaohoanq.ktservice.domain.user.User
-import com.lcaohoanq.ktservice.repository.ApiQuotaRepository
+import com.lcaohoanq.common.dto.QuotaPort
+import com.lcaohoanq.ktservice.entities.ApiQuota
+import com.lcaohoanq.ktservice.entities.User
+import com.lcaohoanq.common.metadata.QuotaMeta
+import com.lcaohoanq.ktservice.repositories.ApiQuotaRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneOffset

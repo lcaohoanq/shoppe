@@ -1,5 +1,6 @@
 package com.lcaohoanq.ktservice.domain.user
 
+import com.lcaohoanq.ktservice.entities.User
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Predicate

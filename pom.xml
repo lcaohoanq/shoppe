@@ -13,7 +13,7 @@
 
   <groupId>com.lcaohoanq</groupId>
   <artifactId>shoppe-server</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
   <name>server</name>
   <description>Shoppe Parent Project</description>
@@ -22,6 +22,7 @@
     <module>kt-service</module>
     <module>jv-service</module>
     <module>test-service</module>
+    <module>common-lib</module>
   </modules>
 
   <properties>
@@ -35,10 +36,18 @@
     <lombok.version>1.18.30</lombok.version>
     <postgres.version>42.7.3</postgres.version>
     <dotenv.spring.version>4.0.0</dotenv.spring.version>
+    <common-lib.version>1.0.0</common-lib.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <!--	Common Libs	-->
+      <dependency>
+        <groupId>com.lcaohoanq</groupId>
+        <artifactId>common-lib</artifactId>
+        <version>${common-lib.version}</version>
+      </dependency>
+
       <!-- Spring Boot Core -->
       <dependency>
         <groupId>org.springframework.boot</groupId>

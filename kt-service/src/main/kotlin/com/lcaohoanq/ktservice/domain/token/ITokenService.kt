@@ -1,6 +1,7 @@
 package com.lcaohoanq.ktservice.domain.token
 
-import com.lcaohoanq.ktservice.domain.user.User
+import com.lcaohoanq.ktservice.entities.Token
+import com.lcaohoanq.ktservice.entities.User
 
 
 interface ITokenService {

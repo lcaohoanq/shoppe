@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.extension
 
-import com.lcaohoanq.ktservice.domain.token.Token
-import com.lcaohoanq.ktservice.domain.token.TokenPort
+import com.lcaohoanq.common.dto.TokenPort
+import com.lcaohoanq.ktservice.entities.Token
 
 fun Token.toTokenResponse(): TokenPort.TokenResponse {
     return TokenPort.TokenResponse(

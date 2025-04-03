@@ -1,12 +1,11 @@
 package com.lcaohoanq.ktservice.aspects
 
-import com.lcaohoanq.ktservice.config.roleQuotaConfig
+import com.lcaohoanq.ktservice.configs.roleQuotaConfig
 import com.lcaohoanq.ktservice.custom.annotations.ApiQuotable
 import com.lcaohoanq.ktservice.custom.annotations.DynamicApiQuotable
 import com.lcaohoanq.ktservice.domain.auth.AuthService
 import com.lcaohoanq.ktservice.domain.quota.ApiQuotaService
-import com.lcaohoanq.ktservice.domain.user.User
-import com.lcaohoanq.ktservice.exceptions.TooManyRequestsException
+import com.lcaohoanq.ktservice.entities.User
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -31,7 +30,7 @@ class ApiQuotaAspect(
         val endpoint = apiQuotable.endpoint
 
         if (!apiQuotaService.isRequestAllowed(user, endpoint)) {
-            throw TooManyRequestsException("Too many requests. Please try again later.")
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
         }
     }
 
@@ -55,7 +54,7 @@ class ApiQuotaAspect(
         }
 
         if (!apiQuotaService.isRequestAllowed(user, endpoint, maxRequests)) {
-            throw TooManyRequestsException("Too many requests. Please try again later.")
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
         }
     }
 
@@ -70,7 +69,7 @@ class ApiQuotaAspect(
             ?: throw IllegalArgumentException("Unknown role: $role")
 
         if (!apiQuotaService.isRequestAllowed(user, apiQuotable.endpoint, maxRequests, resetTime)) {
-            throw TooManyRequestsException(
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException(
                 "Too many requests. Please try again later."
             )
         }

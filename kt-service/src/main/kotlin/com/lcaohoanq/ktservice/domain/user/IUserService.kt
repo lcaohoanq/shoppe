@@ -1,8 +1,10 @@
 package com.lcaohoanq.ktservice.domain.user
 
-import com.lcaohoanq.ktservice.api.PageResponse
-import com.lcaohoanq.ktservice.base.QueryCriteria
-import com.lcaohoanq.ktservice.utils.Sortable
+import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.entities.User
+import com.lcaohoanq.common.api.PageResponse
+import com.lcaohoanq.common.bases.QueryCriteria
+import com.lcaohoanq.common.utils.Sortable
 import org.springframework.data.domain.Pageable
 
 interface IUserService {

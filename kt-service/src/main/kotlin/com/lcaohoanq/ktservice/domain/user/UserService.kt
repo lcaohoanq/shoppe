@@ -1,17 +1,17 @@
 package com.lcaohoanq.ktservice.domain.user
 
-import com.lcaohoanq.ktservice.api.PageResponse
-import com.lcaohoanq.ktservice.base.QueryCriteria
-import com.lcaohoanq.ktservice.component.JwtTokenUtils
-import com.lcaohoanq.ktservice.exceptions.ExpiredTokenException
-import com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException
+import com.lcaohoanq.common.api.PageResponse
+import com.lcaohoanq.common.bases.QueryCriteria
+import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.entities.User
 import com.lcaohoanq.ktservice.extension.toUserResponse
-import com.lcaohoanq.ktservice.metadata.PaginationMeta
-import com.lcaohoanq.ktservice.repository.TokenRepository
-import com.lcaohoanq.ktservice.repository.UserRepository
-import com.lcaohoanq.ktservice.utils.SortCriterion
-import com.lcaohoanq.ktservice.utils.SortOrder
-import com.lcaohoanq.ktservice.utils.Sortable
+import com.lcaohoanq.common.metadata.PaginationMeta
+import com.lcaohoanq.ktservice.repositories.TokenRepository
+import com.lcaohoanq.ktservice.repositories.UserRepository
+import com.lcaohoanq.common.utils.SortCriterion
+import com.lcaohoanq.common.utils.SortOrder
+import com.lcaohoanq.common.utils.Sortable
+import com.lcaohoanq.ktservice.component.JwtTokenUtils
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -90,18 +90,24 @@ class UserService(
     }
 
     override fun findByEmail(email: String): User? {
-        return userRepository.findByEmail(email) ?: throw DataNotFoundException("Email not found")
+        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+            "Email not found"
+        )
     }
 
     override fun getUserDetailsFromAccessToken(at: String): User {
-        if (jwtTokenUtils.isTokenExpired(at)) throw ExpiredTokenException("Token is expired")
+        if (jwtTokenUtils.isTokenExpired(at)) throw com.lcaohoanq.common.exceptions.ExpiredTokenException(
+            "Token is expired"
+        )
         val email = jwtTokenUtils.extractEmail(at)
-        return userRepository.findByEmail(email) ?: throw DataNotFoundException("User not found")
+        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+            "User not found"
+        )
     }
 
     override fun getUserDetailsFromRefreshToken(rf: String): User {
         val existingToken = tokenRepository.findByRefreshToken(rf)
-            ?: throw DataNotFoundException("Refresh Token not exist")
+            ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("Refresh Token not exist")
         return getUserDetailsFromAccessToken(existingToken.token)
     }
 }

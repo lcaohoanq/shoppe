@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.extension
 
-import com.lcaohoanq.ktservice.domain.user.User
-import com.lcaohoanq.ktservice.domain.user.UserPort
+import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.entities.User
 
 fun User.toUserResponse() = UserPort.UserResponse(
     id = this.id!!,
