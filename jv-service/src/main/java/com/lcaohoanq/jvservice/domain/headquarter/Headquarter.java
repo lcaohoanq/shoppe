@@ -3,7 +3,7 @@ package com.lcaohoanq.jvservice.domain.headquarter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.jvservice.base.entity.BaseEntity;
-import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.common.enums.Country;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,12 +1,9 @@
 package com.lcaohoanq.ktservice.domain.auth
 
-import com.lcaohoanq.common.api.ApiResponse
+import com.lcaohoanq.ktservice.api.ApiResponse
+import com.lcaohoanq.ktservice.dto.TokenPort
 import com.lcaohoanq.ktservice.component.LocalizationUtils
-import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.ktservice.domain.user.IUserService
-import com.lcaohoanq.common.exceptions.MethodArgumentNotValidException
-import com.lcaohoanq.common.exceptions.TokenNotFoundException
-import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
@@ -62,7 +59,7 @@ class AuthController(
         result: BindingResult
     ): ResponseEntity<ApiResponse<AuthPort.AuthResponse>> {
         if (result.hasErrors()) {
-            throw com.lcaohoanq.common.exceptions.MethodArgumentNotValidException(result)
+            throw com.lcaohoanq.ktservice.exceptions.MethodArgumentNotValidException(result)
         }
 
         return ResponseEntity.ok(
@@ -84,14 +81,14 @@ class AuthController(
         val authorizationHeader: String = request.getHeader("Authorization")
 
         if (!authorizationHeader.startsWith("Bearer ")) {
-            throw com.lcaohoanq.common.exceptions.TokenNotFoundException("Token not found")
+            throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException("Token not found")
         }
         val token = authorizationHeader.substring(7)
 
         val userDetails = SecurityContextHolder.getContext()
             .authentication.principal as UserDetails
         val user = userService.findByEmail(userDetails.username)
-            ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("User not found")
+            ?: throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException("User not found")
 
         authService.logout(token, user) //revoke token
 

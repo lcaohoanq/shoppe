@@ -1,7 +1,7 @@
 package com.lcaohoanq.jvservice.domain.role;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.jvservice.enums.UserRole;
+import com.lcaohoanq.common.enums.UserRole;
 import lombok.Builder;
 
 @Builder

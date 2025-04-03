@@ -1,5 +1,6 @@
 package com.lcaohoanq.ktservice.domain.token
 
+import com.lcaohoanq.common.utils.Identifiable
 import com.lcaohoanq.ktservice.entities.Token
 import com.lcaohoanq.ktservice.entities.User
 import com.lcaohoanq.ktservice.repositories.TokenRepository
@@ -21,7 +22,7 @@ class TokenService(
     private val tokenRepository: TokenRepository, // Note: Changed from UserRepository
     private val jwtTokenUtil: JwtTokenUtils,
     private val request: HttpServletRequest
-) : ITokenService {
+) : ITokenService, Identifiable {
 
     companion object {
         private const val MAX_TOKENS = 3
@@ -36,7 +37,7 @@ class TokenService(
     @Transactional
     override fun addToken(userId: Long, token: String): Token {
         val user = userRepository.findById(userId)
-            .orElseThrow { com.lcaohoanq.common.exceptions.base.DataNotFoundException("User not found") }
+            .orElseThrow { com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException("User not found") }
 
         val userTokens = tokenRepository.findByUserId(userId)
 
@@ -53,7 +54,7 @@ class TokenService(
 
         val expirationDateTime = LocalDateTime.now().plusSeconds(expiration)
 
-        val isMobileDevice = request.getHeader("User-Agent")?.contains("Mobile") ?: false
+        val isMobileDevice = isMobileDevice(request.getHeader("User-Agent"))
 
         return Token(
             user = user,
@@ -70,13 +71,13 @@ class TokenService(
 
     @Transactional
     override fun refreshToken(refreshToken: String, user: User): Token {
-        val existingToken = tokenRepository.findByRefreshToken(refreshToken) ?: throw com.lcaohoanq.common.exceptions.TokenNotFoundException(
+        val existingToken = tokenRepository.findByRefreshToken(refreshToken) ?: throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException(
             "Refresh token does not exist"
         )
 
         // Check token expiration
         require(existingToken.refreshExpirationDate.isAfter(LocalDateTime.now())) {
-            throw com.lcaohoanq.common.exceptions.ExpiredTokenException("Refresh token is expired")
+            throw com.lcaohoanq.ktservice.exceptions.ExpiredTokenException("Refresh token is expired")
         }
 
         return existingToken.apply {
@@ -89,16 +90,16 @@ class TokenService(
     }
 
     override fun deleteToken(token: String, user: User) {
-        val existingToken = tokenRepository.findByToken(token) ?: throw com.lcaohoanq.common.exceptions.TokenNotFoundException(
+        val existingToken = tokenRepository.findByToken(token) ?: throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException(
             "Token does not exist"
         )
 
         // Validate token ownership and status
         require(!existingToken.revoked) {
-            throw com.lcaohoanq.common.exceptions.TokenNotFoundException("Token has been revoked")
+            throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException("Token has been revoked")
         }
         require(existingToken.user.id == user.id) {
-            throw com.lcaohoanq.common.exceptions.TokenNotFoundException("Token does not exist")
+            throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException("Token does not exist")
         }
 
         existingToken.revoked = true
@@ -106,7 +107,7 @@ class TokenService(
     }
 
     override fun findUserByToken(token: String): Token =
-        tokenRepository.findByToken(token) ?: throw com.lcaohoanq.common.exceptions.TokenNotFoundException(
+        tokenRepository.findByToken(token) ?: throw com.lcaohoanq.ktservice.exceptions.TokenNotFoundException(
             "Token does not exist"
         )
 }

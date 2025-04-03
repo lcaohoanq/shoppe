@@ -1,6 +1,6 @@
 package com.lcaohoanq.jvservice.domain.phone;
 
-import com.lcaohoanq.jvservice.enums.UserStatus;
+import com.lcaohoanq.common.enums.UserStatus;
 import com.lcaohoanq.jvservice.domain.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

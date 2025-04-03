@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.domain.auth
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.lcaohoanq.common.dto.TokenPort
+import com.lcaohoanq.ktservice.dto.TokenPort
 import io.swagger.v3.oas.annotations.media.Schema
 
 interface AuthPort {

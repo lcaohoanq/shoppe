@@ -1,14 +1,12 @@
 package com.lcaohoanq.ktservice.domain.auth
 
+import com.lcaohoanq.ktservice.dto.TokenPort
+import com.lcaohoanq.ktservice.dto.UserPort.UserResponse
 import com.lcaohoanq.ktservice.component.JwtTokenUtils
-import com.lcaohoanq.ktservice.entities.Token
-import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.ktservice.domain.token.TokenService
 import com.lcaohoanq.ktservice.domain.user.IUserService
+import com.lcaohoanq.ktservice.entities.Token
 import com.lcaohoanq.ktservice.entities.User
-import com.lcaohoanq.common.dto.UserPort.UserResponse
-import com.lcaohoanq.common.exceptions.ExpiredTokenException
-import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import com.lcaohoanq.ktservice.extension.toTokenResponse
 import com.lcaohoanq.ktservice.extension.toUserResponse
 import com.lcaohoanq.ktservice.repositories.UserRepository
@@ -30,7 +28,7 @@ class AuthService(
     private val jwtTokenUtils: JwtTokenUtils,
     private val tokenService: TokenService,
     private val passwordEncoder: PasswordEncoder
-) : IAuthService {
+) : IAuthService{
 
     private val log = KotlinLogging.logger {}
 
@@ -95,14 +93,14 @@ class AuthService(
 
     override fun getUserDetailsFromToken(token: String): UserResponse {
         if (jwtTokenUtils.isTokenExpired(token)) {
-            throw com.lcaohoanq.common.exceptions.ExpiredTokenException("Token is expired")
+            throw com.lcaohoanq.ktservice.exceptions.ExpiredTokenException("Token is expired")
         }
         val email = jwtTokenUtils.extractEmail(token)
         val user = userRepository.findByEmail(email)
         if (user != null) {
             return user.toUserResponse()
         } else {
-            throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("User not found")
+            throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException("User not found")
         }
 
     }
@@ -110,7 +108,7 @@ class AuthService(
     override fun getCurrentAuthenticatedUser(): User {
         return userService.findByEmail(
             SecurityContextHolder.getContext().authentication.name
-        ) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("User not found")
+        ) ?: throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException("User not found")
     }
 
     override fun refreshToken(refreshTokenDTO: TokenPort.RefreshTokenDTO): AuthPort.AuthResponse {
@@ -123,7 +121,7 @@ class AuthService(
 
     override fun logout(token: String, user: User) {
         if (jwtTokenUtils.isTokenExpired(token))
-            throw com.lcaohoanq.common.exceptions.ExpiredTokenException("Token is expired");
+            throw com.lcaohoanq.ktservice.exceptions.ExpiredTokenException("Token is expired");
 
         tokenService.deleteToken(token, user);
     }

@@ -1,8 +1,7 @@
 package com.lcaohoanq.jvservice;
 
 
-import static com.lcaohoanq.jvservice.util.WebUtilKt.openHomePage;
-
+import com.lcaohoanq.common.utils.WebUtil;
 import java.util.TimeZone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,7 +21,6 @@ public class JvApp {
         SpringApplication.run(JvApp.class, args);
 
         // Open home pages in browser
-        openHomePage("http://localhost:8080/graphiql");
-        openHomePage("http://localhost:8080/swagger-ui/index.html");
+        WebUtil.INSTANCE.openHomePage(WebUtil.INSTANCE.getUrlListJava());
     }
 }

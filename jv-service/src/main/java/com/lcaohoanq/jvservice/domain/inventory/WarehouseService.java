@@ -1,7 +1,7 @@
 package com.lcaohoanq.jvservice.domain.inventory;
 
 import com.lcaohoanq.jvservice.base.exception.DataNotFoundException;
-import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.common.enums.Country;
 import com.lcaohoanq.jvservice.mapper.WarehouseMapper;
 import com.lcaohoanq.jvservice.repository.WarehouseRepository;
 import java.util.List;

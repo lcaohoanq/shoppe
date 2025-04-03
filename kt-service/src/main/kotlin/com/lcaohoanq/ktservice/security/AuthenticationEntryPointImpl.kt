@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.lcaohoanq.common.api.ApiError
+import com.lcaohoanq.ktservice.api.ApiError
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus

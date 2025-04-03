@@ -1,8 +1,8 @@
 package com.lcaohoanq.ktservice.domain.auth
 
-import com.lcaohoanq.common.dto.TokenPort
+import com.lcaohoanq.ktservice.dto.TokenPort
 import com.lcaohoanq.ktservice.entities.User
-import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.dto.UserPort
 
 interface IAuthService {
 

@@ -1,6 +1,6 @@
 package com.lcaohoanq.ktservice.cron
 
-import com.lcaohoanq.common.bases.BaseLogger
+import com.lcaohoanq.ktservice.bases.BaseLogger
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 

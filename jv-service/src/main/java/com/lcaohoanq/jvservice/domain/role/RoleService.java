@@ -1,6 +1,6 @@
 package com.lcaohoanq.jvservice.domain.role;
 
-import com.lcaohoanq.jvservice.enums.UserRole;
+import com.lcaohoanq.common.enums.UserRole;
 import com.lcaohoanq.jvservice.exception.MalformDataException;
 import com.lcaohoanq.jvservice.base.exception.DataAlreadyExistException;
 import com.lcaohoanq.jvservice.base.exception.DataNotFoundException;

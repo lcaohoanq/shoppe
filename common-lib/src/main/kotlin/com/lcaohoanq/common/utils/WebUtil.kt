@@ -12,12 +12,17 @@ object WebUtil {
     val currentRequest: HttpServletRequest
         get() = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
 
-    var urlList = listOf(
+    val urlListKotLin = listOf(
         "http://localhost:4000/swagger-ui/index.html",
 //    "http://localhost:4000/h2-console",
     )
 
-    fun openHomePage() {
+    val urlListJava = listOf(
+        "http://localhost:8080/swagger-ui/index.html",
+        "http://localhost:8080/graphiql"
+    )
+
+    fun openHomePage(urlList: List<String>) {
         try {
             urlList.forEach { url ->
                 if (Desktop.isDesktopSupported()) {

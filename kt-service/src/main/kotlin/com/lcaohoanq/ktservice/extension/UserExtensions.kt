@@ -1,6 +1,6 @@
 package com.lcaohoanq.ktservice.extension
 
-import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.dto.UserPort
 import com.lcaohoanq.ktservice.entities.User
 
 fun User.toUserResponse() = UserPort.UserResponse(

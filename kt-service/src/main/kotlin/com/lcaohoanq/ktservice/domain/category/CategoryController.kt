@@ -1,7 +1,7 @@
 package com.lcaohoanq.ktservice.domain.category
 
-import com.lcaohoanq.common.dto.CatePort
-import com.lcaohoanq.common.api.ApiResponse
+import com.lcaohoanq.ktservice.dto.CatePort
+import com.lcaohoanq.ktservice.api.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize

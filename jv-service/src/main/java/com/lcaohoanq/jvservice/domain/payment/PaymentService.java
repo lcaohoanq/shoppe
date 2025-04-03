@@ -10,7 +10,7 @@ import com.lcaohoanq.jvservice.domain.payment.Payment.EPaymentType;
 import com.lcaohoanq.jvservice.domain.user.IUserService;
 import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.domain.wallet.WalletService;
-import com.lcaohoanq.jvservice.enums.EmailCategoriesEnum;
+import com.lcaohoanq.common.enums.EmailCategoriesEnum;
 import com.lcaohoanq.jvservice.exception.MalformDataException;
 import com.lcaohoanq.jvservice.repository.OrderRepository;
 import com.lcaohoanq.jvservice.repository.PaymentRepository;

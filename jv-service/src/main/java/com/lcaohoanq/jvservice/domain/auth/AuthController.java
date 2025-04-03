@@ -13,7 +13,7 @@ import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.domain.user.UserResponse;
 import com.lcaohoanq.jvservice.exception.MethodArgumentNotValidException;
 import com.lcaohoanq.jvservice.mapper.UserMapper;
-import com.lcaohoanq.jvservice.util.Identifiable;
+import com.lcaohoanq.common.utils.Identifiable;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

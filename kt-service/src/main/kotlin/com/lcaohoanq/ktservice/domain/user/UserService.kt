@@ -1,8 +1,8 @@
 package com.lcaohoanq.ktservice.domain.user
 
-import com.lcaohoanq.common.api.PageResponse
-import com.lcaohoanq.common.bases.QueryCriteria
-import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.ktservice.api.PageResponse
+import com.lcaohoanq.ktservice.bases.QueryCriteria
+import com.lcaohoanq.ktservice.dto.UserPort
 import com.lcaohoanq.ktservice.entities.User
 import com.lcaohoanq.ktservice.extension.toUserResponse
 import com.lcaohoanq.common.metadata.PaginationMeta
@@ -90,24 +90,24 @@ class UserService(
     }
 
     override fun findByEmail(email: String): User? {
-        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException(
             "Email not found"
         )
     }
 
     override fun getUserDetailsFromAccessToken(at: String): User {
-        if (jwtTokenUtils.isTokenExpired(at)) throw com.lcaohoanq.common.exceptions.ExpiredTokenException(
+        if (jwtTokenUtils.isTokenExpired(at)) throw com.lcaohoanq.ktservice.exceptions.ExpiredTokenException(
             "Token is expired"
         )
         val email = jwtTokenUtils.extractEmail(at)
-        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException(
             "User not found"
         )
     }
 
     override fun getUserDetailsFromRefreshToken(rf: String): User {
         val existingToken = tokenRepository.findByRefreshToken(rf)
-            ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("Refresh Token not exist")
+            ?: throw com.lcaohoanq.ktservice.exceptions.base.DataNotFoundException("Refresh Token not exist")
         return getUserDetailsFromAccessToken(existingToken.token)
     }
 }

@@ -1,7 +1,7 @@
 package com.lcaohoanq.jvservice.domain.inventory;
 
 import com.lcaohoanq.jvservice.domain.inventory.Warehouse.WarehouseName;
-import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.common.enums.Country;
 import jakarta.validation.constraints.NotNull;
 
 public record WarehouseDTO(

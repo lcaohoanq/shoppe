@@ -1,10 +1,10 @@
 package com.lcaohoanq.jvservice.domain.mail;
 
-import com.lcaohoanq.jvservice.enums.EmailCategoriesEnum;
+import com.lcaohoanq.common.enums.EmailCategoriesEnum;
 import com.lcaohoanq.jvservice.domain.otp.Otp;
 import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.domain.otp.OtpService;
-import com.lcaohoanq.jvservice.util.OtpUtil;
+import com.lcaohoanq.common.utils.OtpUtil;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.mail.MessagingException;

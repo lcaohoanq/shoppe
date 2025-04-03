@@ -1,8 +1,8 @@
 package com.lcaohoanq.ktservice.domain.quota
 
-import com.lcaohoanq.common.dto.QuotaPort
+import com.lcaohoanq.ktservice.dto.QuotaPort
 import com.lcaohoanq.ktservice.entities.ApiQuota
-import com.lcaohoanq.common.api.ApiResponse
+import com.lcaohoanq.ktservice.api.ApiResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity

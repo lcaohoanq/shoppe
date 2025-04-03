@@ -1,6 +1,6 @@
 package com.lcaohoanq.ktservice.domain.quota
 
-import com.lcaohoanq.common.dto.QuotaPort
+import com.lcaohoanq.ktservice.dto.QuotaPort
 import com.lcaohoanq.ktservice.entities.ApiQuota
 import com.lcaohoanq.ktservice.entities.User
 import com.lcaohoanq.common.metadata.QuotaMeta

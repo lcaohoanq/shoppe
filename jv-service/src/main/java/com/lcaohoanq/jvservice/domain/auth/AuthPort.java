@@ -7,12 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.jvservice.constant.Regex;
 import com.lcaohoanq.jvservice.domain.token.TokenPort.TokenResponse;
+import com.lcaohoanq.jvservice.domain.user.Address;
 import com.lcaohoanq.jvservice.domain.user.User.Gender;
-import com.lcaohoanq.jvservice.enums.Country;
-import com.lcaohoanq.jvservice.enums.Currency;
+import com.lcaohoanq.common.enums.Country;
+import com.lcaohoanq.common.enums.Currency;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import java.util.Set;
 
 public interface AuthPort {
 
@@ -31,7 +33,7 @@ public interface AuthPort {
         @JsonProperty("gender") Gender gender,
 
         @JsonProperty("address")
-        String address,
+        Set<Address> address,
 
         @JsonProperty("password")
         @Pattern(regexp = Regex.PASSWORD_REGEX, message = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")

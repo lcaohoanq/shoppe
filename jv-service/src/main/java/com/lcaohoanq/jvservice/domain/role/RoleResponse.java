@@ -3,7 +3,7 @@ package com.lcaohoanq.jvservice.domain.role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.lcaohoanq.jvservice.enums.UserRole;
+import com.lcaohoanq.common.enums.UserRole;
 import java.time.LocalDateTime;
 
 @JsonPropertyOrder(

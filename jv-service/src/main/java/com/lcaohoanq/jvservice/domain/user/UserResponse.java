@@ -6,8 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.jvservice.domain.role.Role;
 import com.lcaohoanq.jvservice.domain.user.User.Gender;
-import com.lcaohoanq.jvservice.enums.UserStatus;
+import com.lcaohoanq.common.enums.UserStatus;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @JsonPropertyOrder(
     {
@@ -41,7 +42,7 @@ public record UserResponse(
     UserStatus status,
     @JsonProperty("date_of_birth") String dateOfBirth,
     @JsonProperty("phone_number") String phoneNumber,
-    @JsonProperty("address") String address,
+    @JsonProperty("address") Set<Address> address,
     @JsonProperty("avatar") String avatar,
     @JsonProperty("role") Role role,
     @JsonIgnore @JsonProperty("wallet_id") Long walletId,

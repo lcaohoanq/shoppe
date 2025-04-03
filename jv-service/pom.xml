@@ -221,6 +221,11 @@
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-lib</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

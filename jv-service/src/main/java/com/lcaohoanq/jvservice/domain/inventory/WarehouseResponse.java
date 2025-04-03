@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.lcaohoanq.jvservice.domain.inventory.Warehouse.WarehouseName;
-import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.common.enums.Country;
 import java.time.LocalDateTime;
 
 @JsonPropertyOrder(

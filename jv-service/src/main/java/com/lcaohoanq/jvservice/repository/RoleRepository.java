@@ -1,7 +1,7 @@
 package com.lcaohoanq.jvservice.repository;
 
 import com.lcaohoanq.jvservice.domain.role.Role;
-import com.lcaohoanq.jvservice.enums.UserRole;
+import com.lcaohoanq.common.enums.UserRole;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

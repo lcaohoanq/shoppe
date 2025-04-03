@@ -2,8 +2,8 @@ package com.lcaohoanq.ktservice.component
 
 import com.lcaohoanq.ktservice.entities.Token
 import com.lcaohoanq.ktservice.entities.User
-import com.lcaohoanq.common.exceptions.InvalidParamException
-import com.lcaohoanq.common.exceptions.JwtAuthenticationException
+import com.lcaohoanq.ktservice.exceptions.InvalidParamException
+import com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException
 import com.lcaohoanq.ktservice.repositories.TokenRepository
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
@@ -48,7 +48,7 @@ class JwtTokenUtils(
                 .compact()
         } catch (e: Exception) {
             //you can "inject" Logger, instead System.out.println
-            throw InvalidParamException("Cannot create jwt token, error: " + e.message)
+            throw com.lcaohoanq.ktservice.exceptions.InvalidParamException("Cannot create jwt token, error: " + e.message)
             //return null;
         }
     }
@@ -98,18 +98,18 @@ class JwtTokenUtils(
         try {
             val email = extractEmail(token)
             val existingToken: Token =
-                tokenRepository.findByToken(token) ?: throw JwtAuthenticationException(
+                tokenRepository.findByToken(token) ?: throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException(
                     "Token is invalid"
                 )
 
             // Check token existence and revocation
             if (existingToken.revoked) {
-                throw JwtAuthenticationException("Token is invalid or has been revoked")
+                throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("Token is invalid or has been revoked")
             }
 
             // Check token matches user
             if (email != userDetails.getUsername()) {
-                throw JwtAuthenticationException("Token does not match user")
+                throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("Token does not match user")
             }
 
             // Check expiration
@@ -119,13 +119,13 @@ class JwtTokenUtils(
 
             return true
         } catch (e: ExpiredJwtException) {
-            throw JwtAuthenticationException("JWT token has expired")
+            throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("JWT token has expired")
         } catch (e: MalformedJwtException) {
-            throw JwtAuthenticationException("Invalid JWT token format")
+            throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("Invalid JWT token format")
         } catch (e: UnsupportedJwtException) {
-            throw JwtAuthenticationException("Unsupported JWT token")
+            throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("Unsupported JWT token")
         } catch (e: IllegalArgumentException) {
-            throw JwtAuthenticationException("JWT claims string is empty")
+            throw com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException("JWT claims string is empty")
         }
     }
 }

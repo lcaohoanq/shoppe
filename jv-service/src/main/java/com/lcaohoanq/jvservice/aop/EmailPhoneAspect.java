@@ -1,6 +1,6 @@
 package com.lcaohoanq.jvservice.aop;
 
-import com.lcaohoanq.jvservice.enums.UserStatus;
+import com.lcaohoanq.common.enums.UserStatus;
 import com.lcaohoanq.jvservice.exception.UserHasBeenBannedException;
 import com.lcaohoanq.jvservice.exception.UserHasBeenVerifiedException;
 import com.lcaohoanq.jvservice.domain.user.User;

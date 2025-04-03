@@ -2,7 +2,7 @@ package com.lcaohoanq.jvservice.domain.socialaccount;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.lcaohoanq.jvservice.enums.ProviderName;
+import com.lcaohoanq.common.enums.ProviderName;
 import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.base.entity.BaseEntity;
 import jakarta.persistence.Column;
@@ -17,7 +17,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

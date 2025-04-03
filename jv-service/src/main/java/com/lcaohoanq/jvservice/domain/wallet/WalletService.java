@@ -9,7 +9,7 @@ import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.repository.UserRepository;
 import com.lcaohoanq.jvservice.domain.user.UserResponse;
 import com.lcaohoanq.jvservice.domain.wallet.WalletDTO.WalletResponse;
-import com.lcaohoanq.jvservice.enums.EmailCategoriesEnum;
+import com.lcaohoanq.common.enums.EmailCategoriesEnum;
 import com.lcaohoanq.jvservice.mapper.WalletMapper;
 import com.lcaohoanq.jvservice.repository.WalletRepository;
 import jakarta.mail.MessagingException;

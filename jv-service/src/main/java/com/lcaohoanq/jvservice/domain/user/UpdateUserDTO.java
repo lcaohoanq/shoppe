@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Pattern;
+import java.util.Set;
 
 @JsonInclude(Include.NON_NULL)
 public record UpdateUserDTO(
@@ -12,7 +13,7 @@ public record UpdateUserDTO(
     @JsonProperty("phone_number") String phoneNumber,
     @JsonProperty("password") String password,
     @JsonProperty("confirm_password") String confirmPassword, // in case user wants to change password
-    @JsonProperty("address") String address,
+    @JsonProperty("address") Set<Address> address,
     @JsonProperty("status")
     @Pattern(regexp = "ACTIVE|INACTIVE|VERIFIED|UNVERIFIED|BANNED", message = "Status must be either ONGOING, INACTIVE, VERIFIED, UNVERIFIED, BANNED")
     String status,

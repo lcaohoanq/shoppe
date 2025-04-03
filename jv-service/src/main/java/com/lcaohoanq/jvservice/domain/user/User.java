@@ -9,7 +9,7 @@ import com.lcaohoanq.jvservice.domain.cart.Cart;
 import com.lcaohoanq.jvservice.domain.chat.ChatRoom;
 import com.lcaohoanq.jvservice.domain.role.Role;
 import com.lcaohoanq.jvservice.domain.wallet.Wallet;
-import com.lcaohoanq.jvservice.enums.UserStatus;
+import com.lcaohoanq.common.enums.UserStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

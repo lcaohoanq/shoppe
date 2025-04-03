@@ -1,6 +1,6 @@
 package com.lcaohoanq.jvservice.base.entity;
 
-import com.lcaohoanq.jvservice.enums.Country;
+import com.lcaohoanq.common.enums.Country;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
