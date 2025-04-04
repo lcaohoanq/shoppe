@@ -23,6 +23,8 @@
     <module>jv-service</module>
     <module>test-service</module>
     <module>common-lib</module>
+    <module>asset-service</module>
+    <module>chat-service</module>
   </modules>
 
   <properties>
@@ -36,6 +38,7 @@
     <lombok.version>1.18.30</lombok.version>
     <postgres.version>42.7.3</postgres.version>
     <dotenv.spring.version>4.0.0</dotenv.spring.version>
+    <dotenv.java.version>3.0.1</dotenv.java.version>
     <common-lib.version>1.0.0</common-lib.version>
   </properties>
 
@@ -143,6 +146,13 @@
         <version>${mapstruct.version}</version>
         <scope>provided</scope>
       </dependency>
+
+      <dependency>
+        <groupId>io.github.cdimascio</groupId>
+        <artifactId>dotenv-java</artifactId>
+        <version>${dotenv.java.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>me.paulschwarz</groupId>
         <artifactId>spring-dotenv</artifactId>

@@ -1,0 +1,153 @@
+networks:
+  chat_network:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_shoppee
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: Iloveyou123!
+      POSTGRES_DB: chat_app
+    networks:
+      - chat_network
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_shoppee
+    environment:
+      PGADMIN_DEFAULT_EMAIL: hoangclw@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+      - chat_network
+    ports:
+      - "81:80"
+    depends_on:
+      - postgres
+
+  redis-container:
+    image: docker.io/redis:7.2.3
+    container_name: redis_shoppee
+    restart: no
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data # Mount a volume for Redis data persistence
+    networks:
+      - chat_network
+  
+#  authelia:
+#    image: authelia/authelia
+#    container_name: authelia
+#    volumes:
+#      - ./authelia:/config:rw #Read-Write Permission
+#    networks:
+#      - chat_network
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.authelia.rule=Host(`authelia.example.com`)"
+#      - "traefik.http.routers.authelia.entrypoints=https"
+#      - "traefik.http.routers.authelia.tls=true"
+#      - "traefik.http.routers.authelia.tls.options=default"
+#      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://authelia.example.com"
+#      - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
+#      - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User,Remote-Groups,Remote-Name,Remote-Email"
+#    ports:
+#      - "9091:9091"
+#    restart: unless-stopped
+#
+#  traefik:
+#    image: traefik:2.10.5
+#    container_name: traefik
+#    volumes:
+#      - ./traefik:/etc/traefik
+#      - ./traefik/certs:/etc/traefik/certs
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    networks:
+#      - chat_network
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.api.rule=Host(`traefik.example.com`)"
+#      - "traefik.http.routers.api.entrypoints=https"
+#      - "traefik.http.routers.api.service=api@internal"
+#      - "traefik.http.routers.api.tls=true"
+#      - "traefik.http.routers.api.tls.options=default"
+#      - "traefik.http.routers.api.middlewares=authelia@docker"
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#
+#    command:
+#      - "--api"
+#      - "--providers.docker=true"
+#      - "--providers.docker.exposedByDefault=false"
+#      - "--providers.file.filename=/etc/traefik/certificates.yml"
+#      - "--entrypoints.http=true"
+#      - "--entrypoints.http.address=:80"
+#      - "--entrypoints.http.http.redirections.entrypoint.to=https"
+#      - "--entrypoints.http.http.redirections.entrypoint.scheme=https"
+#      - "--entrypoints.https=true"
+#      - "--entrypoints.https.address=:443"
+#      - "--log=true"
+#      - "--log.level=DEBUG"
+#
+#  dozzle:
+#    image: amir20/dozzle:latest
+#    environment:
+#      DOZZLE_AUTH_PROVIDER: forward-proxy
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.dozzle.rule=Host(`dozzle.example.com`)"
+#      - "traefik.http.routers.dozzle.entrypoints=https"
+#      - "traefik.http.routers.dozzle.tls=true"
+#      - "traefik.http.routers.dozzle.tls.options=default"
+#      - "traefik.http.routers.dozzle.middlewares=authelia@docker"
+#    ports:
+#      - "8081:8080"
+#    networks:
+#      - chat_network
+#    restart: unless-stopped
+
+#  prometheus:
+#    image: prom/prometheus
+#    container_name: prometheus_shoppe
+#    ports:
+#      - "9090:9090"
+#    restart: unless-stopped
+#    volumes:
+#      - ./config/prometheus:/etc/prometheus
+#    networks:
+#      - chat_network
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#
+#  # connection Prometheus server URL
+#  # http://prometheus:9090(prometheus is the service name)
+#  # not use localhost because localhost refer to grafana itself
+#  grafana:
+#    image: grafana/grafana
+#    container_name: grafana_shoppe
+#    ports:
+#      - "3001:3000"
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=sysadmin
+#      - GF_SECURITY_ADMIN_PASSWORD=sysadmin
+#    volumes:
+#      - grafana_data:/var/lib/grafana
+#    networks:
+#      - chat_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  grafana_data:
+    driver: local

@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.domain.asset
+package com.lcaohoanq.assetservice
 
 import com.lcaohoanq.ktservice.custom.annotations.DynamicApiQuotable
 import io.swagger.v3.oas.annotations.Parameter
@@ -11,7 +11,6 @@ import org.springframework.core.io.UrlResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,11 +24,10 @@ import java.nio.file.Paths
 @RequestMapping("\${api.prefix}/assets")
 class AssetController() {
 
-    @Value("\${servlet.multipart.location:uploads}")
-    private val imageDirectory: String? = null
+    @Value("\${spring.servlet.multipart.location}")
+    private lateinit var imageDirectory: String
 
     @GetMapping("/images/{filename:.+}")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
     @DynamicApiQuotable(endpoint = "/images/{filename:.+}", memberMaxRequests = 5, staffMaxRequests = 10, adminMaxRequests = 15)
     fun serveImage(
         @PathVariable @Parameter(
@@ -45,8 +43,7 @@ class AssetController() {
             )]
         ) filename: String
     ): ResponseEntity<Resource> {
-        val filePath = imageDirectory?.let { Paths.get(it).resolve(filename).normalize() }
-            ?: throw IOException("File path is invalid: $filename")
+        val filePath = Paths.get(imageDirectory).resolve(filename).normalize()
 
         val resource = UrlResource(filePath.toUri())
 
@@ -66,8 +63,5 @@ class AssetController() {
             .headers(headers)
             .body(resource)
     }
-
-
-
 
 }

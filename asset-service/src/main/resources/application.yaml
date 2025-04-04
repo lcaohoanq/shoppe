@@ -1,0 +1,42 @@
+server:
+  port: 4001
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: asset-service
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      location: asset-service/images
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+  api-docs:
+    enabled: true
+
+logging:
+  level:
+    root: info
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
