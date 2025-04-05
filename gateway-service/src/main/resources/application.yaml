@@ -1,0 +1,23 @@
+server:
+  port: 4003
+
+spring:
+  application:
+    name: gateway-service
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+jwt:
+  expiration: ${JWT_EXPIRATION:2592000}
+  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN:5184000}
+  secretKey: ${JWT_SECRET_KEY:TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=}
+
+logging:
+  level:
+    root: info
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

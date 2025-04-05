@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
+@Deprecated("We turn to centralized the auth logic on Gateway Service")
 @Component
 @Slf4j
 class JwtTokenFilter(

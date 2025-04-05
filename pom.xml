@@ -25,6 +25,7 @@
     <module>common-lib</module>
     <module>asset-service</module>
     <module>chat-service</module>
+    <module>gateway-service</module>
   </modules>
 
   <properties>

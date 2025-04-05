@@ -1,6 +1,5 @@
 package com.lcaohoanq.ktservice.configs
 
-import com.lcaohoanq.ktservice.filter.JwtTokenFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,7 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.AccessDeniedHandler
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -22,7 +20,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebSecurity
 @EnableWebMvc
 class WebSecurityConfig(
-    private val jwtTokenFilter: JwtTokenFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler
 ) {
@@ -52,9 +49,9 @@ class WebSecurityConfig(
                 cors.configurationSource(corsConfigurationSource())
             }
             .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session
             }
-            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
+            // We remove the JWT filter since it's handled by the Gateway now
             .authorizeHttpRequests { auth ->
                 // Public authentication endpoints
                 auth.requestMatchers(
@@ -63,11 +60,16 @@ class WebSecurityConfig(
                     "$apiPrefix/users/**",
                     "$apiPrefix/students/**",
                     "$apiPrefix/categories/**",
-                    "$apiPrefix/experiments/**",
+                    "$apiPrefix/experiments/**"
                 ).permitAll()
 
                 // Swagger and public documentation endpoints
                 auth.requestMatchers(*PUBLIC_ENDPOINTS).permitAll()
+
+                // Role-based security for specific user roles
+                auth.requestMatchers("$apiPrefix/users/**").hasAnyRole("ADMIN", "STAFF")
+                auth.requestMatchers("$apiPrefix/categories/**").hasAnyRole("ADMIN", "MANAGER")
+                auth.requestMatchers("$apiPrefix/experiments/**").hasRole("USER")
 
                 // All other endpoints require authentication
                 auth.anyRequest().authenticated()
@@ -84,12 +86,8 @@ class WebSecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = mutableListOf(
-            "http://localhost:4000"
-        )
-        configuration.allowedMethods = mutableListOf(
-            "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
-        )
+        configuration.allowedOrigins = mutableListOf("http://localhost:4000")
+        configuration.allowedMethods = mutableListOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
         configuration.addAllowedHeader("*")
         configuration.allowCredentials = true
         configuration.maxAge = 3600
