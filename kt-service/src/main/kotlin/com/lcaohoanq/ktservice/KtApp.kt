@@ -16,5 +16,5 @@ fun main(args: Array<String>) {
     // Set default timezone
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"))
     runApplication<KtApp>(*args)
-    WebUtil.openHomePage(WebUtil.urlListKotLin)
+//    WebUtil.openHomePage(WebUtil.urlListKotLin)
 }

@@ -23,7 +23,7 @@ class SwaggerConfig {
         return OpenAPI()
             .info(
                 Info()
-                    .title("Shoppe API Services")
+                    .title("JV API Services")
                     .version("1.0.0")
                     .description("REST API documentation for Shoppe services")
                     .contact(

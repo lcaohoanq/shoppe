@@ -41,6 +41,7 @@
     <dotenv.spring.version>4.0.0</dotenv.spring.version>
     <dotenv.java.version>3.0.1</dotenv.java.version>
     <common-lib.version>1.0.0</common-lib.version>
+    <kotlin.logging.version>3.0.5</kotlin.logging.version>
   </properties>
 
   <dependencyManagement>
@@ -167,6 +168,14 @@
         <version>${spring-boot.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <!-- Logging -->
+      <dependency>
+        <groupId>io.github.microutils</groupId>
+        <artifactId>kotlin-logging-jvm</artifactId>
+        <version>${kotlin.logging.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

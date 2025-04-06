@@ -24,7 +24,7 @@ class OpenAPIConfig {
         return OpenAPI()
             .info(
                 Info()
-                    .title("My API Services")
+                    .title("KT API Services")
                     .version("1.0.0")
                     .description("REST API documentation for My services")
                     .contact(

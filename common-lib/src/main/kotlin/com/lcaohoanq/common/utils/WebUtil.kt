@@ -22,6 +22,11 @@ object WebUtil {
         "http://localhost:8080/graphiql"
     )
 
+    val urlListGateWay = listOf(
+        "http://localhost:4003/kt/swagger", //kt-service
+        "http://localhost:4003/jv/swagger", //jv-service
+    )
+
     fun openHomePage(urlList: List<String>) {
         try {
             urlList.forEach { url ->

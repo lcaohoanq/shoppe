@@ -49,6 +49,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+    </dependency>
+
     <!-- JWT -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
@@ -63,7 +68,16 @@
       <artifactId>jjwt-jackson</artifactId>
     </dependency>
 
-
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-lib</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-security</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
   </dependencies>
   <dependencyManagement>

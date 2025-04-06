@@ -21,6 +21,6 @@ public class JvApp {
         SpringApplication.run(JvApp.class, args);
 
         // Open home pages in browser
-        WebUtil.INSTANCE.openHomePage(WebUtil.INSTANCE.getUrlListJava());
+//        WebUtil.INSTANCE.openHomePage(WebUtil.INSTANCE.getUrlListJava());
     }
 }
