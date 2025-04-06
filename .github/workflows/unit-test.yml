@@ -5,7 +5,11 @@ on:
     branches: [ "main" ]
   push:
     branches: [ "develop" ]
-    
+
+permissions:
+  contents: read  # Allow the workflow to read repository contents, including code
+  id-token: write # Required if using certain OIDC authentication features
+
 jobs:
   run-tests:
     runs-on: ubuntu-24.04
