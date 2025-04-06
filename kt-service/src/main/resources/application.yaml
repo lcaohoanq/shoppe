@@ -11,7 +11,7 @@ api:
 
 spring:
   application:
-    name: shoppe
+    name: kt-service
 
   output:
     ansi:
@@ -32,6 +32,14 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
+
+  cloud:
+    discovery:
+      enabled: true
+      eureka:
+        client:
+          serviceUrl:
+            defaultZone: http://localhost:8761/eureka/  # Eureka Server URL
 
 springdoc:
   swagger-ui:
@@ -59,9 +67,12 @@ logging:
 
 #health check
 management:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
-      base-path: /api/v1/actuator
+      base-path: /actuator
       exposure:
         include: "health,info,prometheus"
   endpoint:

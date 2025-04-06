@@ -22,6 +22,10 @@ class GatewayConfig {
     private val CATEGORIES = "/categories"
     private val AUTH_LOGIN = "/auth/login"
 
+    // Eureka service instance
+    private val JV_EUREKA = "lb://jv-service"
+    private val KT_EUREKA = "lb://kt-service"
+
     /**
      * Configures the routes for the Spring Cloud Gateway.
      * Each route is defined with a path and a URI to forward requests to.
@@ -81,10 +85,21 @@ class GatewayConfig {
                     .uri(JV_SERVICE) // Forward to the Category service
             }
             // Route for /api/v1/auth/login (bypassing authentication filter)
+            // Before use Eureka as a service discovery (need to explicitly define the service name, hardcoded the URL)
+//            .route("auth_service_route") { r ->
+//                r.path("${API_PREFIX_V1}/auth/login") // Match /api/v1/auth/login path
+//                    .uri(KT_SERVICE) // Forward to the authentication service
+//            }
+
+            // After using Eureka, you can use the service name directly
+            // Provide the option lb://<service-name> to use load balancing (default is round-robin)
+            // When the request to /api/v1/auth/login is received, it will notify the eureka server to find the service instance
+            // and forward the request to that instance.
             .route("auth_service_route") { r ->
                 r.path("${API_PREFIX_V1}/auth/login") // Match /api/v1/auth/login path
-                    .uri(KT_SERVICE) // Forward to the authentication service
+                    .uri(KT_EUREKA) // Forward to the authentication service
             }
+
             .build()
     }
 

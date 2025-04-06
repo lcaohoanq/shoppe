@@ -27,24 +27,26 @@ object WebUtil {
         "http://localhost:4003/jv/swagger", //jv-service
     )
 
-    fun openHomePage(urlList: List<String>) {
+    fun openHomePage(urls: Any) {
         try {
-            urlList.forEach { url ->
-                if (Desktop.isDesktopSupported()) {
-                    val desktop = Desktop.getDesktop()
-                    if (desktop.isSupported(Desktop.Action.BROWSE)) {
-                        desktop.browse(URI.create(url))
-                    }
+            val urlList = when (urls) {
+                is List<*> -> urls.filterIsInstance<String>() // Handles if it's a List<String>
+                is String -> listOf(urls) // Converts a single URL to a list
+                else -> throw IllegalArgumentException("Invalid argument type")
+            }
+
+            val desktop = if (Desktop.isDesktopSupported()) Desktop.getDesktop() else null
+            val os = System.getProperty("os.name").lowercase(Locale.getDefault())
+
+            for (url in urlList) {
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    desktop.browse(URI.create(url))
                 } else {
-                    val os = System.getProperty("os.name").lowercase(Locale.getDefault())
-                    if (os.contains("win")) {
-                        Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $url")
-                    } else if (os.contains("mac")) {
-                        Runtime.getRuntime().exec("open $url")
-                    } else if (os.contains("nix") || os.contains("nux")) {
-                        Runtime.getRuntime().exec("xdg-open $url")
-                    } else {
-                        println("Unsupported operating system: $os")
+                    when {
+                        os.contains("win") -> Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $url")
+                        os.contains("mac") -> Runtime.getRuntime().exec("open $url")
+                        os.contains("nix") || os.contains("nux") -> Runtime.getRuntime().exec("xdg-open $url")
+                        else -> println("Unsupported operating system: $os")
                     }
                 }
             }

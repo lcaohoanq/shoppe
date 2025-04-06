@@ -29,7 +29,7 @@ class WebSecurityConfig(
     // Use a companion object for constants
     companion object {
         private val PUBLIC_ENDPOINTS = arrayOf(
-            "/api/v1/actuator/**",
+            "/actuator/**",
             "/h2-console/**",
             "/graphiql",
             "/graphql",

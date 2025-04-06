@@ -26,6 +26,7 @@
     <module>asset-service</module>
     <module>chat-service</module>
     <module>gateway-service</module>
+    <module>eureka-service</module>
   </modules>
 
   <properties>
@@ -42,6 +43,8 @@
     <dotenv.java.version>3.0.1</dotenv.java.version>
     <common-lib.version>1.0.0</common-lib.version>
     <kotlin.logging.version>3.0.5</kotlin.logging.version>
+    <spring-cloud.version>2024.0.1</spring-cloud.version>
+    <eureka.client.version>3.1.5</eureka.client.version>
   </properties>
 
   <dependencyManagement>
@@ -88,6 +91,15 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-actuator</artifactId>
         <version>${spring-boot.version}</version>
+      </dependency>
+
+      <!-- Spring Cloud-->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- Documentation -->

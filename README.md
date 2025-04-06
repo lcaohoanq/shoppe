@@ -395,3 +395,11 @@ JwtTokenFilter (valid token)
 AccessDeniedHandler (returns 403 Forbidden)
 
 ```
+
+# Service Discovery
+- Eureka là một service discovery server, cho phép các microservices đăng ký và tìm kiếm nhau.
+- Spring Cloud Netflix Eureka là một thư viện giúp tích hợp Eureka vào ứng dụng Spring Boot.
+- Eureka Server là nơi các microservices đăng ký và tìm kiếm nhau.
+
+# Spring Cloud Gateway
+- Spring Cloud Gateway là một API Gateway cho phép định tuyến và xử lý các yêu cầu đến các microservices.
