@@ -44,6 +44,7 @@
     <common-lib.version>1.0.0</common-lib.version>
     <kotlin.logging.version>3.0.5</kotlin.logging.version>
     <spring-cloud.version>2024.0.1</spring-cloud.version>
+    <spring-cloud.loadbalancer.version>4.2.0</spring-cloud.loadbalancer.version>
     <eureka.client.version>3.1.5</eureka.client.version>
   </properties>
 
@@ -100,6 +101,12 @@
         <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        <version>${spring-cloud.loadbalancer.version}</version>
       </dependency>
 
       <!-- Documentation -->
