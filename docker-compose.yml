@@ -1,0 +1,37 @@
+networks:
+  shopee_network:
+    driver: bridge
+
+services:
+  eureka:
+    build:
+      context: ./eureka-service
+    ports:
+      - "8761:8761"
+    networks:
+      - shopee_network
+
+  gateway:
+    build:
+      context: ./gateway-service
+    ports:
+      - "4003:4003"
+    depends_on:
+      - eureka
+    networks:
+      - shopee_network
+
+  auth-service:
+    build:
+      context: ./auth-service
+    ports:
+      - "4006:4006"
+    depends_on:
+      - eureka
+      - gateway
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:./stores/h2/auth_data/mydb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    volumes:
+      - ./stores/h2/auth_data:/data
+    networks:
+      - shopee_network
