@@ -1,0 +1,57 @@
+server:
+  port: 4005
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: notification-service
+
+  datasource:
+    url: jdbc:h2:file:./stores/h2/notification_data/mydb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  output:
+    ansi:
+      enabled: ALWAYS
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+  cloud:
+    discovery:
+      enabled: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:test}
+    password: ${MAIL_PASSWORD:test}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    root: info
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+  api-docs:
+    enabled: true

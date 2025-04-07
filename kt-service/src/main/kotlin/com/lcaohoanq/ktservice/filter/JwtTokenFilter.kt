@@ -1,10 +1,8 @@
 package com.lcaohoanq.ktservice.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.lcaohoanq.ktservice.api.ApiError
+import com.lcaohoanq.common.apis.ApiError
 import com.lcaohoanq.ktservice.component.JwtTokenUtils
-import com.lcaohoanq.ktservice.entities.User
-import com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.MalformedJwtException
 import jakarta.servlet.FilterChain
@@ -86,7 +84,7 @@ class JwtTokenFilter(
                             createAuthentication(userDetails, request)
                     }
                 }
-            } catch (e: com.lcaohoanq.ktservice.exceptions.JwtAuthenticationException) {
+            } catch (e: com.lcaohoanq.common.exceptions.JwtAuthenticationException) {
                 sendErrorResponse(
                     response, e.message,
                     HttpStatus.UNAUTHORIZED, request.requestURI

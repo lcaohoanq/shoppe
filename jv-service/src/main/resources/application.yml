@@ -1,5 +1,5 @@
 spring:
   application:
-    name: shoppe
+    name: jv-service
   profiles:
     active: dev

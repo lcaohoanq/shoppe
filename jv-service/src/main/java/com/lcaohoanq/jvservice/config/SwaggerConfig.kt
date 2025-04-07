@@ -1,6 +1,6 @@
 package com.lcaohoanq.jvservice.config
 
-import com.lcaohoanq.jvservice.annotation.Disabled
+import com.lcaohoanq.common.annotations.Disabled
 import io.swagger.v3.oas.models.*
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info

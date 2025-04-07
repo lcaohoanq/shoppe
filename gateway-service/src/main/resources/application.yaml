@@ -2,6 +2,9 @@ server:
   port: 4003
 
 spring:
+  main:
+    web-application-type: reactive
+
   application:
     name: gateway-service
   cloud:
@@ -17,6 +20,17 @@ spring:
           uri: lb://kt-service  # Use the service name registered in Eureka
           predicates:
             - Path=/kt-service/**
+
+        - id: auth-service-route
+          uri: lb://auth-service  # Use the service name registered in Eureka
+          predicates:
+            - Path=/auth-service/**
+
+        - id: jv-service-route
+          uri: lb://jv-service  # Use the service name registered in Eureka
+          predicates:
+            - Path=/jv-service/**
+
 
   output:
     ansi:

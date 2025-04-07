@@ -4,7 +4,6 @@ import com.github.javafaker.Faker;
 import com.lcaohoanq.jvservice.api.ApiResponse;
 import com.lcaohoanq.jvservice.api.PageResponse;
 import com.lcaohoanq.jvservice.component.LocalizationUtils;
-import com.lcaohoanq.jvservice.domain.asset.IFileStoreService;
 import com.lcaohoanq.jvservice.domain.category.Category;
 import com.lcaohoanq.jvservice.domain.category.ICategoryService;
 import com.lcaohoanq.jvservice.domain.product.Product.ProductStatus;

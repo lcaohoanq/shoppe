@@ -21,12 +21,19 @@
   <modules>
     <module>kt-service</module>
     <module>jv-service</module>
-    <module>test-service</module>
-    <module>common-lib</module>
+
+    <module>libs/common-lib</module>
+    <module>libs/common-spring</module>
+
     <module>asset-service</module>
     <module>chat-service</module>
     <module>gateway-service</module>
     <module>eureka-service</module>
+    <module>product-service</module>
+    <module>auth-service</module>
+    <module>order-service</module>
+    <module>inventory-service</module>
+    <module>notification-service</module>
   </modules>
 
   <properties>
@@ -42,9 +49,11 @@
     <dotenv.spring.version>4.0.0</dotenv.spring.version>
     <dotenv.java.version>3.0.1</dotenv.java.version>
     <common-lib.version>1.0.0</common-lib.version>
+    <common-spring.version>1.0.0</common-spring.version>
     <kotlin.logging.version>3.0.5</kotlin.logging.version>
     <spring-cloud.version>2024.0.1</spring-cloud.version>
     <spring-cloud.loadbalancer.version>4.2.0</spring-cloud.loadbalancer.version>
+    <spring-cloud.feign.version>4.2.1</spring-cloud.feign.version>
     <eureka.client.version>3.1.5</eureka.client.version>
   </properties>
 
@@ -55,6 +64,11 @@
         <groupId>com.lcaohoanq</groupId>
         <artifactId>common-lib</artifactId>
         <version>${common-lib.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lcaohoanq</groupId>
+        <artifactId>common-spring</artifactId>
+        <version>${common-spring.version}</version>
       </dependency>
 
       <!-- Spring Boot Core -->
@@ -107,6 +121,12 @@
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-loadbalancer</artifactId>
         <version>${spring-cloud.loadbalancer.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-openfeign</artifactId>
+        <version>${spring-cloud.feign.version}</version>
       </dependency>
 
       <!-- Documentation -->

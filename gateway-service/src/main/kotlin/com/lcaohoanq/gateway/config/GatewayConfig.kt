@@ -25,6 +25,9 @@ class GatewayConfig {
     // Eureka service instance
     private val JV_EUREKA = "lb://jv-service"
     private val KT_EUREKA = "lb://kt-service"
+    private val CATEGORY_EUREKA = "lb://category-service"
+    private val AUTH_EUREKA = "lb://auth-service"
+    private val NOTIFICATION_EUREKA = "lb://notification-service"
 
     /**
      * Configures the routes for the Spring Cloud Gateway.
@@ -82,7 +85,7 @@ class GatewayConfig {
             // Route for /api/v1/categories, which should go to the Category Service on localhost:8080
             .route("category_service_route") { r ->
                 r.path("${API_PREFIX_V1}/categories/**") // Match any requests that start with /api/v1/categories
-                    .uri(JV_SERVICE) // Forward to the Category service
+                    .uri(CATEGORY_EUREKA) // Forward to the Category service
             }
             // Route for /api/v1/auth/login (bypassing authentication filter)
             // Before use Eureka as a service discovery (need to explicitly define the service name, hardcoded the URL)
@@ -96,8 +99,13 @@ class GatewayConfig {
             // When the request to /api/v1/auth/login is received, it will notify the eureka server to find the service instance
             // and forward the request to that instance.
             .route("auth_service_route") { r ->
-                r.path("${API_PREFIX_V1}/auth/login") // Match /api/v1/auth/login path
-                    .uri(KT_EUREKA) // Forward to the authentication service
+                r.path("${API_PREFIX_V1}/auth/**", "${API_PREFIX_V1}/otp/**", "${API_PREFIX_V1}/users/**")
+                    .uri(AUTH_EUREKA)
+            }
+
+            .route("notification_service_route"){ r ->
+                r.path("${API_PREFIX_V1}/mail/**")
+                    .uri(NOTIFICATION_EUREKA)
             }
 
             .build()

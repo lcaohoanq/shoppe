@@ -30,7 +30,7 @@ class ApiQuotaAspect(
         val endpoint = apiQuotable.endpoint
 
         if (!apiQuotaService.isRequestAllowed(user, endpoint)) {
-            throw com.lcaohoanq.ktservice.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
         }
     }
 
@@ -54,7 +54,7 @@ class ApiQuotaAspect(
         }
 
         if (!apiQuotaService.isRequestAllowed(user, endpoint, maxRequests)) {
-            throw com.lcaohoanq.ktservice.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException("Too many requests. Please try again later.")
         }
     }
 
@@ -69,7 +69,7 @@ class ApiQuotaAspect(
             ?: throw IllegalArgumentException("Unknown role: $role")
 
         if (!apiQuotaService.isRequestAllowed(user, apiQuotable.endpoint, maxRequests, resetTime)) {
-            throw com.lcaohoanq.ktservice.exceptions.TooManyRequestsException(
+            throw com.lcaohoanq.common.exceptions.TooManyRequestsException(
                 "Too many requests. Please try again later."
             )
         }

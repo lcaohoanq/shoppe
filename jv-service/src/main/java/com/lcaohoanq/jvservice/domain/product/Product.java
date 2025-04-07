@@ -8,7 +8,7 @@ import com.lcaohoanq.jvservice.base.entity.BaseEntity;
 import com.lcaohoanq.jvservice.domain.cart.CartItem;
 import com.lcaohoanq.jvservice.domain.category.Category;
 import com.lcaohoanq.jvservice.domain.inventory.Warehouse;
-import com.lcaohoanq.jvservice.domain.product.ProductImage;import com.lcaohoanq.jvservice.domain.user.User;
+import com.lcaohoanq.jvservice.domain.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

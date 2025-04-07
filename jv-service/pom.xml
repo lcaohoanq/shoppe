@@ -66,6 +66,12 @@
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
 
+    <!-- Spring Cloud-->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>
+
     <!-- Database -->
     <dependency>
       <groupId>org.postgresql</groupId>

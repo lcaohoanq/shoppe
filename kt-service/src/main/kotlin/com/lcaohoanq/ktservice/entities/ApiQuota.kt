@@ -12,9 +12,8 @@ class ApiQuota(
     @Column(name = "id", unique = true, nullable = false)
     val id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val user: User,
+    val userId: String,
 
     @Column(name = "api_endpoint", nullable = false)
     val apiEndpoint: String,

@@ -20,7 +20,7 @@ public class EmailPhoneAspect {
     private final HttpServletRequest request;
     private final IUserService userService;
 
-    @Before("execution(* com.lcaohoanq.jvservice.domain.mail.MailController.*(..)) && args(toEmail,..) && !@annotation(com.lcaohoanq.jvservice.annotation.SkipEmailValidation)")
+    @Before("execution(* com.lcaohoanq.notificationservice.domains.mail.MailController.*(..)) && args(toEmail,..) && !@annotation(com.lcaohoanq.common.annotations.SkipEmailValidation)")
     public void checkValidEmail(JoinPoint joinPoint, String toEmail) {
         User user = userService.findUserByEmail(toEmail);
 

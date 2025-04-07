@@ -6,7 +6,6 @@ import com.lcaohoanq.jvservice.domain.cart.CartItemResponse;
 import com.lcaohoanq.jvservice.domain.cart.CartResponse;
 import com.lcaohoanq.jvservice.domain.product.Product;
 import com.lcaohoanq.jvservice.domain.product.ProductPort;
-import com.lcaohoanq.jvservice.domain.product.ProductPort.ProductResponse;
 import com.lcaohoanq.jvservice.domain.user.User;
 import com.lcaohoanq.jvservice.domain.user.UserResponse;
 import org.mapstruct.Mapper;

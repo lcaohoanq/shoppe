@@ -2,7 +2,7 @@ package com.lcaohoanq.ktservice.domain.quota
 
 import com.lcaohoanq.ktservice.dto.QuotaPort
 import com.lcaohoanq.ktservice.entities.ApiQuota
-import com.lcaohoanq.ktservice.api.ApiResponse
+import com.lcaohoanq.common.apis.MyApiResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
@@ -22,9 +22,9 @@ class QuotaController(
     @Operation(summary = "Get all quotas", description = "Get all quotas")
     @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
-    fun findAll(): ResponseEntity<ApiResponse<List<QuotaPort.QuotaResponse>>> =
+    fun findAll(): ResponseEntity<MyApiResponse<List<QuotaPort.QuotaResponse>>> =
         ResponseEntity.ok(
-            ApiResponse(
+            MyApiResponse(
                 message = "Get all quotas successfully",
                 data = quotaService.findAllQuotas()
             )
@@ -32,10 +32,10 @@ class QuotaController(
 
     @GetMapping("/user/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
-    fun findByUser(@PathVariable id: Long): ResponseEntity<ApiResponse<List<ApiQuota>>> {
+    fun findByUser(@PathVariable id: Long): ResponseEntity<MyApiResponse<List<ApiQuota>>> {
         val quotas = quotaService.findQuotasByUserId(id)
         return ResponseEntity.ok(
-            ApiResponse(
+            MyApiResponse(
                 message = "Get quotas by user successfully",
                 data = quotas
             )

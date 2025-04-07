@@ -3,6 +3,7 @@ package com.lcaohoanq.ktservice.domain.experiment
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -15,6 +16,7 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("\${api.prefix}/experiments")
+@ComponentScan(basePackages = ["com.lcaohoanq.commonspring"])
 @Tag(name = "Experiment", description = "Experiment Controller")
 class ExperimentController(
     private val webClient: WebClient
