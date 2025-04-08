@@ -1,0 +1,20 @@
+### Post request
+POST http://localhost:4003/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "name": "Hoang Cao Luu",
+  "email": "hoangclw@gmail.com",
+  "phoneNumber": "0854123561",
+  "gender": "MALE",
+  "password": "1"
+}
+
+### Post request
+POST http://localhost:4003/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "hoangclw@gmail.com",
+  "password": "string"
+}

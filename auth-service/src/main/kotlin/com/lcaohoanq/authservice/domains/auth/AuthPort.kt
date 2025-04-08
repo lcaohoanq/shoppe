@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.authservice.dto.TokenPort
 import com.lcaohoanq.common.enums.UserEnum
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Email
 
 interface AuthPort {
 
@@ -18,6 +19,8 @@ interface AuthPort {
 
     data class SignUpReq(
         val name: String,
+
+        @Email(message = "Email should be valid")
         val email: String,
         val phoneNumber: String,
         val gender: UserEnum.Gender,

@@ -1,0 +1,22 @@
+@host=http://localhost:4006
+@member_token = eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxIiwiZW1haWwiOiJob2FuZ2Nsd0BnbWFpbC5jb20iLCJzdWIiOiJob2FuZ2Nsd0BnbWFpbC5jb20iLCJleHAiOjE3NDY2ODkxNTB9.EkQkLEtjAJz9Y-LxA6THmp6mQ-ai-EjeyK2ZvMkgrRo
+@staff_token = your_token_here
+@admin_token = your_token_here
+
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+#### Get request
+GET http://localhost:4006/api/users/all
+Accept: application/json
+Authorization: Bearer {{member_token}}
+
+### Get users with query params
+GET {{host}}/api/v1/users
+    ?page=0
+    &limit=10
+    &search=
+    &sortBy=ID
+    &sortOrder=ASC
+Accept: application/json

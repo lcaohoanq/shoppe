@@ -11,4 +11,7 @@ interface MailFeignClient {
     @PostMapping("/api/v1/mail/greeting-user-login")
     fun sendGreetingUserLoginEmail(@RequestParam toEmail: String): ResponseEntity<String>
 
+    @PostMapping("/api/v1/mail/send-otp")
+    fun sendOtp(@RequestParam toEmail: String): ResponseEntity<String>
+
 }

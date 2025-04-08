@@ -71,7 +71,9 @@ class AuthService(
 
         log.info("New user logged in successfully");
 
-        mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
+
+        if(existUser.lastLoginTimeStamp == null)
+            mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
 
         existUser.lastLoginTimeStamp = LocalDateTime.now()
         userRepository.save(existUser)
@@ -88,6 +90,8 @@ class AuthService(
         if (userRepository.existsByEmail(newAccount.email)) {
             throw DataIntegrityViolationException("Email is already taken")
         }
+
+        mailFeignClient.sendOtp(newAccount.email)
 
         userRepository.save(
             User(

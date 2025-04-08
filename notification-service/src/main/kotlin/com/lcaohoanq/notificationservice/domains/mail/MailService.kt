@@ -4,6 +4,7 @@ import com.lcaohoanq.common.enums.EmailCategoriesEnum
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.scheduling.annotation.Async
@@ -29,6 +30,7 @@ class MailService(
             val htmlContent: String = templateEngine.process(templateName, context)
             helper.setTo(to)
             helper.setSubject(subject)
+            helper.setFrom("lvhhoangg1@gmail.com")
             helper.setText(htmlContent, true)
             mailSender.send(mimeMessage)
             log.info("Mail send successfully to {}", to)

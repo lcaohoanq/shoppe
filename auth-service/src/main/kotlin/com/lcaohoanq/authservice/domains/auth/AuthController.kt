@@ -3,6 +3,7 @@ package com.lcaohoanq.authservice.domains.auth
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.dto.TokenPort
 import com.lcaohoanq.common.apis.MyApiResponse
+import com.lcaohoanq.common.exceptions.MethodArgumentNotValidException
 import com.lcaohoanq.commonspring.components.LocalizationUtils
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -63,13 +64,18 @@ class AuthController(
 
     @Operation(summary = "Register", description = "Register")
     @PostMapping("/register")
-    fun register(@RequestBody user: AuthPort.SignUpReq): ResponseEntity<MyApiResponse<Unit>> =
-        ResponseEntity.ok(
+    fun register(@Valid @RequestBody user: AuthPort.SignUpReq,
+                 bindingResult: BindingResult): ResponseEntity<MyApiResponse<Unit>> {
+
+        if(bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+
+        authService.register(user)
+        return ResponseEntity.ok(
             MyApiResponse(
-                message = localizationUtils.getLocalizedMessage("user.register.register_successfully"),
-                data = authService.register(user)
+                message = localizationUtils.getLocalizedMessage("auth.register.success"),
             )
         )
+    }
 
     @PreAuthorize("permitAll()")
     @PostMapping("/refresh-token")
