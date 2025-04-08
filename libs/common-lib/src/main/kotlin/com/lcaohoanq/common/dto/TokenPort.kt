@@ -1,4 +1,4 @@
-package com.lcaohoanq.authservice.dto
+package com.lcaohoanq.common.dto
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore

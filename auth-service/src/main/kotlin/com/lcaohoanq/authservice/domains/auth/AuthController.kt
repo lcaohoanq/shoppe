@@ -1,8 +1,9 @@
 package com.lcaohoanq.authservice.domains.auth
 
 import com.lcaohoanq.authservice.domains.user.IUserService
-import com.lcaohoanq.authservice.dto.TokenPort
+import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.apis.MyApiResponse
+import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.exceptions.MethodArgumentNotValidException
 import com.lcaohoanq.commonspring.components.LocalizationUtils
 import io.swagger.v3.oas.annotations.Operation
@@ -151,24 +152,12 @@ class AuthController(
     @Operation(
         summary = "Verify account",
         description = "Verify account",
-        responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Account verified successfully",
-                content = [
-                    Content(
-                        mediaType = "application/json",
-                        schema = Schema(implementation = AuthResponseWrapper::class)
-                    )
-                ]
-            )
-        ]
     )
-    fun verifyAccount(@RequestBody token: String): ResponseEntity<MyApiResponse<Unit>> {
+    fun verifyAccount(@RequestParam token: String): ResponseEntity<MyApiResponse<Unit>> {
         authService.verifyAccount(token)
         return ResponseEntity.ok(
             MyApiResponse(
-                message = localizationUtils.getLocalizedMessage("auth.verify.success"),
+                message = "Verify account successfully",
             )
         )
     }

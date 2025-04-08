@@ -1,8 +1,9 @@
 package com.lcaohoanq.authservice.domains.auth
 
 import com.lcaohoanq.authservice.domains.user.User
-import com.lcaohoanq.authservice.dto.TokenPort
+import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.authservice.dto.UserPort
+import com.lcaohoanq.common.dto.AuthPort
 
 
 interface IAuthService {

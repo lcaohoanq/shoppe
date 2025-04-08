@@ -11,6 +11,7 @@ fun User.toUserResponse() = UserPort.UserResponse(
     username = userName,
     address = address,
     phone = phone,
+    status = status!!,
     avatar = avatar,
     createdAt = createdAt,
     updatedAt = updatedAt

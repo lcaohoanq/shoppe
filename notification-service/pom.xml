@@ -96,6 +96,11 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-spring</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

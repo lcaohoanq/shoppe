@@ -1,7 +1,7 @@
 package com.lcaohoanq.authservice.extension
 
 import com.lcaohoanq.authservice.domains.token.Token
-import com.lcaohoanq.authservice.dto.TokenPort
+import com.lcaohoanq.common.dto.TokenPort
 
 
 fun Token.toTokenResponse(): TokenPort.TokenResponse {

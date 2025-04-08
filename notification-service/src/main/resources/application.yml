@@ -28,8 +28,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME:test}
-    password: ${MAIL_PASSWORD:test}
+    username: ${MAIL_USERNAME:lvhhoangg1@gmail.com}
+    password: ${MAIL_PASSWORD:ojlx ohfr qxwd llxx}
 
 eureka:
   client:

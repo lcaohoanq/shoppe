@@ -1,0 +1,15 @@
+@toEmail=hoangclw@gmail.com
+
+### Post request
+POST {{mail-service.host}}/api/v1/mail/send-otp?toEmail={{toEmail}}
+
+### Post request
+POST {{mail-service.host}}/api/v1/mail/greeting-user-login?toEmail={{toEmail}}
+
+### Post request
+POST {{mail-service.host}}/api/v1/mail/verify-account
+Content-Type: application/json
+
+{
+  "email": "{{toEmail}}"
+}

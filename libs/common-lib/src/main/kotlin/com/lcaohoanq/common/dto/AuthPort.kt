@@ -1,7 +1,6 @@
-package com.lcaohoanq.authservice.domains.auth
+package com.lcaohoanq.common.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.lcaohoanq.authservice.dto.TokenPort
 import com.lcaohoanq.common.enums.UserEnum
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Email

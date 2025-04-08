@@ -6,13 +6,15 @@ import com.lcaohoanq.authservice.domains.token.Token
 import com.lcaohoanq.authservice.domains.token.TokenService
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
-import com.lcaohoanq.authservice.dto.TokenPort
+import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.authservice.dto.UserPort.UserResponse
 import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.repositories.UserRepository
+import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.enums.UserEnum
 import com.lcaohoanq.common.exceptions.ExpiredTokenException
+import com.lcaohoanq.common.exceptions.MalformBehaviourException
 import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import mu.KotlinLogging
 import org.springframework.dao.DataIntegrityViolationException
@@ -72,7 +74,7 @@ class AuthService(
         log.info("New user logged in successfully");
 
 
-        if(existUser.lastLoginTimeStamp == null)
+        if (existUser.lastLoginTimeStamp == null)
             mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
 
         existUser.lastLoginTimeStamp = LocalDateTime.now()
@@ -91,7 +93,7 @@ class AuthService(
             throw DataIntegrityViolationException("Email is already taken")
         }
 
-        mailFeignClient.sendOtp(newAccount.email)
+//        mailFeignClient.sendOtp(newAccount.email)
 
         userRepository.save(
             User(
@@ -106,6 +108,12 @@ class AuthService(
                 walletId = "wallet-${newAccount.email}",
             )
         )
+
+        mailFeignClient.sendVerifyAccountEmail(
+            AuthPort.VerifyEmailReq(newAccount.email)
+        )
+
+        log.info("New user registered successfully");
     }
 
     override fun getUserDetailsFromToken(token: String): UserResponse {
@@ -163,6 +171,9 @@ class AuthService(
         val email = jwtTokenUtils.extractEmail(token)
         val user = userRepository.findByEmail(email)
             ?: throw DataNotFoundException("User not found")
+
+        if(user.status == UserEnum.Status.VERIFIED)
+            throw MalformBehaviourException("User already verified")
 
         user.status = UserEnum.Status.VERIFIED
         userRepository.save(user)

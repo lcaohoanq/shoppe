@@ -1,8 +1,11 @@
 package com.lcaohoanq.notificationservice.domains.mail
 
+import com.lcaohoanq.common.dto.AuthPort
+import com.lcaohoanq.common.dto.MailPort
 import com.lcaohoanq.common.dto.OtpPort
 import com.lcaohoanq.common.enums.EmailCategoriesEnum
 import com.lcaohoanq.common.utils.OtpUtil
+import com.lcaohoanq.commonspring.utils.unwrap
 import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest
@@ -21,7 +24,7 @@ class MailController(
 
     //api: /otp/send?type=email&recipient=abc@gmail
     @PostMapping("/send-otp")
-    fun sendOtp(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailResponse> {
+    fun sendOtp(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailPort.MailResponse> {
         val context: Context = Context()
         val otp: String = OtpUtil.generateOtp()
         context.setVariable("name", toEmail)
@@ -32,7 +35,7 @@ class MailController(
             EmailCategoriesEnum.OTP.type,
             context
         )
-        val response = MailResponse("Mail sent successfully")
+        val response = MailPort.MailResponse("Mail sent successfully")
 
         val otpEntity= OtpPort.OtpReq(
             email = toEmail,
@@ -42,11 +45,11 @@ class MailController(
         //need to call a request to auth service to create otp
         authFeignClient.createOtp(otpEntity)
 
-        return ResponseEntity<MailResponse>(response, HttpStatus.OK)
+        return ResponseEntity<MailPort.MailResponse>(response, HttpStatus.OK)
     }
 
     @PostMapping("/greeting-user-login")
-    fun greeting(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailResponse>{
+    fun greeting(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailPort.MailResponse>{
 
         val context = Context()
         context.setVariable("name", toEmail)
@@ -57,19 +60,17 @@ class MailController(
             context
         )
 
-        val response = MailResponse("Mail sent successfully")
+        val response = MailPort.MailResponse("Mail sent successfully")
 
-        return ResponseEntity<MailResponse>(response, HttpStatus.OK)
+        return ResponseEntity<MailPort.MailResponse>(response, HttpStatus.OK)
     }
 
     @PostMapping("/verify-account")
-    fun doVerifyAccount(@RequestBody data: AuthFeignClient.VerifyEmailReq): ResponseEntity<MailResponse> {
-        val token = authFeignClient.generateTokenFromEmail(data) // Bạn cần hàm tạo JWT hoặc token ngẫu nhiên có thời hạn
-
-        val verifyLink = "http://localhost:4006/api/v1/auth/verify-account?token=$token"
+    fun doVerifyAccount(@RequestBody data: AuthPort.VerifyEmailReq): ResponseEntity<MailPort.MailResponse> {
+        val token = unwrap(authFeignClient.generateTokenFromEmail(data))
 
         val context = Context()
-        context.setVariable("verifyLink", verifyLink)
+        context.setVariable("verifyLink", "http://localhost:4006/api/v1/auth/verify-account?token=$token")
 
         mailService.sendMail(
             data.email,
@@ -78,7 +79,7 @@ class MailController(
             context
         )
 
-        val response = MailResponse("Verification mail sent successfully")
+        val response = MailPort.MailResponse("Verification mail sent successfully")
         return ResponseEntity(response, HttpStatus.OK)
     }
 
