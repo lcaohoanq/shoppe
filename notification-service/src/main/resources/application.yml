@@ -38,9 +38,15 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
 
+feign:
+  client:
+    config:
+      default:
+        retryer: com.lcaohoanq.commonspring.configs.CustomRetryer
+
 logging:
   level:
-    root: info
+    root: DEBUG
     org.springframework: DEBUG
     springframework.security: DEBUG
     org.hibernate: DEBUG
