@@ -3,15 +3,12 @@ package com.lcaohoanq.notificationservice.domains.mail
 import com.lcaohoanq.common.dto.OtpPort
 import com.lcaohoanq.common.enums.EmailCategoriesEnum
 import com.lcaohoanq.common.utils.OtpUtil
-import com.lcaohoanq.notificationservice.clients.OtpFeignClient
+import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.thymeleaf.context.Context
 
 @RequestMapping(path = ["\${api.prefix}/mail"])
@@ -19,7 +16,7 @@ import org.thymeleaf.context.Context
 class MailController(
     private val mailService: IMailService,
     private val request: HttpServletRequest,
-    private val otpFeignClient: OtpFeignClient,
+    private val authFeignClient: AuthFeignClient,
 ) {
 
     //api: /otp/send?type=email&recipient=abc@gmail
@@ -43,7 +40,7 @@ class MailController(
         )
 
         //need to call a request to auth service to create otp
-        otpFeignClient.createOtp(otpEntity)
+        authFeignClient.createOtp(otpEntity)
 
         return ResponseEntity<MailResponse>(response, HttpStatus.OK)
     }
@@ -64,5 +61,26 @@ class MailController(
 
         return ResponseEntity<MailResponse>(response, HttpStatus.OK)
     }
+
+    @PostMapping("/verify-account")
+    fun doVerifyAccount(@RequestBody data: AuthFeignClient.VerifyEmailReq): ResponseEntity<MailResponse> {
+        val token = authFeignClient.generateTokenFromEmail(data) // Bạn cần hàm tạo JWT hoặc token ngẫu nhiên có thời hạn
+
+        val verifyLink = "http://localhost:4006/api/v1/auth/verify-account?token=$token"
+
+        val context = Context()
+        context.setVariable("verifyLink", verifyLink)
+
+        mailService.sendMail(
+            data.email,
+            "Shoppe Corporation - Welcome ${data.email}, thanks for joining us!",
+            "verifyUser",
+            context
+        )
+
+        val response = MailResponse("Verification mail sent successfully")
+        return ResponseEntity(response, HttpStatus.OK)
+    }
+
 
 }

@@ -39,7 +39,7 @@ class User(
     val isActive: Boolean = true,
 
     @Enumerated(EnumType.ORDINAL)
-    val status: UserEnum.Status? = UserEnum.Status.UNVERIFIED,
+    var status: UserEnum.Status? = UserEnum.Status.UNVERIFIED,
 
     val dateOfBirth: String? = "",
 

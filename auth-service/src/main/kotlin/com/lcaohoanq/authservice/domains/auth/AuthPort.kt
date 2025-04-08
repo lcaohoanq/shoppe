@@ -5,6 +5,7 @@ import com.lcaohoanq.authservice.dto.TokenPort
 import com.lcaohoanq.common.enums.UserEnum
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
 
 interface AuthPort {
 
@@ -25,6 +26,12 @@ interface AuthPort {
         val phoneNumber: String,
         val gender: UserEnum.Gender,
         val password: String
+    )
+
+    data class VerifyEmailReq(
+        @Email(message = "Email should be valid")
+        @NotBlank(message = "Email should not be blank")
+        val email: String,
     )
 
 }

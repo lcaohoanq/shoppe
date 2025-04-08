@@ -142,4 +142,31 @@ class AuthService(
 
         tokenService.deleteToken(token, user);
     }
+
+    override fun generateTokenFromEmail(email: String): String {
+
+        val user = userRepository.findByEmail(email)
+            ?: throw DataNotFoundException("User not found")
+
+        return jwtTokenUtils.generateToken(user)
+            .also { token ->
+                tokenService.addToken(user.id!!, token)
+            }
+
+    }
+
+    override fun verifyAccount(token: String) {
+        if (jwtTokenUtils.isTokenExpired(token)) {
+            throw ExpiredTokenException("Token is expired")
+        }
+
+        val email = jwtTokenUtils.extractEmail(token)
+        val user = userRepository.findByEmail(email)
+            ?: throw DataNotFoundException("User not found")
+
+        user.status = UserEnum.Status.VERIFIED
+        userRepository.save(user)
+
+        tokenService.deleteToken(token, user)
+    }
 }

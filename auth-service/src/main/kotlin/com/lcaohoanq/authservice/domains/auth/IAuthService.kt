@@ -13,4 +13,7 @@ interface IAuthService {
     fun getCurrentAuthenticatedUser(): User
     fun refreshToken(refreshTokenDTO: TokenPort.RefreshTokenDTO): AuthPort.AuthResponse
     fun logout(token: String, user: User)
+    fun generateTokenFromEmail(email: String): String
+    fun verifyAccount(token: String): Unit
+
 }

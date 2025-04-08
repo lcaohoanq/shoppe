@@ -18,10 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.BindingResult
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @Tag(name = "Auth", description = "Auth API")
@@ -64,10 +61,12 @@ class AuthController(
 
     @Operation(summary = "Register", description = "Register")
     @PostMapping("/register")
-    fun register(@Valid @RequestBody user: AuthPort.SignUpReq,
-                 bindingResult: BindingResult): ResponseEntity<MyApiResponse<Unit>> {
+    fun register(
+        @Valid @RequestBody user: AuthPort.SignUpReq,
+        bindingResult: BindingResult
+    ): ResponseEntity<MyApiResponse<Unit>> {
 
-        if(bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+        if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
 
         authService.register(user)
         return ResponseEntity.ok(
@@ -121,6 +120,55 @@ class AuthController(
         return ResponseEntity.ok(
             MyApiResponse(
                 message = "Logout successfully"
+            )
+        )
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping("/generate-token-from-email")
+    @Operation(
+        summary = "Generate token from email",
+        description = "Generate token from email",
+    )
+    fun generateTokenFromEmail(
+        @Valid @RequestBody data: AuthPort.VerifyEmailReq,
+        bindingResult: BindingResult
+    ): ResponseEntity<MyApiResponse<String>> {
+
+        if(bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+
+        val response = authService.generateTokenFromEmail(data.email)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = "Token generated successfully",
+                data = response
+            )
+        )
+    }
+
+    //http://localhost:4006/api/v1/auth/verify-account?token=$token
+    @GetMapping("/verify-account")
+    @Operation(
+        summary = "Verify account",
+        description = "Verify account",
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Account verified successfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = AuthResponseWrapper::class)
+                    )
+                ]
+            )
+        ]
+    )
+    fun verifyAccount(@RequestBody token: String): ResponseEntity<MyApiResponse<Unit>> {
+        authService.verifyAccount(token)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = localizationUtils.getLocalizedMessage("auth.verify.success"),
             )
         )
     }

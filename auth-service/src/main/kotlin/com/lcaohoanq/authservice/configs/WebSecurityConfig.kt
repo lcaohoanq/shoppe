@@ -55,8 +55,7 @@ class WebSecurityConfig(
             .authorizeHttpRequests { auth ->
                 // Public authentication endpoints
                 auth.requestMatchers(
-                    "$apiPrefix/auth/login",
-                    "$apiPrefix/auth/register",
+                    "$apiPrefix/auth/**",
                     "$apiPrefix/users/**",
                     "$apiPrefix/students/**",
                     "$apiPrefix/categories/**",
