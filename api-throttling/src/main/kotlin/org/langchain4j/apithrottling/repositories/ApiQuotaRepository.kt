@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.repositories
+package org.langchain4j.apithrottling.repositories
 
 import com.lcaohoanq.ktservice.entities.ApiQuota
 import org.springframework.data.jpa.repository.JpaRepository

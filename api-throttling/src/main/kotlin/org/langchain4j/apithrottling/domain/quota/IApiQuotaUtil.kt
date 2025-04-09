@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.domain.quota
+package org.langchain4j.apithrottling.domain.quota
 
 interface IApiQuotaUtil {
 

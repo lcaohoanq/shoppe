@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.dto
+package org.langchain4j.apithrottling.dto
 
 import com.lcaohoanq.common.metadata.QuotaMeta
 

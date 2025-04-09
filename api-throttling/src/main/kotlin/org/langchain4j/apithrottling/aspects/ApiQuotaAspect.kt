@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.aspects
+package org.langchain4j.apithrottling.aspects
 
 import com.lcaohoanq.ktservice.configs.roleQuotaConfig
 import com.lcaohoanq.ktservice.custom.annotations.ApiQuotable

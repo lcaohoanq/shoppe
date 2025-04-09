@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.configs
+package org.langchain4j.apithrottling.configs
 
 import com.lcaohoanq.ktservice.entities.User
 import java.util.concurrent.TimeUnit

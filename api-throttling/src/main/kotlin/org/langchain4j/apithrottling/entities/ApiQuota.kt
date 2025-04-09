@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.entities
+package org.langchain4j.apithrottling.entities
 
 import jakarta.persistence.*
 import java.time.LocalDateTime

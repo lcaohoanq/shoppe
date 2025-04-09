@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.domain.quota
+package org.langchain4j.apithrottling.domain.quota
 
 import com.lcaohoanq.ktservice.dto.QuotaPort
 import com.lcaohoanq.ktservice.entities.ApiQuota

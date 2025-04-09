@@ -34,6 +34,8 @@
     <module>order-service</module>
     <module>inventory-service</module>
     <module>notification-service</module>
+
+    <module>api-throttling</module>
   </modules>
 
   <properties>

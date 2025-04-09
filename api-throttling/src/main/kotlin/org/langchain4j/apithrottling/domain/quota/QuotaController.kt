@@ -1,10 +1,10 @@
-package com.lcaohoanq.ktservice.domain.quota
+package org.langchain4j.apithrottling.domain.quota
 
-import com.lcaohoanq.ktservice.dto.QuotaPort
-import com.lcaohoanq.ktservice.entities.ApiQuota
 import com.lcaohoanq.common.apis.MyApiResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.langchain4j.apithrottling.dto.QuotaPort
+import org.langchain4j.apithrottling.entities.ApiQuota
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
