@@ -1,7 +1,7 @@
 package com.lcaohoanq.authservice.extension
 
 import com.lcaohoanq.authservice.domains.user.User
-import com.lcaohoanq.authservice.dto.UserPort
+import com.lcaohoanq.common.dto.UserPort
 
 
 fun User.toUserResponse() = UserPort.UserResponse(
@@ -9,9 +9,10 @@ fun User.toUserResponse() = UserPort.UserResponse(
     email = email,
     password = hashedPassword,
     username = userName,
-    address = address,
+    address = address.toAddressResponseSet(),
     phone = phone,
     status = status!!,
+    role = role!!,
     avatar = avatar,
     createdAt = createdAt,
     updatedAt = updatedAt

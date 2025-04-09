@@ -3,7 +3,6 @@ package com.lcaohoanq.common.dto
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 import java.util.*
 
@@ -22,7 +21,7 @@ interface TokenPort {
     )
 
     data class RefreshTokenDTO(
-        @NotBlank(message = "Refresh token is required") val refreshToken: String
+        val refreshToken: String
     )
 
 }

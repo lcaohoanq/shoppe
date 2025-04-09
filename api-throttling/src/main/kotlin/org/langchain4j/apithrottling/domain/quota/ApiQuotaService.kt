@@ -1,9 +1,9 @@
 package org.langchain4j.apithrottling.domain.quota
 
 import com.lcaohoanq.common.metadata.QuotaMeta
-import com.lcaohoanq.ktservice.dto.QuotaPort
-import com.lcaohoanq.ktservice.entities.ApiQuota
-import com.lcaohoanq.ktservice.repositories.ApiQuotaRepository
+import org.langchain4j.apithrottling.dto.QuotaPort
+import org.langchain4j.apithrottling.entities.ApiQuota
+import org.langchain4j.apithrottling.repositories.ApiQuotaRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -14,7 +14,7 @@ class ApiQuotaService(private val apiQuotaRepository: ApiQuotaRepository) : IApi
         return apiQuotaRepository.findByUserId(id)
     }
 
-    override fun updateQuota(userId: String, apiQuota: ApiQuota) {
+    override fun updateQuota(userId: Long, apiQuota: ApiQuota) {
         TODO("Not yet implemented")
     }
 
@@ -40,8 +40,8 @@ class ApiQuotaService(private val apiQuotaRepository: ApiQuotaRepository) : IApi
      * So you can use this method if you want to have a fixed quota for all users
      * */
     @Deprecated("Use the overloaded method with maxRequests or with maxRequests and resetTimeMillis for enhanced flexibility")
-    override fun isRequestAllowed(userId: String, apiEndpoint: String): Boolean {
-        val quota = apiQuotaRepository.findByUserAndApiEndpoint(userId, apiEndpoint).orElseGet {
+    override fun isRequestAllowed(userId: Long, apiEndpoint: String): Boolean {
+        val quota = apiQuotaRepository.findByUserIdAndApiEndpoint(userId, apiEndpoint).orElseGet {
             // If no quota exists, create a new one with initial values
             ApiQuota(
                 userId = userId,
@@ -68,8 +68,8 @@ class ApiQuotaService(private val apiQuotaRepository: ApiQuotaRepository) : IApi
         }
     }
 
-    override fun isRequestAllowed(userId: String, apiEndpoint: String, maxRequests: Int): Boolean {
-        val quota = apiQuotaRepository.findByUserAndApiEndpoint(userId, apiEndpoint).orElseGet {
+    override fun isRequestAllowed(userId: Long, apiEndpoint: String, maxRequests: Int): Boolean {
+        val quota = apiQuotaRepository.findByUserIdAndApiEndpoint(userId, apiEndpoint).orElseGet {
             ApiQuota(
                 userId = userId,
                 apiEndpoint = apiEndpoint,
@@ -95,12 +95,12 @@ class ApiQuotaService(private val apiQuotaRepository: ApiQuotaRepository) : IApi
     }
 
     override fun isRequestAllowed(
-        userId: String,
+        userId: Long,
         apiEndpoint: String,
         maxRequests: Int,
         resetTimeMillis: Long
     ): Boolean {
-        val quota = apiQuotaRepository.findByUserAndApiEndpoint(userId, apiEndpoint).orElseGet {
+        val quota = apiQuotaRepository.findByUserIdAndApiEndpoint(userId, apiEndpoint).orElseGet {
             ApiQuota(
                 userId = userId,
                 apiEndpoint = apiEndpoint,

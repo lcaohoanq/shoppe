@@ -1,0 +1,48 @@
+server:
+  port: 4002
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: chat-service
+
+  datasource:
+    url: jdbc:h2:file:./stores/h2/auth_data/mydb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+  api-docs:
+    enabled: true
+
+logging:
+  level:
+    root: info
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

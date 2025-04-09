@@ -33,7 +33,7 @@ class MailController(
 
         mailService.sendMail(
             toEmail, "Shoppe Corporation- Welcome ${toEmail}, thanks for joining us!",
-            EmailCategoriesEnum.OTP.type,
+            "sendOtp",
             context
         )
         val response = MailPort.MailResponse("Mail sent successfully")

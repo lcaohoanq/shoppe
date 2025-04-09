@@ -12,6 +12,7 @@
 
   <artifactId>common-lib</artifactId>
   <version>1.0.0</version>
+  <packaging>jar</packaging>
   <name>common-lib</name>
   <description>Common Libs Support</description>
 
@@ -31,13 +32,15 @@
 
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit5</artifactId>
-      <scope>test</scope>
+      <artifactId>kotlin-maven-allopen</artifactId>
+      <version>1.9.25</version>
     </dependency>
 
+
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test-junit5</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -46,81 +49,33 @@
       <version>6.0.0</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Documentation -->
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-openfeign</artifactId>
-    </dependency>
-
-
-    <dependency>
-      <groupId>me.paulschwarz</groupId>
-      <artifactId>spring-dotenv</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.github.cdimascio</groupId>
-      <artifactId>dotenv-java</artifactId>
-    </dependency>
-
-
   </dependencies>
 
   <build>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
     <plugins>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <version>${kotlin.version}</version>
+
         <configuration>
-          <args>
-            <arg>-Xjsr305=strict</arg>
-          </args>
           <compilerPlugins>
-            <plugin>spring</plugin>
-            <plugin>jpa</plugin>
+            <!-- Or "spring" for the Spring support -->
             <plugin>all-open</plugin>
           </compilerPlugins>
+
           <pluginOptions>
-            <option>all-open:annotation=jakarta.persistence.Entity</option>
-            <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
-            <option>all-open:annotation=jakarta.persistence.Embeddable</option>
+            <!-- Each annotation is placed on its own line -->
+            <option>all-open:annotation=com.my.Annotation</option>
+            <option>all-open:annotation=com.their.AnotherAnnotation</option>
           </pluginOptions>
         </configuration>
+
         <dependencies>
           <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-allopen</artifactId>
-            <version>${kotlin.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-maven-noarg</artifactId>
             <version>${kotlin.version}</version>
           </dependency>
         </dependencies>

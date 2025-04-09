@@ -5,7 +5,7 @@ import com.lcaohoanq.common.metadata.QuotaMeta
 interface QuotaPort {
 
     data class QuotaResponse(
-        val userId: String,
+        val userId: Long,
         val quotas: List<QuotaMeta>
     )
 

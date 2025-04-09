@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.custom.annotations
+package com.lcaohoanq.common.annotations
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)

@@ -7,7 +7,7 @@ import com.lcaohoanq.authservice.domains.token.TokenService
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
 import com.lcaohoanq.common.dto.TokenPort
-import com.lcaohoanq.authservice.dto.UserPort.UserResponse
+import com.lcaohoanq.common.dto.UserPort.UserResponse
 import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.repositories.UserRepository

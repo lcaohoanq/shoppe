@@ -54,6 +54,11 @@
     <dependency>
       <groupId>com.lcaohoanq</groupId>
       <artifactId>common-lib</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-spring</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>

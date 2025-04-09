@@ -13,8 +13,8 @@
 
   <artifactId>product-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>category-service</name>
-  <description>category-service</description>
+  <name>product-service</name>
+  <description>product-service</description>
 
   <dependencies>
 
@@ -38,6 +38,11 @@
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
 
     <!-- Documentation -->
@@ -99,6 +104,15 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-spring</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-graphql</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -117,6 +131,7 @@
             <arg>-Xjsr305=strict</arg>
           </args>
           <compilerPlugins>
+            <plugin>all-open</plugin>
             <plugin>spring</plugin>
           </compilerPlugins>
         </configuration>

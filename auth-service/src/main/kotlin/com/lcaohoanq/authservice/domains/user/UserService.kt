@@ -1,7 +1,7 @@
 package com.lcaohoanq.authservice.domains.user
 
 import com.lcaohoanq.authservice.components.JwtTokenUtils
-import com.lcaohoanq.authservice.dto.UserPort
+import com.lcaohoanq.common.dto.UserPort
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.repositories.TokenRepository
 import com.lcaohoanq.authservice.repositories.UserRepository

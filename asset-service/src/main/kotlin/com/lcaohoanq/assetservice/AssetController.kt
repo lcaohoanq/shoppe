@@ -1,6 +1,6 @@
 package com.lcaohoanq.assetservice
 
-import com.lcaohoanq.ktservice.custom.annotations.DynamicApiQuotable
+import com.lcaohoanq.common.annotations.DynamicApiQuotable
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
