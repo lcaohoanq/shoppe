@@ -4,7 +4,7 @@ import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.apis.MyApiResponse
 import com.lcaohoanq.common.dto.AuthPort
-import com.lcaohoanq.common.exceptions.MethodArgumentNotValidException
+import com.lcaohoanq.commonspring.exceptions.MethodArgumentNotValidException
 import com.lcaohoanq.commonspring.components.LocalizationUtils
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -85,7 +85,7 @@ class AuthController(
         result: BindingResult
     ): ResponseEntity<MyApiResponse<AuthPort.AuthResponse>> {
         if (result.hasErrors()) {
-            throw com.lcaohoanq.common.exceptions.MethodArgumentNotValidException(result)
+            throw MethodArgumentNotValidException(result)
         }
 
         return ResponseEntity.ok(

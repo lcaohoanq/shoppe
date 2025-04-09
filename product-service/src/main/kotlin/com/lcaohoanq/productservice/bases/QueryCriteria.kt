@@ -1,4 +1,4 @@
-package com.lcaohoanq.ktservice.bases
+package com.lcaohoanq.productservice.bases
 
 import com.lcaohoanq.common.utils.SortOrder
 import com.lcaohoanq.common.utils.Sortable

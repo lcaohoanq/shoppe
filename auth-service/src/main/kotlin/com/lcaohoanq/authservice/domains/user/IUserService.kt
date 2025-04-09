@@ -1,6 +1,6 @@
 package com.lcaohoanq.authservice.domains.user
 
-import com.lcaohoanq.authservice.dto.UserPort
+import com.lcaohoanq.common.dto.UserPort
 import com.lcaohoanq.common.apis.PageResponse
 import com.lcaohoanq.common.metadata.QueryCriteria
 import com.lcaohoanq.common.utils.Sortable

@@ -19,9 +19,6 @@
   <description>Shoppe Parent Project</description>
 
   <modules>
-    <module>kt-service</module>
-    <module>jv-service</module>
-
     <module>libs/common-lib</module>
     <module>libs/common-spring</module>
 
@@ -31,9 +28,10 @@
     <module>eureka-service</module>
     <module>product-service</module>
     <module>auth-service</module>
-    <module>order-service</module>
     <module>inventory-service</module>
     <module>notification-service</module>
+
+    <module>api-throttling</module>
   </modules>
 
   <properties>

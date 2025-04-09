@@ -1,5 +1,6 @@
 package com.lcaohoanq.productservice.domain.category
 
+import com.lcaohoanq.productservice.extensions.toResponse
 import com.lcaohoanq.productservice.repository.CategoryRepository
 import org.springframework.stereotype.Service
 

@@ -5,13 +5,14 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "categories")
-class Category: BaseEntity() {
-
+data class Category(
     @Id
-    val id: Long? = null
-    val name: String = ""
+    val id: Long? = null,
+    val name: String = "",
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     val subCategories: Set<SubCategory> = emptySet()
+) : BaseEntity() {
+
 
 }

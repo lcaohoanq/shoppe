@@ -1,47 +1,5 @@
-server:
-  port: 4002
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-
-api:
-  prefix: /api/v1
-
 spring:
   application:
     name: chat-service
-
-  datasource:
-    url: jdbc:postgresql://localhost:5432/chat_app
-    username: ${POSTGRES_USER:PROD_DB_DEV_USER}
-    password: ${POSTGRES_PASSWORD:PROD_DB_DEV_PASSWORD}
-
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-
-  output:
-    ansi:
-      enabled: ALWAYS
-
-springdoc:
-  swagger-ui:
-    enabled: true
-    path: /swagger-ui.html
-    operations-sorter: alpha
-    tags-sorter: alpha
-
-  api-docs:
-    enabled: true
-
-logging:
-  level:
-    root: info
-    org.springframework: DEBUG
-    springframework.security: DEBUG
-    org.hibernate: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  profiles:
+    active: dev

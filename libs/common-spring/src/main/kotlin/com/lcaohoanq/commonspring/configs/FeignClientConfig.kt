@@ -2,6 +2,8 @@ package com.lcaohoanq.commonspring.configs
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import feign.Retryer
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
@@ -14,5 +16,10 @@ class FeignClientConfig : RequestInterceptor {
     fun generateInternalServiceToken(): String {
         // Có thể hardcode, hoặc gọi TokenProvider, hoặc service-to-service secret
         return "your-internal-jwt-token"
+    }
+
+    @Bean
+    fun retryer(): Retryer {
+        return CustomRetryer() // hoặc truyền giá trị bạn muốn
     }
 }
