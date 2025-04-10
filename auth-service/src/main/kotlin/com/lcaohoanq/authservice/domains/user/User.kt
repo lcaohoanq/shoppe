@@ -3,7 +3,6 @@ package com.lcaohoanq.authservice.domains.user
 import BaseEntity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.common.enums.UserEnum
-import com.lcaohoanq.common.enums.UserStatus
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

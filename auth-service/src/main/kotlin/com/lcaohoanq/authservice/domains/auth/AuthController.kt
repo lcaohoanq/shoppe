@@ -4,8 +4,7 @@ import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.apis.MyApiResponse
 import com.lcaohoanq.common.dto.AuthPort
-import com.lcaohoanq.commonspring.exceptions.MethodArgumentNotValidException
-import com.lcaohoanq.commonspring.components.LocalizationUtils
+import com.lcaohoanq.authservice.exceptions.MethodArgumentNotValidException
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -13,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
@@ -23,14 +21,12 @@ import org.springframework.web.bind.annotation.*
 
 
 @Tag(name = "Auth", description = "Auth API")
-@ComponentScan(basePackages = ["com.lcaohoanq.commonspring"])
 @RestController
 @RequestMapping("\${api.prefix}/auth")
 class AuthController(
     private val authService: IAuthService,
     private val userService: IUserService,
-    private val request: HttpServletRequest,
-    private val localizationUtils: LocalizationUtils
+    private val request: HttpServletRequest
 ) {
 
     @Operation(
@@ -54,7 +50,7 @@ class AuthController(
         val response = authService.login(loginRequest)
         return ResponseEntity.ok(
             MyApiResponse(
-                message = localizationUtils.getLocalizedMessage("auth.login.success"),
+                message = "Login successfully",
                 data = response
             )
         )
@@ -72,7 +68,7 @@ class AuthController(
         authService.register(user)
         return ResponseEntity.ok(
             MyApiResponse(
-                message = localizationUtils.getLocalizedMessage("auth.register.success"),
+                message = "Register successfully",
             )
         )
     }

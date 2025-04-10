@@ -3,9 +3,7 @@ package com.lcaohoanq.notificationservice.domains.mail
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.MailPort
 import com.lcaohoanq.common.dto.OtpPort
-import com.lcaohoanq.common.enums.EmailCategoriesEnum
 import com.lcaohoanq.common.utils.OtpUtil
-import com.lcaohoanq.commonspring.utils.unwrap
 import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest

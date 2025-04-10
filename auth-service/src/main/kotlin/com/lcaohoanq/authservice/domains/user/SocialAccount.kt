@@ -4,20 +4,9 @@ import BaseEntity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.common.enums.ProviderName
 import jakarta.persistence.*
-import lombok.AllArgsConstructor
-import lombok.Getter
-import lombok.NoArgsConstructor
-import lombok.Setter
-import lombok.experimental.SuperBuilder
-
 
 @Entity
 @Table(name = "social_accounts")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@SuperBuilder
 class SocialAccount : BaseEntity() {
     @Id
     @SequenceGenerator(

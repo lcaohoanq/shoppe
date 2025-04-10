@@ -83,11 +83,6 @@
       <artifactId>h2</artifactId>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
 
   <build>

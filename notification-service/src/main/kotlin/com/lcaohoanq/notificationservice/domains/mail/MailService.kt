@@ -1,17 +1,14 @@
 package com.lcaohoanq.notificationservice.domains.mail
 
-import com.lcaohoanq.common.enums.EmailCategoriesEnum
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
 import mu.KotlinLogging
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
-import java.time.LocalDateTime
 
 @Service
 class MailService(
