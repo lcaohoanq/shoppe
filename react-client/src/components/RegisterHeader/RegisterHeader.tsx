@@ -4,7 +4,7 @@ export default function RegisterHeader() {
   const registerMatch = useMatch('/register')
   const isRegister = Boolean(registerMatch)
   return (
-    <header className='py-5'>
+    <header className='py-5 mb-3'>
       <div className='container'>
         <nav className='flex items-end'>
           <Link to='/'>
@@ -15,6 +15,9 @@ export default function RegisterHeader() {
             </svg>
           </Link>
           <div className='ml-5 text-xl lg:text-2xl'>{isRegister ? 'Đăng ký' : 'Đăng nhập'}</div>
+          <div className='ml-auto flex items-center'>
+            <a className='text-orange'>Bạn cần giúp đỡ?</a>
+          </div>
         </nav>
       </div>
     </header>

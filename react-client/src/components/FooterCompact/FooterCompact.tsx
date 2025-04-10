@@ -99,7 +99,7 @@ const FooterCompact = () => {
           <h4 className='font-semibold mb-3'>Thanh toán</h4>
           <div className='flex flex-wrap gap-2'>
             {payments.map((img) => (
-              <div key={img} className='w-10 h-6 flex-shrink-0'>
+              <div key={img} className='w-12 h-8 flex-shrink-0 shadow-sm border border-gray-100 rounded-md '>
                 <img src={`/${img}`} alt={img} className='w-full h-full object-contain' />
               </div>
             ))}
@@ -107,7 +107,7 @@ const FooterCompact = () => {
           <h4 className='font-semibold mt-4 mb-3'>Đơn vị vận chuyển</h4>
           <div className='flex flex-wrap gap-2'>
             {shipping.map((img) => (
-              <div key={img} className='w-10 h-6 flex-shrink-0'>
+              <div key={img} className='w-12 h-8 flex-shrink-0 shadow-sm border border-gray-100 rounded-md  bg-white'>
                 <img src={`/shipping_unit/${img}`} alt={img} className='w-full h-full object-contain' />
               </div>
             ))}
@@ -120,7 +120,7 @@ const FooterCompact = () => {
           <div className='flex flex-col gap-3'>
             {socialIcons.map((item, idx) => (
               <div key={idx} className='flex items-center gap-2 cursor-pointer'>
-                <div className='w-6 h-6 flex-shrink-0 flex items-center justify-center'>
+                <div className='w-6 h-6 flex-shrink-0 flex items-center justify-cente '>
                   <item.icon className='text-gray-700' />
                 </div>
                 <span className='hover:text-orange-500'>{item.label}</span>

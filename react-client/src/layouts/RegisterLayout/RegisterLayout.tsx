@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 import Footer from 'src/components/Footer'
+import FooterCompact from 'src/components/FooterCompact'
 import RegisterHeader from 'src/components/RegisterHeader'
 
 interface Props {
@@ -12,7 +13,7 @@ function RegisterLayoutInner({ children }: Props) {
       <RegisterHeader />
       {children}
       <Outlet />
-      <Footer />
+      <FooterCompact />
     </div>
   )
 }

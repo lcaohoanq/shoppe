@@ -1,29 +1,29 @@
-import {useForm} from 'react-hook-form'
-import {Link, useNavigate} from 'react-router-dom'
-import {yupResolver} from '@hookform/resolvers/yup'
-import {schema, Schema} from 'src/utils/rules'
-import {useMutation} from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate } from 'react-router-dom'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { schema, Schema } from 'src/utils/rules'
+import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
-import {isAxiosUnprocessableEntityError} from 'src/utils/utils'
-import {ErrorResponse} from 'src/types/utils.type'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
+import { ErrorResponse } from 'src/types/utils.type'
 import Input from 'src/components/Input'
-import {useContext} from 'react'
-import {AppContext} from 'src/contexts/app.context'
+import { useContext } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 import Button from 'src/components/Button'
-import {Helmet} from 'react-helmet-async'
-import {Divider} from '@mui/material'
+import { Helmet } from 'react-helmet-async'
+import { Divider } from '@mui/material'
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  const {setIsAuthenticated, setProfile} = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
     setError,
     handleSubmit,
-    formState: {errors}
+    formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(loginSchema)
   })
@@ -58,11 +58,14 @@ export default function Login() {
     <div className='bg-orange'>
       <Helmet>
         <title>Đăng nhập | Shopee Clone</title>
-        <meta name='description' content='Đăng nhập vào dự án Shopee Clone'/>
+        <meta name='description' content='Đăng nhập vào dự án Shopee Clone' />
       </Helmet>
       <div className='container'>
-        <div className='grid grid-cols-1 py-12 lg:grid-cols-5 lg:py-32 lg:pr-10'>
-          <div className='lg:col-span-2 lg:col-start-4'>
+        <div className='grid grid-cols-1 py-12 lg:grid-cols-6 lg:py-12 lg:pr-10'>
+          <div className='lg:col-span-4 hidden lg:block'>
+            <img src={'/img/login_bg.png'} className='w-full h-full object-contain' alt='Shopee Login Background' />
+          </div>
+          <div className='lg:col-span-2'>
             <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit} noValidate>
               <div className='text-2xl'>Đăng nhập</div>
               <Input
