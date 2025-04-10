@@ -46,22 +46,6 @@
       <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.lcaohoanq</groupId>
-      <artifactId>common-lib</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.lcaohoanq</groupId>
-      <artifactId>common-spring</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-security</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
   </dependencies>
 
   <build>

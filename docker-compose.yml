@@ -4,34 +4,61 @@ networks:
 
 services:
   eureka:
+    container_name: eureka-server
     build:
-      context: ./eureka-service
+      context: .
+      dockerfile: eureka-service/Dockerfile
     ports:
       - "8761:8761"
+    restart: on-failure
+    volumes:
+      - ./logs/eureka:/logs/eureka
     networks:
       - shopee_network
 
   gateway:
+    container_name: gateway-service
     build:
-      context: ./gateway-service
+      context: .
+      dockerfile: gateway-service/Dockerfile
     ports:
       - "4003:4003"
+    restart: on-failure
+    volumes:
+    - ./logs/gateway:/logs/gateway
     depends_on:
       - eureka
     networks:
       - shopee_network
 
-  auth-service:
+  notification-service:
+    container_name: notification-service
     build:
-      context: ./auth-service
+      context: .
+      dockerfile: notification-service/Dockerfile
+    ports:
+      - "4005:4005"
+    depends_on:
+      - eureka
+      - gateway
+    volumes:
+      - ./stores/h2/notification_data:/data
+      - ./logs/notification:/logs/notification
+    networks:
+      - shopee_network
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
     ports:
       - "4006:4006"
     depends_on:
       - eureka
       - gateway
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:h2:file:./stores/h2/auth_data/mydb;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
     volumes:
+      - ./logs/auth:/logs/auth
       - ./stores/h2/auth_data:/data
     networks:
       - shopee_network

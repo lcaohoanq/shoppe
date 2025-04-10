@@ -1,26 +1,18 @@
-# Build stage for parent dependencies
-FROM maven:3.9.9-eclipse-temurin-17-alpine AS build-parent
-WORKDIR /app
-
-# Copy the parent POM into the container
-COPY ./pom.xml ./
-
-# Download all dependencies for the parent project
-RUN mvn dependency:go-offline
-
-# Build the eureka-service
+# Build stage
 FROM maven:3.9.9-eclipse-temurin-17-alpine AS build
 WORKDIR /app
 
-# Copy parent dependencies from the build-parent stage
-COPY --from=build-parent /app/.m2 /root/.m2
+# Copy the parent pom.xml first
+COPY pom.xml ./
+# Copy the eureka-service module
+COPY eureka-service/ ./eureka-service/
 
-# Copy eureka-service specific files
-COPY ./eureka-service/pom.xml ./eureka-service/
-COPY ./eureka-service/src ./eureka-service/src/
+# Go to eureka-service directory and download dependencies
+WORKDIR /app/eureka-service
+RUN mvn dependency:go-offline
 
-# Build the eureka-service jar
-RUN mvn clean package -DskipTests -f ./eureka-service/pom.xml
+# Build the project
+RUN mvn clean package -DskipTests
 
 # Runtime stage
 FROM openjdk:17-slim
@@ -35,4 +27,4 @@ RUN chmod +x /wait-for-it.sh
 
 EXPOSE 8080
 # Wait for MySQL to be ready before starting the application
-CMD ["/bin/sh", "-c", "/wait-for-it.sh db:3306 -t 60 -- java -jar app.jar"]
+CMD ["java", "-jar", "app.jar"]

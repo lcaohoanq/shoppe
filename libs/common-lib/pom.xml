@@ -32,13 +32,6 @@
 
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-maven-allopen</artifactId>
-      <version>1.9.25</version>
-    </dependency>
-
-
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
@@ -51,22 +44,39 @@
 
   </dependencies>
 
+  <properties>
+    <kotlin.version>1.9.25</kotlin.version>
+  </properties>
+
   <build>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
     <plugins>
       <plugin>
-        <artifactId>kotlin-maven-plugin</artifactId>
         <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
 
         <configuration>
           <compilerPlugins>
-            <!-- Or "spring" for the Spring support -->
             <plugin>all-open</plugin>
           </compilerPlugins>
-
           <pluginOptions>
-            <!-- Each annotation is placed on its own line -->
             <option>all-open:annotation=com.my.Annotation</option>
             <option>all-open:annotation=com.their.AnotherAnnotation</option>
           </pluginOptions>
