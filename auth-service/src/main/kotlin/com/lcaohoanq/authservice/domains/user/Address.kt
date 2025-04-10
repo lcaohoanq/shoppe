@@ -1,6 +1,5 @@
 package com.lcaohoanq.authservice.domains.user
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
 
@@ -22,9 +21,5 @@ class Address(
     val address: String = "",
     val isDefault: Boolean = false,
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private var user: User
 ) {
 }

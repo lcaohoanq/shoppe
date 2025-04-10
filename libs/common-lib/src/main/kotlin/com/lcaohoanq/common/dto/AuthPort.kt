@@ -17,6 +17,7 @@ interface AuthPort {
     data class SignUpReq(
         val name: String,
         val email: String,
+        val address: String,
         val phoneNumber: String,
         val gender: UserEnum.Gender,
         val password: String

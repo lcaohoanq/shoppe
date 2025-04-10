@@ -4,6 +4,7 @@ import com.lcaohoanq.authservice.clients.MailFeignClient
 import com.lcaohoanq.authservice.components.JwtTokenUtils
 import com.lcaohoanq.authservice.domains.token.Token
 import com.lcaohoanq.authservice.domains.token.TokenService
+import com.lcaohoanq.authservice.domains.user.Address
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
 import com.lcaohoanq.common.dto.TokenPort
@@ -100,7 +101,15 @@ class AuthService(
                 email = newAccount.email,
                 hashedPassword = passwordEncoder.encode(newAccount.password),
                 role = UserEnum.Role.MEMBER,
+                name = newAccount.name,
                 status = UserEnum.Status.UNVERIFIED,
+                address = setOf(
+                    Address(
+                        address = newAccount.address,
+                        nameOfUser = newAccount.name,
+                        phoneNumber = newAccount.phoneNumber,
+                    )
+                ),
                 userName = "",
                 phone = "",
                 avatar = "https://api.dicebear.com/9.x/adventurer/svg?seed=${newAccount.email}",
