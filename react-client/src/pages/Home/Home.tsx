@@ -1,9 +1,12 @@
-import { Box, Card, CardActions, CardContent, Container, Divider, Typography } from '@mui/material'
+import { Box, Card, CardActions, CardContent, Container, Divider, IconButton, Modal, Typography } from '@mui/material'
 import HomeShoppeMall from 'src/components/Grid/HomeShoppeMall/HomeShoppeMall'
 import HomeSlider from 'src/components/Slider/HomeSlider/HomeSlider'
 import Loading from 'src/components/Loading'
 import HomeCategorySlider from 'src/components/Slider/HomeCategorySlider/HomeCategorySlider'
 import useProducts from 'src/hooks/useProducts'
+import { useEffect, useState } from 'react'
+import CloseIcon from '@mui/icons-material/Close'
+import { styles } from './style'
 
 const images = [
   {
@@ -36,14 +39,56 @@ const images = [
   }
 ]
 
+export const bannerslider = [
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215x365.png',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_4_.jpg',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/2400wx720h.jpg',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/anh-khong-dau-banner.jpg',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/MAIN_2_ADL_1215x365.png',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/love-lies.jpg',
+  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_1_.jpg'
+]
+
 export default function Home() {
+  const [openModal, setOpenModal] = useState(true)
+  const [randomBanner, setRandomBanner] = useState('')
   const { data: products, error, isLoading } = useProducts()
+
+  useEffect(() => {
+    setRandomBanner(bannerslider[Math.floor(Math.random() * bannerslider.length)])
+  }, [])
+
+  const handleCloseModal = () => {
+    setOpenModal(false)
+  }
 
   if (isLoading) return <Loading />
   if (error) return <div>Error loading products...</div>
 
   return (
     <Container>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby='movie-preview-modal'
+        aria-describedby='movie-banner-preview'
+        sx={styles.modal}
+      >
+        <Box sx={styles.modalBox}>
+          <IconButton onClick={handleCloseModal} sx={styles.closeButton}>
+            <CloseIcon />
+          </IconButton>
+          {randomBanner && (
+            <img
+              src={randomBanner}
+              alt='Movie Banner'
+              loading='lazy'
+              style={styles.bannerImage as React.CSSProperties}
+            />
+          )}
+        </Box>
+      </Modal>
+
       <div>
         <div className='flex justify-between gap-2'>
           <HomeSlider />

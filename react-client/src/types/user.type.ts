@@ -8,7 +8,7 @@ export enum Gender {
 
 export interface User {
   _id: string
-  username: string,
+  username: string
   roles: Role[]
   email: string
   name?: string
@@ -31,7 +31,7 @@ export type UserResponse = {
   date_of_birth: string
   phone_number: string
   address: string
-  avatar: string | null
+  avatar: string
   role_name: string
   preferred_language: string
   preferred_currency: string
