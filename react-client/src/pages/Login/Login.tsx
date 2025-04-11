@@ -123,13 +123,29 @@ export default function Login() {
                 >
                   Facebook
                 </Button>
+                {/*<Button*/}
+                {/*  type='submit'*/}
+                {/*  className='flex  w-full  border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase b hover:bg-red-600'*/}
+                {/*  isLoading={loginMutation.isLoading}*/}
+                {/*  disabled={loginMutation.isLoading}*/}
+                {/*>*/}
+                {/*  Google*/}
+                {/*</Button>*/}
+
                 <Button
-                  type='submit'
-                  className='flex  w-full  border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase b hover:bg-red-600'
-                  isLoading={loginMutation.isLoading}
-                  disabled={loginMutation.isLoading}
+                  type='button'
+                  className='flex w-full border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase hover:bg-gray-100'
+                  onClick={() => window.location.href = 'http://localhost:4006/api/v1/oauth2/authorize/google'}
                 >
                   Google
+                </Button>
+
+                <Button
+                  type='button'
+                  className='flex w-full border-2 border-gray-300 justify-center text-black py-4 px-2 text-sm uppercase hover:bg-gray-100'
+                  onClick={() => window.location.href = 'http://localhost:4006/api/v1/oauth2/authorize/github'}
+                >
+                  Github
                 </Button>
               </div>
               <div className='mt-8 flex items-center justify-center'>

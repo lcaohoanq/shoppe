@@ -20,6 +20,7 @@ class Address(
     val phoneNumber: String = "",
     val address: String = "",
     val isDefault: Boolean = false,
+    val userId: Long,
 
 ) {
 }

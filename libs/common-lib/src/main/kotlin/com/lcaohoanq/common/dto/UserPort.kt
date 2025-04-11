@@ -16,12 +16,12 @@ interface UserPort {
     @JsonPropertyOrder("id", "email", "username", "status", "phone", "address", "avatar")
     data class UserResponse(
         val id: Long,
-        val address: Set<AddressPort.AddressResponse>? = null,
         val avatar: String,
         val email: String,
         val role: UserEnum.Role,
         val username: String,
         val status: UserEnum.Status,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") val lastLoginTimeStamp: LocalDateTime,
         @JsonIgnore val password: String,
         val phone : String,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") @JsonIgnore val createdAt: LocalDateTime?,

@@ -3,8 +3,10 @@ package com.lcaohoanq.authservice.domains.token
 import com.lcaohoanq.authservice.components.JwtTokenUtils
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
+import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.repositories.TokenRepository
 import com.lcaohoanq.authservice.repositories.UserRepository
+import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.utils.Identifiable
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.transaction.Transactional
@@ -32,6 +34,10 @@ class TokenService(
 
     @Value("\${jwt.expiration-refresh-token}")
     private val expirationRefreshToken: Long = 0
+
+    override fun getAll(): List<TokenPort.TokenResponse> {
+        return tokenRepository.findAll().map { it.toTokenResponse() }
+    }
 
     @Transactional
     override fun addToken(userId: Long, token: String): Token {

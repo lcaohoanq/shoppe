@@ -19,14 +19,14 @@ data class Otp(
     val id: Long? = null,
 
     @Column(name = "email")
-    val email: String? = null,
+    val email: String,
 
     @Column(name = "otp")
-    val otp: String? = null,
+    val otp: String,
 
     @JsonProperty("expired_at")
-    @Column(name = "expired_at")
-    val expiredAt: java.time.LocalDateTime? = null, // in milliseconds
+    @Column(name = "expired_at", nullable = false)
+    val expiredAt: java.time.LocalDateTime, // in milliseconds
 
     @JsonProperty("is_used")
     @Column(name = "is_used")

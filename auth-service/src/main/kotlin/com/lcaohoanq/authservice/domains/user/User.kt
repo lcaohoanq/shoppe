@@ -34,7 +34,7 @@ class User(
     val name: String = "New User",
 
     @Enumerated(EnumType.ORDINAL)
-    val gender: UserEnum.Gender = UserEnum.Gender.FEMALE,
+    val gender: UserEnum.Gender? = UserEnum.Gender.FEMALE,
     val isActive: Boolean = true,
 
     @Enumerated(EnumType.ORDINAL)
@@ -43,9 +43,6 @@ class User(
     val dateOfBirth: String? = "",
 
     val avatar: String = "",
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    val address: Set<Address>?  = null,
 
     val cartId: String,
 

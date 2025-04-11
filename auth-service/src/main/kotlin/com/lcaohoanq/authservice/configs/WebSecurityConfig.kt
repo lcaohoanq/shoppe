@@ -21,7 +21,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 @EnableWebMvc
 class WebSecurityConfig(
     private val authenticationEntryPoint: AuthenticationEntryPoint,
-    private val accessDeniedHandler: AccessDeniedHandler
+    private val accessDeniedHandler: AccessDeniedHandler,
+    private val oAuth2LoginHandler: OAuth2LoginHandler
 ) {
     @Value("\${api.prefix}")
     private lateinit var apiPrefix: String
@@ -61,6 +62,9 @@ class WebSecurityConfig(
                     "$apiPrefix/categories/**",
                     "$apiPrefix/experiments/**",
                     "$apiPrefix/otp/**",
+                    "$apiPrefix/tokens/**",
+                    "$apiPrefix/oauth2/**",
+                    "$apiPrefix/ip/**",
                 ).permitAll()
 
                 // Swagger and public documentation endpoints
@@ -73,6 +77,17 @@ class WebSecurityConfig(
 
                 // All other endpoints require authentication
                 auth.anyRequest().authenticated()
+            }
+            .oauth2Login { oauth2 ->
+                oauth2.loginPage("http://localhost:4000/login")
+                oauth2.successHandler(oAuth2LoginHandler)
+                oauth2.failureUrl("http://localhost:4000/login?error=true")
+//                oauth2.userInfoEndpoint { userInfo ->
+//                    userInfo.userService(oAuth2LoginHandler)
+//                }
+                oauth2.authorizationEndpoint { endpoint ->
+                    endpoint.baseUri("/api/v1/oauth2/authorize")
+                }
             }
             .csrf { it.disable() }
             .exceptionHandling { ex ->
@@ -87,7 +102,8 @@ class WebSecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = mutableListOf("http://localhost:4000")
-        configuration.allowedMethods = mutableListOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
+        configuration.allowedMethods =
+            mutableListOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
         configuration.addAllowedHeader("*")
         configuration.allowCredentials = true
         configuration.maxAge = 3600

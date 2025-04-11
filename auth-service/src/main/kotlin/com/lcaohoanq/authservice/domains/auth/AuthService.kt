@@ -11,6 +11,7 @@ import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.dto.UserPort.UserResponse
 import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.extension.toUserResponse
+import com.lcaohoanq.authservice.repositories.AddressRepository
 import com.lcaohoanq.authservice.repositories.UserRepository
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.enums.UserEnum
@@ -36,7 +37,8 @@ class AuthService(
     private val jwtTokenUtils: JwtTokenUtils,
     private val tokenService: TokenService,
     private val passwordEncoder: PasswordEncoder,
-    private val mailFeignClient: MailFeignClient
+    private val mailFeignClient: MailFeignClient,
+    private val addressRepository: AddressRepository
 ) : IAuthService {
 
     private val log = KotlinLogging.logger {}
@@ -75,8 +77,13 @@ class AuthService(
         log.info("New user logged in successfully");
 
 
-        if (existUser.lastLoginTimeStamp == null)
-            mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
+        if (existUser.lastLoginTimeStamp == null) {
+            try {
+                mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
+            } catch (e: Exception) {
+                log.error("Error when sending greeting email: ${e.message}")
+            }
+        }
 
         existUser.lastLoginTimeStamp = LocalDateTime.now()
         userRepository.save(existUser)
@@ -96,31 +103,38 @@ class AuthService(
 
 //        mailFeignClient.sendOtp(newAccount.email)
 
-        userRepository.save(
-            User(
-                email = newAccount.email,
-                hashedPassword = passwordEncoder.encode(newAccount.password),
-                role = UserEnum.Role.MEMBER,
-                name = newAccount.name,
-                status = UserEnum.Status.UNVERIFIED,
-                address = setOf(
-                    Address(
-                        address = newAccount.address,
-                        nameOfUser = newAccount.name,
-                        phoneNumber = newAccount.phoneNumber,
-                    )
-                ),
-                userName = "",
-                phone = "",
-                avatar = "https://api.dicebear.com/9.x/adventurer/svg?seed=${newAccount.email}",
-                cartId = "cart-${newAccount.email}",
-                walletId = "wallet-${newAccount.email}",
+        val newUser = User(
+            email = newAccount.email,
+            hashedPassword = passwordEncoder.encode(newAccount.password),
+            role = UserEnum.Role.MEMBER,
+            name = newAccount.name,
+            status = UserEnum.Status.UNVERIFIED,
+            userName = "",
+            phone = "",
+            avatar = "https://api.dicebear.com/9.x/adventurer/svg?seed=${newAccount.email}",
+            cartId = "cart-${newAccount.email}",
+            walletId = "wallet-${newAccount.email}",
+        )
+
+        userRepository.save(newUser)
+
+        addressRepository.save(
+            Address(
+                address = newAccount.address,
+                isDefault = true,
+                phoneNumber = newAccount.phoneNumber,
+                nameOfUser = newAccount.name,
+                userId = newUser.id!!
             )
         )
 
-        mailFeignClient.sendVerifyAccountEmail(
-            AuthPort.VerifyEmailReq(newAccount.email)
-        )
+        try {
+            mailFeignClient.sendVerifyAccountEmail(
+                AuthPort.VerifyEmailReq(newAccount.email)
+            )
+        } catch (e: Exception) {
+            log.error("Error when sending email: ${e.message}")
+        }
 
         log.info("New user registered successfully");
     }
@@ -181,7 +195,7 @@ class AuthService(
         val user = userRepository.findByEmail(email)
             ?: throw DataNotFoundException("User not found")
 
-        if(user.status == UserEnum.Status.VERIFIED)
+        if (user.status == UserEnum.Status.VERIFIED)
             throw MalformBehaviourException("User already verified")
 
         user.status = UserEnum.Status.VERIFIED

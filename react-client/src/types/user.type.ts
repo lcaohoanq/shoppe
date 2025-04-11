@@ -31,7 +31,7 @@ export type UserResponse = {
   date_of_birth: string
   phone_number: string
   address: string
-  avatar: string
+  avatar: string | null
   role_name: string
   preferred_language: string
   preferred_currency: string

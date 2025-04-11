@@ -1,6 +1,9 @@
 package com.lcaohoanq.authservice.domains.otp
 
+import com.lcaohoanq.authservice.domains.user.User
+import com.lcaohoanq.authservice.extension.toOtpResponse
 import com.lcaohoanq.authservice.repositories.OtpRepository
+import com.lcaohoanq.common.dto.OtpPort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -8,17 +11,15 @@ import java.time.LocalDateTime
 @Service
 class OtpService(
     private val otpRepository: OtpRepository
-): IOtpService {
+) : IOtpService {
 
-    override fun createOtp(otp: Otp) {
-        val newOtp = Otp(
-            email = otp.email,
-            otp = otp.otp,
-            expiredAt = otp.expiredAt,
-            isUsed = otp.isUsed,
-            isExpired = otp.isExpired
+    override fun createOtpFor(user: User, otpRequest: OtpPort.OtpReq) {
+        val otpEntity = Otp(
+            email = otpRequest.email,
+            otp = otpRequest.otp,
+            expiredAt = LocalDateTime.now().plusMinutes(5),
         )
-        otpRepository.save(newOtp)
+        otpRepository.save(otpEntity)
     }
 
     override fun disableOtp(id: Long) {
@@ -40,5 +41,9 @@ class OtpService(
 
     override fun generateOtp(): String {
         return ((Math.random() * 9000).toInt() + 1000).toString()
+    }
+
+    override fun getAllOtps(): List<OtpPort.OtpRes> {
+        return otpRepository.findAll().map { it.toOtpResponse() }
     }
 }

@@ -143,11 +143,11 @@ class AuthController(
         )
     }
 
-    //http://localhost:4006/api/v1/auth/verify-account?token=$token
-    @GetMapping("/verify-account")
+
+    @PatchMapping("/verify-account")
     @Operation(
         summary = "Verify account",
-        description = "Verify account",
+        description = "This link will sent via email, user press to verify account",
     )
     fun verifyAccount(@RequestParam token: String): ResponseEntity<MyApiResponse<Unit>> {
         authService.verifyAccount(token)

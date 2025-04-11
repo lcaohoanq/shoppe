@@ -19,8 +19,9 @@ interface AuthPort {
         val email: String,
         val address: String,
         val phoneNumber: String,
-        val gender: UserEnum.Gender,
-        val password: String
+        val gender: UserEnum.Gender? = UserEnum.Gender.FEMALE,
+        val password: String,
+        val status: UserEnum.Status? = UserEnum.Status.UNVERIFIED,
     )
 
     data class VerifyEmailReq(

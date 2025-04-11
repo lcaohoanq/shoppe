@@ -18,6 +18,7 @@ import UserLayout from './pages/User/layouts/UserLayout'
 // import NotFound from './pages/NotFound'
 
 const Login = lazy(() => import('./pages/Login'))
+const OAuth2Callback = lazy(() => import('./pages/OAuth2/OAuth2Callback'))
 const ProductList = lazy(() => import('./pages/ProductList'))
 const Register = lazy(() => import('./pages/Register'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
@@ -111,6 +112,10 @@ export default function useRouteElements() {
           ]
         }
       ]
+    },
+    {
+      path: 'auth/oauth2',
+      element: <OAuth2Callback/>
     },
     {
       path: '',
