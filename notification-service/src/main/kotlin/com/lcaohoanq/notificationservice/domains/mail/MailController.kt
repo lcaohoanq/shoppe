@@ -37,7 +37,7 @@ class MailController(
         )
         val response = MailPort.MailResponse("Mail sent successfully")
 
-        val otpEntity= OtpPort.OtpReq(
+        val otpEntity = OtpPort.OtpReq(
             email = toEmail,
             otp = otp,
         )
@@ -49,7 +49,7 @@ class MailController(
     }
 
     @PostMapping("/greeting-user-login")
-    fun greeting(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailPort.MailResponse>{
+    fun greeting(@RequestParam @Schema(defaultValue = "hoangclw@gmail.com") toEmail: String): ResponseEntity<MailPort.MailResponse> {
 
         val context = Context()
         context.setVariable("name", toEmail)
@@ -70,7 +70,10 @@ class MailController(
         val token = unwrap(authFeignClient.generateTokenFromEmail(data))
 
         val context = Context()
-        context.setVariable("verifyLink", "http://localhost:4006/api/v1/auth/verify-account?token=$token")
+        context.setVariable(
+            "verifyLink",
+            "http://localhost:4006/api/v1/auth/verify-account?token=$token"
+        )
 
         mailService.sendMail(
             data.email,
@@ -82,6 +85,27 @@ class MailController(
         val response = MailPort.MailResponse("Verification mail sent successfully")
         return ResponseEntity(response, HttpStatus.OK)
 //        throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Mail service is overloaded")
+    }
+
+    @GetMapping("/static-mail")
+    fun doSendStaticMail(
+        @RequestParam toEmail: String,
+        @RequestParam templateName: String
+    ): ResponseEntity<MailPort.MailResponse> {
+
+        val context = Context()
+
+        mailService.sendMail(
+            toEmail,
+            "Shoppe Corporation - Welcome ${toEmail}, thanks for joining us!",
+            templateName,
+            context
+        )
+
+        return ResponseEntity.ok(
+            MailPort.MailResponse("Static mail sent successfully")
+        )
+
     }
 
 

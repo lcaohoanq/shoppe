@@ -11,6 +11,7 @@ fun User.toUserResponse() = UserPort.UserResponse(
     username = userName,
     phone = phone,
     status = status!!,
+    totp = totpSecret,
     lastLoginTimeStamp = lastLoginTimeStamp!!,
     role = role!!,
     avatar = avatar,

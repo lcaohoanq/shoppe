@@ -28,4 +28,9 @@ interface AuthPort {
         val email: String,
     )
 
+    data class Verify2FAReq(
+        val secret: String,
+        val code: String,
+    )
+
 }

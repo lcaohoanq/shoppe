@@ -8,7 +8,7 @@ import com.lcaohoanq.common.dto.AuthPort
 
 interface IAuthService {
 
-    fun login(account: AuthPort.AuthRequest): AuthPort.AuthResponse
+    fun login(account: AuthPort.AuthRequest): LoginResult
     fun register(newAccount: AuthPort.SignUpReq)
     fun getUserDetailsFromToken(token: String): UserPort.UserResponse
     fun getCurrentAuthenticatedUser(): User
@@ -16,5 +16,7 @@ interface IAuthService {
     fun logout(token: String, user: User)
     fun generateTokenFromEmail(email: String): String
     fun verifyAccount(token: String): Unit
+    fun setup2FA(email: String): String
+    fun verify2fa(data: AuthPort.Verify2FAReq)
 
 }

@@ -19,6 +19,8 @@ import com.lcaohoanq.common.enums.UserEnum
 import com.lcaohoanq.common.exceptions.ExpiredTokenException
 import com.lcaohoanq.common.exceptions.MalformBehaviourException
 import com.lcaohoanq.common.exceptions.base.DataNotFoundException
+import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
+import jakarta.ws.rs.ForbiddenException
 import mu.KotlinLogging
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.authentication.AuthenticationManager
@@ -28,6 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.util.Date
 
 
 @Service
@@ -44,7 +47,7 @@ class AuthService(
 
     private val log = KotlinLogging.logger {}
 
-    override fun login(account: AuthPort.AuthRequest): AuthPort.AuthResponse {
+    override fun login(account: AuthPort.AuthRequest): LoginResult {
         val (email, rawPassword) = account
 
         // Step 1: Retrieve the user by email
@@ -67,6 +70,15 @@ class AuthService(
         // Step 2: Use the password encoder to check if the password is correct
         if (!passwordEncoder.matches(rawPassword, existUser.password)) {
             throw BadCredentialsException("Wrong email or password")
+        }
+
+        if (existUser.totpSecret.isNotEmpty()) {
+            // Generate a short-lived token for 2FA verification
+            val tempToken = jwtTokenUtils.generate2FAToken(existUser)
+            return Login2FARequired(
+                tempToken = tempToken,
+                is2FARequired = true
+            )
         }
 
         // Step 3: Create an authentication token
@@ -104,7 +116,7 @@ class AuthService(
         userRepository.save(existUser)
 
         // Return the authentication response
-        return AuthPort.AuthResponse(
+        return LoginSuccess(
             token = jwtToken.toTokenResponse()
         )
     }
@@ -217,5 +229,41 @@ class AuthService(
         userRepository.save(user)
 
         tokenService.deleteToken(token, user)
+
+        try{
+            mailFeignClient.doSendStaticMail(user.email, "verifiedAccountSuccess")
+        }catch (e: Exception){
+            log.error ("Error when sending email: ${e.message}")
+        }
+    }
+
+    override fun setup2FA(email: String): String {
+        val existUser = userRepository.findByEmail(email)
+            ?: throw DataNotFoundException("User not found")
+
+        if (existUser.totpSecret.isNotEmpty()) {
+            throw MalformBehaviourException("2FA already setup")
+        }
+
+        val secret = GoogleAuthenticator.createRandomSecret()
+        existUser.totpSecret = secret
+        userRepository.save(existUser)
+        val qrCodeUrl = "http://localhost:4006/api/v1/auth/code/$secret"
+        return qrCodeUrl
+    }
+
+    override fun verify2fa(data: AuthPort.Verify2FAReq) {
+        val user = getCurrentAuthenticatedUser()
+
+        if (user.totpSecret.isEmpty()) {
+            throw ForbiddenException("2FA is not enabled for this account.")
+        }
+        val secret = user.totpSecret
+        val code = data.code
+        val isValid = GoogleAuthenticator(secret!!).isValid(code, Date())
+        if (!isValid) {
+            throw MalformBehaviourException("Invalid 2FA code")
+        }
+        log.info("2FA verified successfully")
     }
 }

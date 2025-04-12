@@ -1,10 +1,15 @@
 package com.lcaohoanq.authservice.domains.auth
 
+import com.lcaohoanq.authservice.domains.mfa.CodeGenerator
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.exceptions.MethodArgumentNotValidException
 import com.lcaohoanq.common.apis.MyApiResponse
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.TokenPort
+import com.lcaohoanq.commonspring.utils.WebUtil
+import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
+import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator.Companion.createRandomSecret
+import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator.Companion.createRandomSecretAsByteArray
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -12,12 +17,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
+import org.springframework.core.io.FileSystemResource
+import org.springframework.core.io.Resource
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import java.io.File
+import java.util.*
+import javax.imageio.ImageIO
 
 
 @Tag(name = "Auth", description = "Auth API")
@@ -26,8 +39,11 @@ import org.springframework.web.bind.annotation.*
 class AuthController(
     private val authService: IAuthService,
     private val userService: IUserService,
+    private val generator: CodeGenerator,
     private val request: HttpServletRequest
 ) {
+
+    private val log = mu.KotlinLogging.logger {}
 
     @Operation(
         summary = "Login to the system",
@@ -46,7 +62,7 @@ class AuthController(
         ]
     )
     @PostMapping("/login")
-    fun login(@RequestBody loginRequest: AuthPort.AuthRequest): ResponseEntity<MyApiResponse<AuthPort.AuthResponse>> {
+    fun login(@RequestBody loginRequest: AuthPort.AuthRequest): ResponseEntity<MyApiResponse<LoginResult>> {
         val response = authService.login(loginRequest)
         return ResponseEntity.ok(
             MyApiResponse(
@@ -132,7 +148,7 @@ class AuthController(
         bindingResult: BindingResult
     ): ResponseEntity<MyApiResponse<String>> {
 
-        if(bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+        if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
 
         val response = authService.generateTokenFromEmail(data.email)
         return ResponseEntity.ok(
@@ -158,4 +174,78 @@ class AuthController(
         )
     }
 
+    private val secret = createRandomSecret()
+//    private val secretEncoded = Base64.getEncoder().encodeToString(secret)
+
+    init {
+        log.info { "Secret byte array: $secret" }
+//        log.info { "Secret encoded: $secretEncoded" }
+    }
+
+    @PatchMapping("/2fa/setup/{email}")
+    fun generate2FAForUser(@PathVariable email: String): ResponseEntity<MyApiResponse<String>>{
+        val qrCodeUrl = authService.setup2FA(email)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = "Setup 2FA successfully",
+                data = qrCodeUrl
+            )
+        )
+    }
+
+
+//    @Scheduled(fixedRate = 1000L)
+//    fun ping() {
+//        val timestamp = Date(System.currentTimeMillis())
+//        val code = GoogleAuthenticator(secret).generate(timestamp)
+//
+//        log.info("Code: $code")
+//    }
+
+    @GetMapping("/code/{secret}")
+    fun code(@PathVariable secret: String, @RequestParam email: String): ResponseEntity<Resource> {
+        // Generate the QR code image
+        val bufferedImage = generator.generate("Shoppe", email, secret)
+
+        // Create a temporary file to store the image
+        val tempFile = File.createTempFile("qrcode-", ".png")
+
+        // Write the buffered image to the temp file as PNG
+        ImageIO.write(bufferedImage, "PNG", tempFile)
+
+        // Create a resource from the file
+        val resource = FileSystemResource(tempFile)
+
+        // Set headers for proper display
+        val headers = HttpHeaders().apply {
+            add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"qrcode-${secret}.png\"")
+        }
+
+        // Auto-delete the temp file when the JVM exits
+        tempFile.deleteOnExit()
+
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_PNG)
+            .headers(headers)
+            .body(resource)
+    }
+
+    @PostMapping("/verify-2fa")
+    @Operation(
+        summary = "Verify 2FA code",
+        description = "Verify 2FA code",
+    )
+    fun verify2fa(
+        @Valid @RequestBody data: AuthPort.Verify2FAReq,
+        bindingResult: BindingResult
+    ): ResponseEntity<MyApiResponse<Unit>> {
+        if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+
+        authService.verify2fa(data)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = "Verify 2FA code successfully",
+            )
+        )
+    }
 }

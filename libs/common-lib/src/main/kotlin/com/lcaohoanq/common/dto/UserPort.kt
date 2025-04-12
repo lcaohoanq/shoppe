@@ -19,6 +19,7 @@ interface UserPort {
         val avatar: String,
         val email: String,
         val role: UserEnum.Role,
+        val totp: String,
         val username: String,
         val status: UserEnum.Status,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") val lastLoginTimeStamp: LocalDateTime,

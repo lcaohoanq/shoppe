@@ -113,6 +113,30 @@
       <groupId>io.lettuce</groupId>
       <artifactId>lettuce-core</artifactId>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>core</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.zxing</groupId>
+      <artifactId>javase</artifactId>
+      <version>3.5.3</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/dev.turingcomplete/kotlin-onetimepassword -->
+    <dependency>
+      <groupId>dev.turingcomplete</groupId>
+      <artifactId>kotlin-onetimepassword</artifactId>
+      <version>2.4.1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.3</version>
+    </dependency>
 
   </dependencies>
 

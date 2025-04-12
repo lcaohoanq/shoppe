@@ -126,4 +126,18 @@ class JwtTokenUtils(
             throw com.lcaohoanq.common.exceptions.JwtAuthenticationException("JWT claims string is empty")
         }
     }
+
+    fun generate2FAToken(user: User): String {
+        val claims = HashMap<String, Any>()
+        claims["is2FAToken"] = true
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setSubject(user.email)
+            .setIssuedAt(Date(System.currentTimeMillis()))
+            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 5)) // 5 minutes
+            .signWith(signInKey, SignatureAlgorithm.HS256)
+            .compact()
+    }
+
 }

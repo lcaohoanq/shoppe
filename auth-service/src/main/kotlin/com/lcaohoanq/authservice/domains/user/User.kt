@@ -34,6 +34,8 @@ class User(
     val phone: String = "",
     val name: String = "New User",
 
+    var totpSecret: String = "", // null if 2FA not enabled yet
+
     @Enumerated(EnumType.ORDINAL)
     val gender: UserEnum.Gender? = UserEnum.Gender.FEMALE,
     val isActive: Boolean = true,
