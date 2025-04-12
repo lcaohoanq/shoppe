@@ -1,5 +1,7 @@
 package com.lcaohoanq.gateway.filter
 
+import com.lcaohoanq.common.enums.ServiceTier
+import com.lcaohoanq.gateway.config.rateLimitRules
 import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
 import io.github.bucket4j.Refill
@@ -24,7 +26,7 @@ class RateLimitFilter : GlobalFilter, Ordered {
     // Store buckets per IP address
     private val buckets = ConcurrentHashMap<String, Bucket>()
 
-    // Define rate limit: 5 tokens per second with max burst of 10 ( 10 requests maximum, refilling at 5 per second)
+    // Define rate limit: 5 tokens per second with max burst of 10 (10 requests maximum, refilling at 5 per second)
     /*
         Greedy refill (adds tokens immediately)
         Refill.greedy(5, Duration.ofSeconds(1))
@@ -32,7 +34,6 @@ class RateLimitFilter : GlobalFilter, Ordered {
         Interval refill (adds tokens at fixed intervals)
         Refill.intervally(5, Duration.ofSeconds(1))
     */
-    
     private fun createBucket(): Bucket {
         val limit = Bandwidth.classic(10, Refill.greedy(5, Duration.ofSeconds(1)))
         return Bucket.builder().addLimit(limit).build()
@@ -42,45 +43,54 @@ class RateLimitFilter : GlobalFilter, Ordered {
         val request = exchange.request
         val path = request.uri.path
 
-        // Only rate limit login endpoint
-        if (!path.contains("/api/v1/auth/login")) {
-            return chain.filter(exchange)
-        }
+        val rule = rateLimitRules.entries.find { it.key.matches(path) }?.value
+        if (rule == null) return chain.filter(exchange)
 
         // Client Identification: Get client IP - properly extract from X-Forwarded-For header
-        val clientIp = request.headers.getFirst("X-Forwarded-For") 
-            ?: exchange.request.remoteAddress?.address?.hostAddress 
+        val clientIp = request.headers.getFirst("X-Forwarded-For")
+            ?: request.remoteAddress?.address?.hostAddress
             ?: "unknown"
-        
-        /*           
+
+        /*
             By user ID (for authenticated requests)
-            val userId = exchange.getAttribute<String>("userId") ?: "anonymous" 
+            val userId = exchange.getAttribute<String>("userId") ?: "anonymous"
         */
 
         log.info("🔑 Rate limiting request from IP: $clientIp for path: $path")
 
-        // Create a more restrictive bucket for testing
-        val bucket = buckets.computeIfAbsent(clientIp) { 
-            // For tests: 3 initial tokens with 1 token per second refill
-            Bucket.builder()
-                .addLimit(Bandwidth.classic(3, Refill.greedy(1, Duration.ofSeconds(1))))
-                .build()
+        val bucketKey = "$clientIp:$path"
+        //Nếu sau này muốn cache theo userId thay vì IP, chỉ cần sửa đoạn bucketKey.
+        val bucket = buckets.computeIfAbsent(bucketKey) {
+            getBucketWithLimit(rule.capacity, rule.refillPerSec)
         }
 
         // Try to consume a token
-        val probe = bucket.tryConsumeAndReturnRemaining(1)
-        if (probe.isConsumed) {
-            log.info("✅ Request allowed, remaining: ${probe.remainingTokens}")
-            return chain.filter(exchange)
+        val availableTokens = bucket.availableTokens
+        val consumed = bucket.tryConsume(1) //Take 1 last token, if available the request is allowed, rather than rely on the token count
+
+        return if (consumed) {
+            log.info("✅ Request allowed, remaining: ${availableTokens - 1}")
+            chain.filter(exchange)
         } else {
             log.warn("❌ Rate limit exceeded for IP: $clientIp")
             exchange.response.statusCode = HttpStatus.TOO_MANY_REQUESTS
-            return exchange.response.setComplete()
+            exchange.response.setComplete()
         }
     }
 
+    private fun getBucketWithLimit(capacity: Int, refillPerSecond: Int): Bucket {
+        return Bucket.builder()
+            .addLimit(
+                Bandwidth.classic(
+                    capacity.toLong(),
+                    Refill.greedy(refillPerSecond.toLong(), Duration.ofSeconds(1))
+                )
+            )
+            .build()
+    }
+
     fun getBucketForTier(clientId: String, tier: ServiceTier): Bucket {
-        return when(tier) {
+        return when (tier) {
             ServiceTier.FREE -> Bucket.builder()
                 .addLimit(Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1))))
                 .build()
@@ -90,6 +100,17 @@ class RateLimitFilter : GlobalFilter, Ordered {
             ServiceTier.ENTERPRISE -> // No limits for enterprise
                 unlimitedBucket()
         }
+    }
+
+    private fun unlimitedBucket(): Bucket {
+        return Bucket.builder()
+            .addLimit(
+                Bandwidth.classic(
+                    Long.MAX_VALUE,
+                    Refill.greedy(Long.MAX_VALUE, Duration.ofMinutes(1))
+                )
+            )
+            .build()
     }
 
     override fun getOrder(): Int = -2
