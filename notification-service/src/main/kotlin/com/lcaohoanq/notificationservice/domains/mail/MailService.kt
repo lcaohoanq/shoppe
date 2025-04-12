@@ -1,5 +1,6 @@
 package com.lcaohoanq.notificationservice.domains.mail
 
+import feign.FeignException.ServiceUnavailable
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
 import mu.KotlinLogging
@@ -34,7 +35,14 @@ class MailService(
         } catch (e: MessagingException) {
             log.error("Failed to send mail to {}: {}", to, e.message)
             throw MessagingException("Failed to send mail to $to")
+        } catch (e: ServiceUnavailable){
+            log.error("Mail service is unavailable: {}", e.message)
+            throw ServiceUnavailable("Mail service is unavailable")
         }
+    }
+
+    override fun ServiceUnavailable(s: String): ServiceUnavailable {
+        return ServiceUnavailable(s)
     }
 
 //    override fun createEmailVerification(user: User): Single<User> {

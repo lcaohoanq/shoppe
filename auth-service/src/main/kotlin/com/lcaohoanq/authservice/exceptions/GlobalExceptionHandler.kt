@@ -40,6 +40,17 @@ class GlobalExceptionHandler {
         )
     }
 
+    @ExceptionHandler(UnauthorizedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun handleUnauthorizedException(e: UnauthorizedException): ApiError<Any> {
+        return ApiError(
+            message = "Unauthorized",
+            reason = e.message,
+            statusCode = HttpStatus.UNAUTHORIZED.value(),
+            isSuccess = false
+        )
+    }
+
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     fun handleException(e: Exception): ApiError<Any> {

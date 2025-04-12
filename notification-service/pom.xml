@@ -81,16 +81,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.lcaohoanq</groupId>
-      <artifactId>common-lib</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-security</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>compile</scope>
@@ -99,6 +89,12 @@
     <dependency>
       <groupId>com.lcaohoanq</groupId>
       <artifactId>common-spring</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-security</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>

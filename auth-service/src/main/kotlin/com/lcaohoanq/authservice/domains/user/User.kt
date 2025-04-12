@@ -4,6 +4,7 @@ import BaseEntity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.common.enums.UserEnum
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

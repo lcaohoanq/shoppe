@@ -4,6 +4,7 @@ import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.MailPort
 import com.lcaohoanq.common.dto.OtpPort
 import com.lcaohoanq.common.utils.OtpUtil
+import com.lcaohoanq.commonspring.utils.unwrap
 import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest
@@ -66,21 +67,21 @@ class MailController(
 
     @PostMapping("/verify-account")
     fun doVerifyAccount(@RequestBody data: AuthPort.VerifyEmailReq): ResponseEntity<MailPort.MailResponse> {
-//        val token = unwrap(authFeignClient.generateTokenFromEmail(data))
-//
-//        val context = Context()
-//        context.setVariable("verifyLink", "http://localhost:4006/api/v1/auth/verify-account?token=$token")
-//
-//        mailService.sendMail(
-//            data.email,
-//            "Shoppe Corporation - Welcome ${data.email}, thanks for joining us!",
-//            "verifyUser",
-//            context
-//        )
-//
-//        val response = MailPort.MailResponse("Verification mail sent successfully")
-//        return ResponseEntity(response, HttpStatus.OK)
-        throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Mail service is overloaded")
+        val token = unwrap(authFeignClient.generateTokenFromEmail(data))
+
+        val context = Context()
+        context.setVariable("verifyLink", "http://localhost:4006/api/v1/auth/verify-account?token=$token")
+
+        mailService.sendMail(
+            data.email,
+            "Shoppe Corporation - Welcome ${data.email}, thanks for joining us!",
+            "verifyUser",
+            context
+        )
+
+        val response = MailPort.MailResponse("Verification mail sent successfully")
+        return ResponseEntity(response, HttpStatus.OK)
+//        throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Mail service is overloaded")
     }
 
 

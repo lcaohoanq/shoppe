@@ -144,7 +144,7 @@ class AuthController(
     }
 
 
-    @PatchMapping("/verify-account")
+    @GetMapping("/verify-account")
     @Operation(
         summary = "Verify account",
         description = "This link will sent via email, user press to verify account",

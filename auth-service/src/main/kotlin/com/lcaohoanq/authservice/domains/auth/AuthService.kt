@@ -7,6 +7,7 @@ import com.lcaohoanq.authservice.domains.token.TokenService
 import com.lcaohoanq.authservice.domains.user.Address
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
+import com.lcaohoanq.authservice.exceptions.UnauthorizedException
 import com.lcaohoanq.common.dto.TokenPort
 import com.lcaohoanq.common.dto.UserPort.UserResponse
 import com.lcaohoanq.authservice.extension.toTokenResponse
@@ -50,6 +51,19 @@ class AuthService(
         val existUser = userRepository.findByEmail(email)
             ?: throw BadCredentialsException("Wrong email or password")
 
+        // Check if user has verified their account
+        if (existUser.status == UserEnum.Status.UNVERIFIED) {
+            // User exists but is unverified - resend verification email and block login
+            try {
+                mailFeignClient.sendVerifyAccountEmail(
+                    AuthPort.VerifyEmailReq(existUser.email)
+                )
+            } catch (e: Exception) {
+                log.error("Error when sending email: ${e.message}")
+            }
+            throw UnauthorizedException("Please verify your email before logging in. A new verification email has been sent.")
+        }
+
         // Step 2: Use the password encoder to check if the password is correct
         if (!passwordEncoder.matches(rawPassword, existUser.password)) {
             throw BadCredentialsException("Wrong email or password")
@@ -74,9 +88,9 @@ class AuthService(
             token
         )
 
-        log.info("New user logged in successfully");
+        log.info("User logged in successfully");
 
-
+        // Send greeting email for first-time login
         if (existUser.lastLoginTimeStamp == null) {
             try {
                 mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
@@ -85,6 +99,7 @@ class AuthService(
             }
         }
 
+        // Update last login timestamp
         existUser.lastLoginTimeStamp = LocalDateTime.now()
         userRepository.save(existUser)
 
