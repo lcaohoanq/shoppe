@@ -1,11 +1,13 @@
 package com.lcaohoanq.gateway.config
 
-import com.lcaohoanq.gateway.filter.AuthenticationFilter
 import com.lcaohoanq.gateway.jwt.JwtTokenProvider
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
+import org.springframework.cloud.gateway.support.ipresolver.RemoteAddressResolver
+import org.springframework.cloud.gateway.support.ipresolver.XForwardedRemoteAddressResolver
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpStatus
 
 @Configuration
 class GatewayConfig {
@@ -38,7 +40,9 @@ class GatewayConfig {
      */
 
     @Bean
-    fun routeLocator(builder: RouteLocatorBuilder): RouteLocator {
+    fun routeLocator(
+        builder: RouteLocatorBuilder
+    ): RouteLocator {
         return builder.routes()
 
             /*
@@ -78,10 +82,7 @@ class GatewayConfig {
             }
 
             // Route for /api/v1/users, which should go to the User Service on localhost:4000
-            .route("user_service_route") { r ->
-                r.path("${API_PREFIX_V1}/users/**") // Match any requests that start with /api/v1/users
-                    .uri(KT_SERVICE) // Forward to the User service
-            }
+            
             // Route for /api/v1/categories, which should go to the Category Service on localhost:8080
             .route("category_service_route") { r ->
                 r.path("${API_PREFIX_V1}/categories/**") // Match any requests that start with /api/v1/categories
@@ -103,7 +104,7 @@ class GatewayConfig {
                     .uri(AUTH_EUREKA)
             }
 
-            .route("notification_service_route"){ r ->
+            .route("notification_service_route") { r ->
                 r.path("${API_PREFIX_V1}/mail/**")
                     .uri(NOTIFICATION_EUREKA)
             }
@@ -111,14 +112,20 @@ class GatewayConfig {
             .build()
     }
 
-    @Bean
-    fun authenticationFilter(): AuthenticationFilter {
-        return AuthenticationFilter(jwtTokenProvider())
-    }
+//    @Bean
+//    fun authenticationFilter(): AuthenticationFilter {
+//        return AuthenticationFilter(jwtTokenProvider())
+//    }
 
     @Bean
     fun jwtTokenProvider(): JwtTokenProvider {
         return JwtTokenProvider()
     }
+
+    @Bean
+    fun remoteAddressResolver(): RemoteAddressResolver {
+        return XForwardedRemoteAddressResolver.maxTrustedIndex(1)
+    }
+
 
 }

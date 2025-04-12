@@ -5,31 +5,33 @@ import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilterChain
 import org.springframework.cloud.gateway.filter.GlobalFilter
 import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
+@Component
+@Order(value = -1)
 class AuthenticationFilter(
     private val jwtTokenProvider: JwtTokenProvider
-) : GlobalFilter, Ordered {
+) : GlobalFilter {
 
     private val log = LoggerFactory.getLogger(AuthenticationFilter::class.java)
 
     override fun filter(exchange: ServerWebExchange, chain: GatewayFilterChain): Mono<Void> {
-        val request = exchange.request
+        log.info("🔥 AuthenticationFilter called for: ${exchange.request.uri}")
 
+        val request = exchange.request
         val path = request.uri.path
         val method = request.method
 
         log.debug("Intercepting request: {} {}", method, path)
 
-        if (isPublicEndpoint(path)) {
-            return chain.filter(exchange)
-        }
+        if (isPublicEndpoint(path)) return chain.filter(exchange)
 
         val authHeader = request.headers.getFirst(HttpHeaders.AUTHORIZATION)
-
         if (authHeader.isNullOrBlank() || !authHeader.startsWith("Bearer ")) {
             return unauthorized(exchange, "Missing or invalid Authorization header")
         }
@@ -39,7 +41,6 @@ class AuthenticationFilter(
             return unauthorized(exchange, "Invalid or expired JWT token")
         }
 
-        // Optionally you can extract claims and attach it to request headers
         val email = jwtTokenProvider.extractEmail(token)
         val mutatedRequest = exchange.request.mutate()
             .header("X-User-Email", email)
@@ -49,7 +50,7 @@ class AuthenticationFilter(
     }
 
     private fun unauthorized(exchange: ServerWebExchange, message: String): Mono<Void> {
-        log.warn("Unauthorized: {}", message)
+        log.warn("❌ Unauthorized: {}", message)
         exchange.response.statusCode = HttpStatus.UNAUTHORIZED
         return exchange.response.setComplete()
     }
@@ -60,6 +61,4 @@ class AuthenticationFilter(
                 path.contains("/actuator") ||
                 path.contains("/public")
     }
-
-    override fun getOrder(): Int = -1
 }

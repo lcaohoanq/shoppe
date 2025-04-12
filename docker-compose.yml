@@ -10,7 +10,7 @@ services:
       dockerfile: eureka-service/Dockerfile
     ports:
       - "8761:8761"
-    restart: on-failure
+    # restart: on-failure
     volumes:
       - ./logs/eureka:/logs/eureka
     networks:
@@ -23,7 +23,7 @@ services:
       dockerfile: gateway-service/Dockerfile
     ports:
       - "4003:4003"
-    restart: on-failure
+    # restart: on-failure
     volumes:
     - ./logs/gateway:/logs/gateway
     environment:

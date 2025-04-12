@@ -1,14 +1,14 @@
 spring:
   application:
     name: eureka-server
-  cloud:
-    discovery:
-      eureka:
-        client:
-          registerWithEureka: false
-          fetchRegistry: false
+
 server:
   port: 8761  # Eureka server will run on this port by default
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
 
 #health check
 management:
@@ -27,3 +27,8 @@ management:
       access: unrestricted
     prometheus:
       access: unrestricted
+
+logging:
+  level:
+    com.netflix.eureka: OFF
+    com.netflix.discovery: OFF

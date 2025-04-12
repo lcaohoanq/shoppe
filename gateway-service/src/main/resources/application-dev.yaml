@@ -13,24 +13,7 @@ spring:
       eureka:
         client:
           serviceUrl:
-            defaultZone: http://eureka:8761/eureka/  # Eureka Server URL
-    gateway:
-      routes:
-        - id: kt-service-route
-          uri: lb://kt-service  # Use the service name registered in Eureka
-          predicates:
-            - Path=/kt-service/**
-
-        - id: auth-service-route
-          uri: lb://auth-service  # Use the service name registered in Eureka
-          predicates:
-            - Path=/auth-service/**
-
-        - id: jv-service-route
-          uri: lb://jv-service  # Use the service name registered in Eureka
-          predicates:
-            - Path=/jv-service/**
-
+            defaultZone: http://eureka:8761/eureka/ # Eureka Server URL
 
   output:
     ansi:
@@ -48,6 +31,7 @@ logging:
     springframework.security: DEBUG
     org.hibernate: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.cloud.gateway.filter.ratelimit: DEBUG
 
 #health check
 management:
