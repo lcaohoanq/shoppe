@@ -1,5 +1,6 @@
 package com.lcaohoanq.authservice.clients
 
+import com.lcaohoanq.authservice.configs.FeignClientConfig
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.MailPort
 import org.springframework.cloud.openfeign.FeignClient
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 
-@FeignClient(name = "notification-service")
+@FeignClient(name = "notification-service", configuration = [FeignClientConfig::class])
 interface MailFeignClient {
 
     @PostMapping("/api/v1/mail/greeting-user-login")

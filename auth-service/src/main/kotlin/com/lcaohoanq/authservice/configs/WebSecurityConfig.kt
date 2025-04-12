@@ -65,6 +65,7 @@ class WebSecurityConfig(
                     "$apiPrefix/tokens/**",
                     "$apiPrefix/oauth2/**",
                     "$apiPrefix/ip/**",
+                    "$apiPrefix/user-settings/**",
                 ).permitAll()
 
                 // Swagger and public documentation endpoints

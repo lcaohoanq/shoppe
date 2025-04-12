@@ -18,7 +18,6 @@ class User(
     @SequenceGenerator(name = "users_seq", sequenceName = "users_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
     @Column(name = "id", unique = true, nullable = false)
-    @JsonProperty("id")
     val id: Long? = null,
 
     @Column(name = "email", unique = true)

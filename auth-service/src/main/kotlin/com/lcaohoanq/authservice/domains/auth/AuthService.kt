@@ -2,6 +2,7 @@ package com.lcaohoanq.authservice.domains.auth
 
 import com.lcaohoanq.authservice.clients.MailFeignClient
 import com.lcaohoanq.authservice.components.JwtTokenUtils
+import com.lcaohoanq.authservice.domains.settings.UserSettings
 import com.lcaohoanq.authservice.domains.token.Token
 import com.lcaohoanq.authservice.domains.token.TokenService
 import com.lcaohoanq.authservice.domains.user.Address
@@ -14,6 +15,7 @@ import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.repositories.AddressRepository
 import com.lcaohoanq.authservice.repositories.UserRepository
+import com.lcaohoanq.authservice.repositories.UserSettingsRepository
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.enums.UserEnum
 import com.lcaohoanq.common.exceptions.ExpiredTokenException
@@ -29,6 +31,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.Date
 
@@ -42,7 +45,8 @@ class AuthService(
     private val tokenService: TokenService,
     private val passwordEncoder: PasswordEncoder,
     private val mailFeignClient: MailFeignClient,
-    private val addressRepository: AddressRepository
+    private val addressRepository: AddressRepository,
+    private val userSettingsRepository: UserSettingsRepository
 ) : IAuthService {
 
     private val log = KotlinLogging.logger {}
@@ -57,13 +61,9 @@ class AuthService(
         // Check if user has verified their account
         if (existUser.status == UserEnum.Status.UNVERIFIED) {
             // User exists but is unverified - resend verification email and block login
-            try {
-                mailFeignClient.sendVerifyAccountEmail(
-                    AuthPort.VerifyEmailReq(existUser.email)
-                )
-            } catch (e: Exception) {
-                log.error("Error when sending email: ${e.message}")
-            }
+            mailFeignClient.sendVerifyAccountEmail(
+                AuthPort.VerifyEmailReq(existUser.email)
+            )
             throw UnauthorizedException("Please verify your email before logging in. A new verification email has been sent.")
         }
 
@@ -104,11 +104,7 @@ class AuthService(
 
         // Send greeting email for first-time login
         if (existUser.lastLoginTimeStamp == null) {
-            try {
-                mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
-            } catch (e: Exception) {
-                log.error("Error when sending greeting email: ${e.message}")
-            }
+            mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
         }
 
         // Update last login timestamp
@@ -121,7 +117,7 @@ class AuthService(
         )
     }
 
-
+    @Transactional
     override fun register(newAccount: AuthPort.SignUpReq) {
 
         if (userRepository.existsByEmail(newAccount.email)) {
@@ -155,13 +151,12 @@ class AuthService(
             )
         )
 
-        try {
-            mailFeignClient.sendVerifyAccountEmail(
-                AuthPort.VerifyEmailReq(newAccount.email)
-            )
-        } catch (e: Exception) {
-            log.error("Error when sending email: ${e.message}")
-        }
+        val settings = UserSettings(userId = newUser.id!!)
+        userSettingsRepository.save(settings)
+
+        mailFeignClient.sendVerifyAccountEmail(
+            AuthPort.VerifyEmailReq(newAccount.email)
+        )
 
         log.info("New user registered successfully");
     }
@@ -230,11 +225,8 @@ class AuthService(
 
         tokenService.deleteToken(token, user)
 
-        try{
-            mailFeignClient.doSendStaticMail(user.email, "verifiedAccountSuccess")
-        }catch (e: Exception){
-            log.error ("Error when sending email: ${e.message}")
-        }
+        mailFeignClient.doSendStaticMail(user.email, "verifiedAccountSuccess")
+
     }
 
     override fun setup2FA(email: String): String {

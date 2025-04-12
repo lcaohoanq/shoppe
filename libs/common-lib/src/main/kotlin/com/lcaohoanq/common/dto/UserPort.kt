@@ -29,4 +29,16 @@ interface UserPort {
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") @JsonIgnore val updatedAt: LocalDateTime?
     )
 
+    data class UserSettingsResponse(
+        val id: Long,
+        val userId: Long,
+        val twoFaEnabled: Boolean,
+        val preferredLanguage: String,
+        val darkMode: Boolean,
+        val emailNotificationsEnabled: Boolean,
+        val loginAlerts: Boolean,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") @JsonIgnore val createdAt: LocalDateTime?,
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") @JsonIgnore val updatedAt: LocalDateTime?
+    )
+
 }
