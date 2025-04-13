@@ -2,6 +2,7 @@ package com.lcaohoanq.authservice.domains.auth
 
 import com.lcaohoanq.authservice.clients.MailFeignClient
 import com.lcaohoanq.authservice.components.JwtTokenUtils
+import com.lcaohoanq.authservice.domains.loginhistory.ILoginHistoryService
 import com.lcaohoanq.authservice.domains.settings.UserSettings
 import com.lcaohoanq.authservice.domains.token.Token
 import com.lcaohoanq.authservice.domains.token.TokenService
@@ -9,19 +10,23 @@ import com.lcaohoanq.authservice.domains.user.Address
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.domains.user.User
 import com.lcaohoanq.authservice.exceptions.UnauthorizedException
-import com.lcaohoanq.common.dto.TokenPort
-import com.lcaohoanq.common.dto.UserPort.UserResponse
 import com.lcaohoanq.authservice.extension.toTokenResponse
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.repositories.AddressRepository
+import com.lcaohoanq.authservice.repositories.LoginHistoryRepository
 import com.lcaohoanq.authservice.repositories.UserRepository
 import com.lcaohoanq.authservice.repositories.UserSettingsRepository
+import com.lcaohoanq.authservice.utils.getClientIp
+import com.lcaohoanq.authservice.utils.getUserAgent
 import com.lcaohoanq.common.dto.AuthPort
+import com.lcaohoanq.common.dto.TokenPort
+import com.lcaohoanq.common.dto.UserPort.UserResponse
 import com.lcaohoanq.common.enums.UserEnum
 import com.lcaohoanq.common.exceptions.ExpiredTokenException
 import com.lcaohoanq.common.exceptions.MalformBehaviourException
 import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.ws.rs.ForbiddenException
 import mu.KotlinLogging
 import org.springframework.dao.DataIntegrityViolationException
@@ -32,8 +37,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
-import java.util.Date
+import java.util.*
 
 
 @Service
@@ -46,7 +50,10 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     private val mailFeignClient: MailFeignClient,
     private val addressRepository: AddressRepository,
-    private val userSettingsRepository: UserSettingsRepository
+    private val userSettingsRepository: UserSettingsRepository,
+    private val loginHistoryRepository: LoginHistoryRepository,
+    private val request: HttpServletRequest,
+    private val loginHistoryService: ILoginHistoryService
 ) : IAuthService {
 
     private val log = KotlinLogging.logger {}
@@ -100,17 +107,14 @@ class AuthService(
             token
         )
 
-        log.info("User logged in successfully");
-
         // Send greeting email for first-time login
-        if (existUser.lastLoginTimeStamp == null) {
+        if (!loginHistoryRepository.existsByUserId(existUser.id!!)) {
             mailFeignClient.sendGreetingUserLoginEmail(existUser.email)
         }
 
-        // Update last login timestamp
-        existUser.lastLoginTimeStamp = LocalDateTime.now()
+        // Update login history
+        loginHistoryService.recordLogin(existUser, request.getClientIp(), request.getUserAgent())
         userRepository.save(existUser)
-
         // Return the authentication response
         return LoginSuccess(
             token = jwtToken.toTokenResponse()

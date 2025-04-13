@@ -1,17 +1,20 @@
 package com.lcaohoanq.authservice.domains.loginhistory
 
+import BaseEntity
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.lcaohoanq.authservice.domains.user.User
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
 @Entity
 @Table(name = "login_history")
-data class LoginHistory(
+class LoginHistory(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     val user: User,
 
     @Column(nullable = false)
@@ -28,4 +31,4 @@ data class LoginHistory(
 
     @Column(nullable = false)
     val success: Boolean = true
-)
+) : BaseEntity()

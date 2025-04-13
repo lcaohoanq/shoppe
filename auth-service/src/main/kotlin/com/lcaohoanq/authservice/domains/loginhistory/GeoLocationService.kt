@@ -13,6 +13,8 @@ class GeoLocationService(
     private val webClient: WebClient
 ) {
 
+    private val log = mu.KotlinLogging.logger {}
+
     /*    fun getLocationFromIp(ip: String): GeoLocation {
             val url = URL("http://ip-api.com/json/$ip")
             val connection = url.openConnection() as HttpURLConnection
@@ -35,23 +37,46 @@ class GeoLocationService(
         }*/
 
     fun getLocationFromIp(ip: String): GeoLocation {
-        val response = webClient.get()
-            .uri("/json/{ip}", ip)
-            .retrieve()
-            .bodyToMono(IpApiResponse::class.java)
-            .block()  // blocking ở đây vì app bạn là Spring MVC, nếu WebFlux thì dùng `.subscribe()` hoặc `.flatMap`...
-
-        if (response?.status != "success") {
-            throw RuntimeException("Unable to retrieve location for IP: $ip")
+        // Bỏ qua localhost IP
+        if (ip == "::1" || ip == "127.0.0.1") {
+            return GeoLocation(
+                ip = ip,
+                country = "Localhost",
+                city = "Localhost",
+                lat = 0.0,
+                lon = 0.0
+            )
         }
 
-        return GeoLocation(
-            ip = ip,
-            country = response.country ?: "Unknown",
-            city = response.city ?: "Unknown",
-            lat = response.lat ?: 0.0,
-            lon = response.lon ?: 0.0
-        )
+        return try {
+            val response = webClient.get()
+                .uri("/json/{ip}", ip)
+                .retrieve()
+                .bodyToMono(IpApiResponse::class.java)
+                .block()
+
+            if (response?.status != "success") {
+                throw RuntimeException("Unable to retrieve location for IP: $ip, status=${response?.status}")
+            }
+
+            GeoLocation(
+                ip = ip,
+                country = response.country ?: "Unknown",
+                city = response.city ?: "Unknown",
+                lat = response.lat ?: 0.0,
+                lon = response.lon ?: 0.0
+            )
+        } catch (e: Exception) {
+            // Log lỗi và trả về thông tin mặc định
+            log.warn("Geo IP lookup failed for IP: $ip", e)
+            GeoLocation(
+                ip = ip,
+                country = "Unknown",
+                city = "Unknown",
+                lat = 0.0,
+                lon = 0.0
+            )
+        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

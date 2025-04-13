@@ -33,7 +33,10 @@ class UserSettings(
     var emailNotificationsEnabled: Boolean = true,
 
     @Column(name = "login_alerts")
-    var loginAlerts: Boolean = true
+    var loginAlerts: Boolean = true,
+
+    @Column(name = "request_disable_account")
+    var requestDisableAccount: Boolean = false,
 ) : BaseEntity() {
 
 }

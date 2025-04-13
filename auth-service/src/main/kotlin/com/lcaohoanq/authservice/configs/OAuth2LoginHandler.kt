@@ -2,9 +2,10 @@ package com.lcaohoanq.authservice.configs
 
 import com.lcaohoanq.authservice.components.JwtTokenUtils
 import com.lcaohoanq.authservice.domains.auth.IAuthService
-import com.lcaohoanq.authservice.domains.loginhistory.LoginHistory
-import com.lcaohoanq.authservice.repositories.LoginHistoryRepository
+import com.lcaohoanq.authservice.domains.loginhistory.ILoginHistoryService
 import com.lcaohoanq.authservice.repositories.UserRepository
+import com.lcaohoanq.authservice.utils.getClientIp
+import com.lcaohoanq.authservice.utils.getUserAgent
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.enums.UserEnum
 import jakarta.servlet.http.HttpServletRequest
@@ -22,108 +23,79 @@ class OAuth2LoginHandler(
     private val userRepository: UserRepository,
     private val authServiceProvider: ObjectProvider<IAuthService>,
     private val jwtTokenUtils: JwtTokenUtils,
-    private val loginHistoryRepository: LoginHistoryRepository
-): SavedRequestAwareAuthenticationSuccessHandler() {
+    private val loginHistoryService: ILoginHistoryService
+) : SavedRequestAwareAuthenticationSuccessHandler() {
 
-    // Get authService only when needed
     private val authService: IAuthService
         get() = authServiceProvider.getObject()
 
     override fun onAuthenticationSuccess(
-        request: HttpServletRequest?,
+        request: HttpServletRequest,
         response: HttpServletResponse?,
         authentication: Authentication?
     ) {
-
         val token = authentication as OAuth2AuthenticationToken
+        val provider = token.authorizedClientRegistrationId
+        val principal = authentication.principal as DefaultOAuth2User
+        val attributes = principal.attributes
 
-        if ("google" == token.authorizedClientRegistrationId) {
-            val principal = authentication.principal as DefaultOAuth2User
-            val attributes = principal.attributes
-            val email = attributes.getOrDefault("email", "").toString()
-            val name = attributes.getOrDefault("name", "").toString()
-            val imageUrl = attributes.getOrDefault("picture", "").toString()
-            val user = userRepository.findByEmail(email) ?: run {
-                authService.register(AuthPort.SignUpReq(
+        val (email, name, avatarUrl) = when (provider) {
+            "google" -> Triple(
+                attributes["email"]?.toString() ?: "",
+                attributes["name"]?.toString() ?: "Unknown",
+                attributes["picture"]?.toString() ?: ""
+            )
+            "github" -> Triple(
+                attributes["email"]?.toString() ?: "",
+                attributes["name"]?.toString() ?: "Unknown",
+                attributes["avatar_url"]?.toString() ?: ""
+            )
+            else -> throw IllegalArgumentException("Unsupported OAuth2 provider: $provider")
+        }
+
+        val user = userRepository.findByEmail(email) ?: run {
+            authService.register(
+                AuthPort.SignUpReq(
                     email = email,
                     address = "",
                     password = "",
                     phoneNumber = "",
                     name = name,
                     status = UserEnum.Status.VERIFIED
-                ))
-
-                userRepository.findByEmail(email) ?: throw IllegalStateException("User not found after register")
-            }
-
-            // ✅ Nếu user đã tồn tại, cập nhật lastLoginTimeStamp
-            if (user.id != null) {
-                user.lastLoginTimeStamp = java.time.LocalDateTime.now()
-                userRepository.save(user)
-            }
-
-            val loginHistory = LoginHistory(
-                user = user,
-                ipAddress = request?.remoteAddr,
-                userAgent = request?.getHeader("User-Agent"),
-                success = true
+                )
             )
-            loginHistoryRepository.save(loginHistory)
-
-            val jwtToken: String = jwtTokenUtils.generateToken(user)
-            val role: UserEnum.Role? = user.role
-            val username: String = user.getUsername()
-            val id: Long? = user.id
-            val avatar: String = user.avatar ?: imageUrl
-
-            val redirectUrl = "http://localhost:4000/auth/oauth2?token=$jwtToken&role=$role&username=$username&id=$id&avatar=$avatar"
-
-            response?.sendRedirect(redirectUrl)
+            userRepository.findByEmail(email) ?: throw IllegalStateException("User not found after registration")
         }
 
-        if ("github" == token.authorizedClientRegistrationId) {
-            val principal = authentication.principal as DefaultOAuth2User
-            val attributes = principal.attributes
-            val email = attributes.getOrDefault("email", "").toString()
-            val name = attributes.getOrDefault("name", "").toString()
-            val imageUrl = attributes.getOrDefault("avatar_url", "").toString()
-            val user = userRepository.findByEmail(email) ?: run {
-                authService.register(AuthPort.SignUpReq(
-                    email = email,
-                    address = "",
-                    password = "",
-                    phoneNumber = "",
-                    name = name,
-                    status = UserEnum.Status.VERIFIED
-                ))
+        // Record login
+        loginHistoryService.recordLogin(user, request.getClientIp(), request.getUserAgent())
 
-                userRepository.findByEmail(email) ?: throw IllegalStateException("User not found after register")
-            }
+        // Generate token
+        val jwtToken: String = jwtTokenUtils.generateToken(user)
 
-            // ✅ Nếu user đã tồn tại, cập nhật lastLoginTimeStamp
-            if (user.id != null) {
-                user.lastLoginTimeStamp = java.time.LocalDateTime.now()
-                userRepository.save(user)
-            }
+        val redirectUrl = buildRedirectUrl(
+            token = jwtToken,
+            role = user.role,
+            username = user.getUsername(),
+            id = user.id,
+            avatar = user.avatar.ifEmpty { avatarUrl }
+        )
 
-            val loginHistory = LoginHistory(
-                user = user,
-                ipAddress = request?.remoteAddr,
-                userAgent = request?.getHeader("User-Agent"),
-                success = true
-            )
-            loginHistoryRepository.save(loginHistory)
+        response?.sendRedirect(redirectUrl)
+    }
 
-            val jwtToken: String = jwtTokenUtils.generateToken(user)
-            val role: UserEnum.Role? = user.role
-            val username: String = user.getUsername()
-            val id: Long? = user.id
-            val avatar: String = user.avatar ?: imageUrl
-
-            val redirectUrl = "http://localhost:4000/auth/oauth2?token=$jwtToken&role=$role&username=$username&id=$id&avatar=$avatar"
-
-            response?.sendRedirect(redirectUrl)
-        }
-
+    private fun buildRedirectUrl(
+        token: String,
+        role: UserEnum.Role?,
+        username: String,
+        id: Long?,
+        avatar: String
+    ): String {
+        return "http://localhost:4000/auth/oauth2" +
+                "?token=$token" +
+                "&role=${role?.name}" +
+                "&username=$username" +
+                "&id=$id" +
+                "&avatar=$avatar"
     }
 }

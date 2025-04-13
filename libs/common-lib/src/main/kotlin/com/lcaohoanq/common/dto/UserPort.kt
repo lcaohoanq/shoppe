@@ -22,7 +22,7 @@ interface UserPort {
         val totp: String,
         val username: String,
         val status: UserEnum.Status,
-        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") val lastLoginTimeStamp: LocalDateTime,
+        val loginHistory: MutableList<LoginHistoryPort.LoginHistoryResponse>,
         @JsonIgnore val password: String,
         val phone : String,
         @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "Asia/Ho_Chi_Minh") @JsonIgnore val createdAt: LocalDateTime?,

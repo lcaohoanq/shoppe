@@ -2,6 +2,7 @@ package com.lcaohoanq.authservice.domains.user
 
 import BaseEntity
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.lcaohoanq.authservice.domains.loginhistory.LoginHistory
 import com.lcaohoanq.common.enums.UserEnum
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
@@ -54,7 +55,8 @@ class User(
 
     val preferredCurrency: String? = "VND",
 
-    var lastLoginTimeStamp: LocalDateTime? = LocalDateTime.now(),
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val loginHistory: MutableList<LoginHistory> = mutableListOf()
 
     ) : BaseEntity(), UserDetails {
 
