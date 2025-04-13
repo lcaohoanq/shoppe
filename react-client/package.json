@@ -20,6 +20,7 @@
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@floating-ui/react": "^0.24.6",
+    "@headlessui/react": "^2.2.1",
     "@hookform/resolvers": "^3.1.1",
     "@mui/icons-material": "^6.4.1",
     "@mui/material": "^6.4.1",
