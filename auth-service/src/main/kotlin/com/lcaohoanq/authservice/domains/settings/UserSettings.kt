@@ -1,6 +1,7 @@
 package com.lcaohoanq.authservice.domains.settings
 
 import BaseEntity
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -18,7 +19,8 @@ class UserSettings(
     val id: Long? = null,
 
     @Column(name = "user_id", nullable = false, unique = true)
-    val userId: Long,
+    @JsonIgnore
+    var userId: Long? = null,
 
     @Column(name = "two_fa_enabled")
     var twoFaEnabled: Boolean = false,

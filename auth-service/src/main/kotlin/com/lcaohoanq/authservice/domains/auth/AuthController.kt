@@ -6,10 +6,7 @@ import com.lcaohoanq.authservice.exceptions.MethodArgumentNotValidException
 import com.lcaohoanq.common.apis.MyApiResponse
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.TokenPort
-import com.lcaohoanq.commonspring.utils.WebUtil
-import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
 import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator.Companion.createRandomSecret
-import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator.Companion.createRandomSecretAsByteArray
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -22,14 +19,12 @@ import org.springframework.core.io.Resource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.io.File
-import java.util.*
 import javax.imageio.ImageIO
 
 

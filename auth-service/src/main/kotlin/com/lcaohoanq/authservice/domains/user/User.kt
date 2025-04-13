@@ -3,6 +3,7 @@ package com.lcaohoanq.authservice.domains.user
 import BaseEntity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.authservice.domains.loginhistory.LoginHistory
+import com.lcaohoanq.authservice.domains.settings.UserSettings
 import com.lcaohoanq.common.enums.UserEnum
 import jakarta.persistence.*
 import jakarta.validation.constraints.Email
@@ -56,7 +57,11 @@ class User(
     val preferredCurrency: String? = "VND",
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val loginHistory: MutableList<LoginHistory> = mutableListOf()
+    val loginHistory: MutableList<LoginHistory> = mutableListOf(),
+
+    @OneToOne
+    @JoinColumn(name = "user_settings_id", referencedColumnName = "id")
+    var userSettings: UserSettings? = null,
 
     ) : BaseEntity(), UserDetails {
 

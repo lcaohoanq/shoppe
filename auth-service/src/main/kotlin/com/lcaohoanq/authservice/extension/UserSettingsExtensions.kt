@@ -5,12 +5,12 @@ import com.lcaohoanq.common.dto.UserPort
 
 fun UserSettings.toUserSettingsResponse() = UserPort.UserSettingsResponse(
     id = this.id!!,
-    userId = this.userId,
     twoFaEnabled = this.twoFaEnabled,
     preferredLanguage = this.preferredLanguage,
     darkMode = this.darkMode,
     emailNotificationsEnabled = this.emailNotificationsEnabled,
     loginAlerts = this.loginAlerts,
+    requestDisableAccount = this.requestDisableAccount,
     createdAt = this.createdAt,
     updatedAt = this.updatedAt
 )

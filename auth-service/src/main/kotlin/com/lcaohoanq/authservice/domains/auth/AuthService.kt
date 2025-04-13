@@ -123,13 +123,11 @@ class AuthService(
 
     @Transactional
     override fun register(newAccount: AuthPort.SignUpReq) {
-
         if (userRepository.existsByEmail(newAccount.email)) {
             throw DataIntegrityViolationException("Email is already taken")
         }
 
-//        mailFeignClient.sendOtp(newAccount.email)
-
+        // First create and save the user without settings
         val newUser = User(
             email = newAccount.email,
             hashedPassword = passwordEncoder.encode(newAccount.password),
@@ -140,10 +138,19 @@ class AuthService(
             phone = "",
             avatar = "https://api.dicebear.com/9.x/adventurer/svg?seed=${newAccount.email}",
             cartId = "cart-${newAccount.email}",
-            walletId = "wallet-${newAccount.email}",
+            walletId = "wallet-${newAccount.email}"
+            // No userSettings reference needed here
         )
 
-        userRepository.save(newUser)
+        val savedUser = userRepository.save(newUser)
+
+        // Then create settings with the user ID
+        val settings = UserSettings(userId = savedUser.id!!)
+        val savedSettings = userSettingsRepository.save(settings)
+
+        // Now assign the settings to the user and save again
+        savedUser.userSettings = savedSettings
+        userRepository.save(savedUser)
 
         addressRepository.save(
             Address(
@@ -151,18 +158,15 @@ class AuthService(
                 isDefault = true,
                 phoneNumber = newAccount.phoneNumber,
                 nameOfUser = newAccount.name,
-                userId = newUser.id!!
+                userId = savedUser.id!!
             )
         )
-
-        val settings = UserSettings(userId = newUser.id!!)
-        userSettingsRepository.save(settings)
 
         mailFeignClient.sendVerifyAccountEmail(
             AuthPort.VerifyEmailReq(newAccount.email)
         )
 
-        log.info("New user registered successfully");
+        log.info("New user registered successfully")
     }
 
     override fun getUserDetailsFromToken(token: String): UserResponse {
