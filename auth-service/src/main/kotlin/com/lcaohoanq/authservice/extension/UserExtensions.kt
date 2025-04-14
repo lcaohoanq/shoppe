@@ -2,7 +2,7 @@ package com.lcaohoanq.authservice.extension
 
 import com.lcaohoanq.authservice.domains.user.User
 import com.lcaohoanq.common.dto.LoginHistoryPort
-import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.authservice.domains.user.UserPort
 
 data class UserResponseOptions(
     val includeLoginHistory: Boolean = false,
@@ -36,6 +36,7 @@ fun User.toUserResponse(
 
         role = role!!,
         avatar = avatar,
+        address = address.map { it.toAddressResponse() }.toMutableList(),
         createdAt = createdAt,
         updatedAt = updatedAt
     )

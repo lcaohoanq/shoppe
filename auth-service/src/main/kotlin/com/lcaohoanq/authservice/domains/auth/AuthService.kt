@@ -20,7 +20,7 @@ import com.lcaohoanq.authservice.utils.getClientIp
 import com.lcaohoanq.authservice.utils.getUserAgent
 import com.lcaohoanq.common.dto.AuthPort
 import com.lcaohoanq.common.dto.TokenPort
-import com.lcaohoanq.common.dto.UserPort.UserResponse
+import com.lcaohoanq.authservice.domains.user.UserPort.UserResponse
 import com.lcaohoanq.common.enums.UserEnum
 import com.lcaohoanq.common.exceptions.ExpiredTokenException
 import com.lcaohoanq.common.exceptions.MalformBehaviourException
@@ -152,15 +152,18 @@ class AuthService(
         savedUser.userSettings = savedSettings
         userRepository.save(savedUser)
 
-        addressRepository.save(
-            Address(
-                address = newAccount.address,
-                isDefault = true,
-                phoneNumber = newAccount.phoneNumber,
-                nameOfUser = newAccount.name,
-                userId = savedUser.id!!
-            )
+        val address =  Address(
+            address = newAccount.address,
+            isDefault = true,
+            phoneNumber = newAccount.phoneNumber,
+            nameOfUser = newAccount.name,
+            user = savedUser
         )
+        val savedAddress = addressRepository.save(address)
+
+        // Assign the address to the user and save again
+        savedUser.address = mutableListOf(savedAddress)
+        userRepository.save(savedUser)
 
         mailFeignClient.sendVerifyAccountEmail(
             AuthPort.VerifyEmailReq(newAccount.email)

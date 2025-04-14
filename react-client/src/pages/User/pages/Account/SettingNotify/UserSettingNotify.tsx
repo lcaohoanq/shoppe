@@ -6,46 +6,51 @@ function classNames(...classes: string[]) {
 }
 
 const UserSettingNotify = () => {
-  // Master toggles for sections
-  const [emailMasterEnabled, setEmailMasterEnabled] = useState(true)
-  const [smsMasterEnabled, setSmsMasterEnabled] = useState(true)
-  const [zaloMasterEnabled, setZaloMasterEnabled] = useState(true)
+  // Email group
+  const [emailSettings, setEmailSettings] = useState({
+    masterEnabled: true,
+    order: true,
+    promo: true,
+    survey: true,
+  })
 
-  // Individual notification states
-  const [emailOrder, setEmailOrder] = useState(true)
-  const [emailPromo, setEmailPromo] = useState(true)
-  const [emailSurvey, setEmailSurvey] = useState(true)
+  // SMS group
+  const [smsSettings, setSmsSettings] = useState({
+    masterEnabled: false,
+    promo: false,
+  })
 
-  const [smsNotify, setSmsNotify] = useState(true)
-  const [smsPromo, setSmsPromo] = useState(false)
-
-  const [zaloNotify, setZaloNotify] = useState(true)
-  const [zaloPromo, setZaloPromo] = useState(true)
-
-  // Update individual settings when master toggle changes
-  useEffect(() => {
-    if (!emailMasterEnabled) {
-      setEmailOrder(false)
-      setEmailPromo(false)
-      setEmailSurvey(false)
-    }
-  }, [emailMasterEnabled])
+  // Zalo group
+  const [zaloSettings, setZaloSettings] = useState({
+    masterEnabled: false,
+    promo: true,
+  })
 
   useEffect(() => {
-    if (!smsMasterEnabled) {
-      setSmsNotify(false)
-      setSmsPromo(false)
+    if (!emailSettings.masterEnabled) {
+      setEmailSettings((prev) => ({ ...prev, order: false, promo: false, survey: false }))
     }
-  }, [smsMasterEnabled])
+  }, [emailSettings.masterEnabled])
 
   useEffect(() => {
-    if (!zaloMasterEnabled) {
-      setZaloNotify(false)
-      setZaloPromo(false)
+    if (!smsSettings.masterEnabled) {
+      setSmsSettings((prev) => ({ ...prev, promo: false }))
     }
-  }, [zaloMasterEnabled])
+  }, [smsSettings.masterEnabled])
 
-  const renderItem = (title: string, desc: string, enabled: boolean, setEnabled: (v: boolean) => void, masterEnabled: boolean) => (
+  useEffect(() => {
+    if (!zaloSettings.masterEnabled) {
+      setZaloSettings((prev) => ({ ...prev, promo: false }))
+    }
+  }, [zaloSettings.masterEnabled])
+
+  const renderItem = (
+    title: string,
+    desc: string,
+    enabled: boolean,
+    setEnabled: (v: boolean) => void,
+    masterEnabled: boolean
+  ) => (
     <div className={`flex justify-between items-start py-3 border-b border-gray-100 ${!masterEnabled ? 'opacity-50' : ''}`}>
       <div>
         <div className="text-black text-[16px] font-medium">{title}</div>
@@ -70,17 +75,20 @@ const UserSettingNotify = () => {
     </div>
   )
 
-  const renderSectionHeader = (title: string, description: string, enabled: boolean, setEnabled: (v: boolean) => void) => (
+  const renderSectionHeader = (
+    title: string,
+    description: string,
+    enabled: boolean,
+    toggle: () => void
+  ) => (
     <div className="flex justify-between items-start mb-4">
       <div>
         <div className="text-xl text-black mb-1">{title}</div>
-        <div className="text-sm text-gray-500">
-          {description}
-        </div>
+        <div className="text-sm text-gray-500">{description}</div>
       </div>
       <Switch
         checked={enabled}
-        onChange={setEnabled}
+        onChange={toggle}
         className={classNames(
           enabled ? 'bg-green-500' : 'bg-gray-300',
           'relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200'
@@ -103,13 +111,13 @@ const UserSettingNotify = () => {
         {renderSectionHeader(
           'Email thông báo',
           'Thông báo và nhắc nhở quan trọng về tài khoản sẽ không thể bị tắt',
-          emailMasterEnabled,
-          setEmailMasterEnabled
+          emailSettings.masterEnabled,
+          () => setEmailSettings((prev) => ({ ...prev, masterEnabled: !prev.masterEnabled }))
         )}
         <div className="ml-5 space-y-2">
-          {renderItem('Cập nhật đơn hàng', 'Cập nhật về tình trạng vận chuyển của tất cả các đơn hàng', emailOrder, setEmailOrder, emailMasterEnabled)}
-          {renderItem('Khuyến mãi', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', emailPromo, setEmailPromo, emailMasterEnabled)}
-          {renderItem('Khảo sát', 'Đồng ý nhận khảo sát để cho chúng tôi được lắng nghe bạn', emailSurvey, setEmailSurvey, emailMasterEnabled)}
+          {renderItem('Cập nhật đơn hàng', 'Cập nhật về tình trạng vận chuyển của tất cả các đơn hàng', emailSettings.order, (v) => setEmailSettings((prev) => ({ ...prev, order: v })), emailSettings.masterEnabled)}
+          {renderItem('Khuyến mãi', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', emailSettings.promo, (v) => setEmailSettings((prev) => ({ ...prev, promo: v })), emailSettings.masterEnabled)}
+          {renderItem('Khảo sát', 'Đồng ý nhận khảo sát để cho chúng tôi được lắng nghe bạn', emailSettings.survey, (v) => setEmailSettings((prev) => ({ ...prev, survey: v })), emailSettings.masterEnabled)}
         </div>
       </div>
 
@@ -118,11 +126,11 @@ const UserSettingNotify = () => {
         {renderSectionHeader(
           'Thông báo SMS',
           'Thông báo và nhắc nhở quan trọng về tài khoản sẽ không thể bị tắt',
-          smsMasterEnabled,
-          setSmsMasterEnabled
+          smsSettings.masterEnabled,
+          () => setSmsSettings((prev) => ({ ...prev, masterEnabled: !prev.masterEnabled }))
         )}
         <div className="ml-5 space-y-2">
-          {renderItem('Khuyến mãi', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', smsPromo, setSmsPromo, smsMasterEnabled)}
+          {renderItem('Khuyến mãi', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', smsSettings.promo, (v) => setSmsSettings((prev) => ({ ...prev, promo: v })), smsSettings.masterEnabled)}
         </div>
       </div>
 
@@ -131,11 +139,11 @@ const UserSettingNotify = () => {
         {renderSectionHeader(
           'Thông báo Zalo',
           'Thông báo và nhắc nhở quan trọng về tài khoản sẽ không thể bị tắt',
-          zaloMasterEnabled,
-          setZaloMasterEnabled
+          zaloSettings.masterEnabled,
+          () => setZaloSettings((prev) => ({ ...prev, masterEnabled: !prev.masterEnabled }))
         )}
         <div className="ml-5 space-y-2">
-          {renderItem('Khuyến mãi (Shopee Việt Nam)', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', zaloPromo, setZaloPromo, zaloMasterEnabled)}
+          {renderItem('Khuyến mãi (Shopee Việt Nam)', 'Cập nhật về các ưu đãi và khuyến mãi sắp tới', zaloSettings.promo, (v) => setZaloSettings((prev) => ({ ...prev, promo: v })), zaloSettings.masterEnabled)}
         </div>
       </div>
     </div>

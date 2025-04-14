@@ -1,7 +1,6 @@
 package com.lcaohoanq.authservice.domains.user
 
 import com.lcaohoanq.authservice.domains.auth.IAuthService
-import com.lcaohoanq.common.dto.UserPort
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.common.apis.MyApiResponse
 import com.lcaohoanq.common.apis.PageResponse

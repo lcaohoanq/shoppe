@@ -48,6 +48,9 @@ class User(
 
     val avatar: String = "",
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var address: MutableList<Address> = mutableListOf(),
+
     val cartId: String,
 
     val walletId: String,

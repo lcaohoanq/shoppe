@@ -2,6 +2,7 @@ package com.lcaohoanq.authservice.domains.settings
 
 import BaseEntity
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.lcaohoanq.authservice.domains.settings.notifications.NotificationSettings
 import jakarta.persistence.*
 
 @Entity
@@ -31,8 +32,22 @@ class UserSettings(
     @Column(name = "dark_mode")
     var darkMode: Boolean = false,
 
-    @Column(name = "email_notifications_enabled")
-    var emailNotificationsEnabled: Boolean = true,
+    @Embedded
+    @AttributeOverrides(
+        value = [
+            AttributeOverride(name = "emailMasterEnabled", column = Column(name = "email_master_enabled")),
+            AttributeOverride(name = "emailOrder", column = Column(name = "email_order")),
+            AttributeOverride(name = "emailPromo", column = Column(name = "email_promo")),
+            AttributeOverride(name = "emailSurvey", column = Column(name = "email_survey")),
+
+            AttributeOverride(name = "smsMasterEnabled", column = Column(name = "sms_master_enabled")),
+            AttributeOverride(name = "smsPromo", column = Column(name = "sms_promo")),
+
+            AttributeOverride(name = "zaloMasterEnabled", column = Column(name = "zalo_master_enabled")),
+            AttributeOverride(name = "zaloPromo", column = Column(name = "zalo_promo")),
+        ]
+    )
+    var notificationSettings: NotificationSettings = NotificationSettings(),
 
     @Column(name = "login_alerts")
     var loginAlerts: Boolean = true,
