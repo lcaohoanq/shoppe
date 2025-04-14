@@ -3,7 +3,6 @@ package com.lcaohoanq.authservice.domains.user
 import com.lcaohoanq.authservice.components.JwtTokenUtils
 import com.lcaohoanq.authservice.extension.UserResponseOptions
 import com.lcaohoanq.authservice.extension.toLoginHistoryResponse
-import com.lcaohoanq.common.dto.UserPort
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.authservice.extension.toUserSettingsResponse
 import com.lcaohoanq.authservice.repositories.LoginHistoryRepository

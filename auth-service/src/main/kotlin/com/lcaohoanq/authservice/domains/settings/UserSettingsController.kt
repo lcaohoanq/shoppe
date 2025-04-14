@@ -3,7 +3,7 @@ package com.lcaohoanq.authservice.domains.settings
 import com.lcaohoanq.authservice.extension.toUserSettingsResponse
 import com.lcaohoanq.authservice.repositories.UserSettingsRepository
 import com.lcaohoanq.common.apis.MyApiResponse
-import com.lcaohoanq.common.dto.UserPort
+import com.lcaohoanq.authservice.domains.user.UserPort
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
