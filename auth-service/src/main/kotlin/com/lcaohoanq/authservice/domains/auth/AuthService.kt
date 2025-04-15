@@ -223,6 +223,17 @@ class AuthService(
 
     }
 
+    override fun changePassword(req: AuthPort.ChangePasswordReq) {
+        val existUser = userRepository.findByEmail(req.email)
+            ?: throw DataNotFoundException("User not found")
+        if (!passwordEncoder.matches(req.oldPassword, existUser.password)) {
+            throw BadCredentialsException("Wrong email or password")
+        }
+        existUser.hashedPassword = passwordEncoder.encode(req.newPassword)
+        userRepository.save(existUser)
+        mailFeignClient.doSendStaticMail(existUser.email, "changePasswordSuccess")
+    }
+
     override fun verifyAccount(token: String) {
         if (jwtTokenUtils.isTokenExpired(token)) {
             throw ExpiredTokenException("Token is expired")

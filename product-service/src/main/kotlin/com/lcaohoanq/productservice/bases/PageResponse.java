@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
     "status_code",
     "is_success",
 })
-@NoArgsConstructor
 @Getter
 public class PageResponse<T> extends ApiResponse<Collection<T>> {
     @JsonProperty("pagination_meta")

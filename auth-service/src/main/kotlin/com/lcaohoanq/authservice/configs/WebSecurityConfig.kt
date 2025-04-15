@@ -1,5 +1,6 @@
 package com.lcaohoanq.authservice.configs
 
+import com.lcaohoanq.authservice.filters.JwtTokenFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.AccessDeniedHandler
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -22,7 +24,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 class WebSecurityConfig(
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
-    private val oAuth2LoginHandler: OAuth2LoginHandler
+    private val oAuth2LoginHandler: OAuth2LoginHandler,
+    private val jwtTokenFilter: JwtTokenFilter
 ) {
     @Value("\${api.prefix}")
     private lateinit var apiPrefix: String
@@ -52,6 +55,7 @@ class WebSecurityConfig(
             .sessionManagement { session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session
             }
+            // .addFilter(jwtTokenFilter)
             // We remove the JWT filter since it's handled by the Gateway now
             .authorizeHttpRequests { auth ->
                 // Public authentication endpoints

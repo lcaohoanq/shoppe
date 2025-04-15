@@ -15,6 +15,7 @@ interface IAuthService {
     fun refreshToken(refreshTokenDTO: TokenPort.RefreshTokenDTO): AuthPort.AuthResponse
     fun logout(token: String, user: User)
     fun generateTokenFromEmail(email: String): String
+    fun changePassword(req: AuthPort.ChangePasswordReq)
     fun verifyAccount(token: String): Unit
     fun disableAccount(token: String)
     fun setup2FA(email: String): String

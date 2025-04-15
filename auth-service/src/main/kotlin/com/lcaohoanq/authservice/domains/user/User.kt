@@ -29,7 +29,7 @@ class User(
     val userName: String = "",
 
     @Column(name = "password")
-    val hashedPassword: String,
+    var hashedPassword: String,
 
     val role: UserEnum.Role? = UserEnum.Role.MEMBER,
     val phone: String = "",

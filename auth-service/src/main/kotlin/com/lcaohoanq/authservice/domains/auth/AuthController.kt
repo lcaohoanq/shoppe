@@ -1,5 +1,6 @@
 package com.lcaohoanq.authservice.domains.auth
 
+import com.lcaohoanq.authservice.bases.BaseController
 import com.lcaohoanq.authservice.domains.mfa.CodeGenerator
 import com.lcaohoanq.authservice.domains.user.IUserService
 import com.lcaohoanq.authservice.exceptions.MethodArgumentNotValidException
@@ -36,7 +37,7 @@ class AuthController(
     private val userService: IUserService,
     private val generator: CodeGenerator,
     private val request: HttpServletRequest
-) {
+) : BaseController() {
 
     private val log = mu.KotlinLogging.logger {}
 
@@ -57,15 +58,9 @@ class AuthController(
         ]
     )
     @PostMapping("/login")
-    fun login(@RequestBody loginRequest: AuthPort.AuthRequest): ResponseEntity<MyApiResponse<LoginResult>> {
-        val response = authService.login(loginRequest)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Login successfully",
-                data = response
-            )
-        )
-    }
+    fun login(@RequestBody req: AuthPort.AuthRequest): ResponseEntity<MyApiResponse<LoginResult>>
+    = ok("Login successfully", authService.login(req))
+
 
     @Operation(summary = "Register", description = "Register")
     @PostMapping("/register")
@@ -77,11 +72,7 @@ class AuthController(
         if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
 
         authService.register(user)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Register successfully",
-            )
-        )
+        return ok("Register successfully")
     }
 
     @PreAuthorize("permitAll()")
@@ -91,15 +82,10 @@ class AuthController(
         @Valid @RequestBody refreshTokenDTO: TokenPort.RefreshTokenDTO,
         result: BindingResult
     ): ResponseEntity<MyApiResponse<AuthPort.AuthResponse>> {
-        if (result.hasErrors()) {
-            throw MethodArgumentNotValidException(result)
-        }
-
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Refresh token successfully",
-                data = authService.refreshToken(refreshTokenDTO)
-            )
+        if (result.hasErrors()) throw MethodArgumentNotValidException(result)
+        return ok(
+            message = "Refresh token successfully",
+            data = authService.refreshToken(refreshTokenDTO)
         )
     }
 
@@ -125,11 +111,7 @@ class AuthController(
 
         authService.logout(token, user) //revoke token
 
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Logout successfully"
-            )
-        )
+        return ok("Logout successfully")
     }
 
     @PreAuthorize("permitAll()")
@@ -146,12 +128,22 @@ class AuthController(
         if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
 
         val response = authService.generateTokenFromEmail(data.email)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Token generated successfully",
-                data = response
-            )
-        )
+        return ok("Generate token successfully", response)
+    }
+
+    @PatchMapping("/change-password")
+    @Operation(
+        summary = "Change password",
+        description = "Change password",
+    )
+    fun changePassword(
+        @Valid @RequestBody data: AuthPort.ChangePasswordReq,
+        bindingResult: BindingResult
+    ): ResponseEntity<MyApiResponse<Unit>> {
+        if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
+
+        authService.changePassword(data)
+        return ok("Change password successfully")
     }
 
 
@@ -162,11 +154,7 @@ class AuthController(
     )
     fun verifyAccount(@RequestParam token: String): ResponseEntity<MyApiResponse<Unit>> {
         authService.verifyAccount(token)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Verify account successfully",
-            )
-        )
+        return ok("Verify account successfully")
     }
 
     @GetMapping("/disable-account")
@@ -176,11 +164,7 @@ class AuthController(
     )
     fun disableAccount(@RequestParam token: String): ResponseEntity<MyApiResponse<Unit>> {
         authService.disableAccount(token)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Disable account successfully",
-            )
-        )
+        return ok("Disable account successfully")
     }
 
     private val secret = createRandomSecret()
@@ -192,14 +176,9 @@ class AuthController(
     }
 
     @PatchMapping("/2fa/setup/{email}")
-    fun generate2FAForUser(@PathVariable email: String): ResponseEntity<MyApiResponse<String>>{
+    fun generate2FAForUser(@PathVariable email: String): ResponseEntity<MyApiResponse<String>> {
         val qrCodeUrl = authService.setup2FA(email)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Setup 2FA successfully",
-                data = qrCodeUrl
-            )
-        )
+        return ok("Setup 2FA successfully", qrCodeUrl)
     }
 
 
@@ -251,10 +230,6 @@ class AuthController(
         if (bindingResult.hasErrors()) throw MethodArgumentNotValidException(bindingResult)
 
         authService.verify2fa(data)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Verify 2FA code successfully",
-            )
-        )
+        return ok("Verify 2FA successfully")
     }
 }

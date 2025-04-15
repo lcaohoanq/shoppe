@@ -1,0 +1,29 @@
+server:
+  port: 4007
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: wallet-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 10000
+        retryer: com.lcaohoanq.commonspring.configs.CustomRetryer

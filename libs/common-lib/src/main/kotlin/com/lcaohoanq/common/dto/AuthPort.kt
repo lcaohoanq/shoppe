@@ -33,4 +33,10 @@ interface AuthPort {
         val code: String,
     )
 
+    data class ChangePasswordReq(
+        val email: String,
+        val oldPassword: String,
+        val newPassword: String
+    )
+
 }

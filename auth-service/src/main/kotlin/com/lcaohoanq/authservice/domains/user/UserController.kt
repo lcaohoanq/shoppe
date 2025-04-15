@@ -1,5 +1,6 @@
 package com.lcaohoanq.authservice.domains.user
 
+import com.lcaohoanq.authservice.bases.BaseController
 import com.lcaohoanq.authservice.domains.auth.IAuthService
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.common.apis.MyApiResponse
@@ -21,7 +22,7 @@ class UserController(
     private val userService: IUserService,
     private val authService: IAuthService,
 //    private val apiQuotaService: ApiQuotaService
-) {
+) : BaseController() {
 
     @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
@@ -44,12 +45,7 @@ class UserController(
 //            )
 //        }
 
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Get all users successfully",
-                data = userService.getAll()
-            )
-        )
+        return ok("Get all users successfully", userService.getAll())
     }
 
     @GetMapping("")
@@ -70,12 +66,7 @@ class UserController(
 
     @GetMapping("/details/{id}")
     fun getUserById(@PathVariable id: Long): ResponseEntity<MyApiResponse<UserPort.UserResponse>> =
-        ResponseEntity.ok(
-            MyApiResponse(
-                message = "Get user by id successfully",
-                data = userService.getById(id)
-            )
-        )
+        ok("Get user info successfully", userService.getById(id))
 
     /**
      * Get current authenticated user via Spring Security JWT
@@ -87,24 +78,18 @@ class UserController(
     )
     @PatchMapping("/details")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
-    fun takeUserDetailsFromToken(): ResponseEntity<MyApiResponse<UserPort.UserResponse>> {
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Get user details successfully",
-                data = authService.getCurrentAuthenticatedUser().toUserResponse()
-            )
+    fun takeUserDetailsFromToken(): ResponseEntity<MyApiResponse<UserPort.UserResponse>> =
+        ok(
+            "Get user details successfully",
+            authService.getCurrentAuthenticatedUser().toUserResponse()
         )
-    }
+
 
     @Operation(summary = "Disable user account", description = "Disable user account")
     @DeleteMapping("/disable-account/{id}")
     fun disableAccount(@PathVariable("id") id: Long): ResponseEntity<MyApiResponse<Unit>> {
         userService.doDisableUser(id)
-        return ResponseEntity.ok(
-            MyApiResponse(
-                message = "Disable account successfully",
-            )
-        )
+        return ok("Disable account successfully")
     }
 
 
