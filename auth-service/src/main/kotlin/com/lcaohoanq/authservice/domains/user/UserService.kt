@@ -1,5 +1,6 @@
 package com.lcaohoanq.authservice.domains.user
 
+import com.lcaohoanq.authservice.clients.MailFeignClient
 import com.lcaohoanq.authservice.components.JwtTokenUtils
 import com.lcaohoanq.authservice.extension.UserResponseOptions
 import com.lcaohoanq.authservice.extension.toLoginHistoryResponse
@@ -10,11 +11,14 @@ import com.lcaohoanq.authservice.repositories.TokenRepository
 import com.lcaohoanq.authservice.repositories.UserRepository
 import com.lcaohoanq.authservice.repositories.UserSettingsRepository
 import com.lcaohoanq.common.apis.PageResponse
+import com.lcaohoanq.common.dto.AuthPort
+import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import com.lcaohoanq.common.metadata.PaginationMeta
 import com.lcaohoanq.common.metadata.QueryCriteria
 import com.lcaohoanq.common.utils.SortCriterion
 import com.lcaohoanq.common.utils.SortOrder
 import com.lcaohoanq.common.utils.Sortable
+import mu.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -27,7 +31,11 @@ class UserService(
     private val tokenRepository: TokenRepository,
     private val loginHistoryRepository: LoginHistoryRepository,
     private val userSettingsRepository: UserSettingsRepository,
+    private val mailFeignClient: MailFeignClient
 ) : IUserService {
+
+    private val log = KotlinLogging.logger {}
+
     override fun getAll(): List<UserPort.UserResponse> {
         return userRepository.findAll().map { it.toUserResponse() }
     }
@@ -88,8 +96,8 @@ class UserService(
     }
 
     override fun getById(id: Long): UserPort.UserResponse? {
-        return userRepository.findById(id).map {
-            user -> user.toUserResponse(
+        return userRepository.findById(id).map { user ->
+            user.toUserResponse(
                 UserResponseOptions(
                     includeLoginHistory = true,
                     loginHistory = loginHistoryRepository
@@ -108,9 +116,10 @@ class UserService(
     }
 
     override fun findByEmail(email: String): User? {
-        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
-            "Email not found"
-        )
+        return userRepository.findByEmail(email)
+            ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+                "Email not found"
+            )
     }
 
     override fun getUserDetailsFromAccessToken(at: String): User {
@@ -118,14 +127,29 @@ class UserService(
             "Token is expired"
         )
         val email = jwtTokenUtils.extractEmail(at)
-        return userRepository.findByEmail(email) ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
-            "User not found"
-        )
+        return userRepository.findByEmail(email)
+            ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException(
+                "User not found"
+            )
     }
 
     override fun getUserDetailsFromRefreshToken(rf: String): User {
         val existingToken = tokenRepository.findByRefreshToken(rf)
             ?: throw com.lcaohoanq.common.exceptions.base.DataNotFoundException("Refresh Token not exist")
         return getUserDetailsFromAccessToken(existingToken.token)
+    }
+
+    override fun doDisableUser(id: Long) {
+
+        val user = userRepository.findById(id).orElseThrow {
+            DataNotFoundException("User not found")
+        }
+        try{
+            mailFeignClient.sendDisableAccountConfirmationEmail(AuthPort.VerifyEmailReq(
+                email = user.email,
+            ))
+        }catch (e: Exception){
+            log.error("Error sending disable account confirmation email: ${e.message}")
+        }
     }
 }

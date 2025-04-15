@@ -1,6 +1,6 @@
 import { User } from 'src/types/user.type'
 import { SuccessResponse } from 'src/types/utils.type'
-import http from 'src/utils/http'
+import http, {createHttpClient} from 'src/utils/http'
 import axios from "axios";
 
 interface BodyUpdateProfile extends Omit<User, '_id' | 'roles' | 'createdAt' | 'updatedAt' | 'email' | 'username' > {
@@ -26,5 +26,7 @@ const userApi = {
     })
   }
 }
+
+export const userServiceClient = createHttpClient('http://localhost:4006/api/v1')
 
 export default userApi

@@ -51,6 +51,10 @@ logging:
     springframework.security: DEBUG
     org.hibernate: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    javax.management: off
+    sun.rmi: off
+    sun.rmi.transport.tcp: off
+    sun.rmi.loader: off
 
 springdoc:
   swagger-ui:

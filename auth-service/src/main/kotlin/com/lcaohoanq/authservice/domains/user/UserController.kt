@@ -81,7 +81,10 @@ class UserController(
      * Get current authenticated user via Spring Security JWT
      * @return User
      */
-    @Operation(summary = "Get user details from token", description = "Provide access token to get user details on the Header")
+    @Operation(
+        summary = "Get user details from token",
+        description = "Provide access token to get user details on the Header"
+    )
     @PatchMapping("/details")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
     fun takeUserDetailsFromToken(): ResponseEntity<MyApiResponse<UserPort.UserResponse>> {
@@ -92,5 +95,17 @@ class UserController(
             )
         )
     }
+
+    @Operation(summary = "Disable user account", description = "Disable user account")
+    @DeleteMapping("/disable-account/{id}")
+    fun disableAccount(@PathVariable("id") id: Long): ResponseEntity<MyApiResponse<Unit>> {
+        userService.doDisableUser(id)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = "Disable account successfully",
+            )
+        )
+    }
+
 
 }

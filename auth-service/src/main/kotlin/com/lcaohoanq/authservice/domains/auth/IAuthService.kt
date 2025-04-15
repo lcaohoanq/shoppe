@@ -16,6 +16,7 @@ interface IAuthService {
     fun logout(token: String, user: User)
     fun generateTokenFromEmail(email: String): String
     fun verifyAccount(token: String): Unit
+    fun disableAccount(token: String)
     fun setup2FA(email: String): String
     fun verify2fa(data: AuthPort.Verify2FAReq)
 

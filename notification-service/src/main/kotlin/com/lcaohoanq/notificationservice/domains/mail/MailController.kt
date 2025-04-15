@@ -8,13 +8,11 @@ import com.lcaohoanq.commonspring.utils.unwrap
 import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.server.ResponseStatusException
 import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import java.io.FileNotFoundException
@@ -25,7 +23,6 @@ class MailController(
     private val mailService: IMailService,
     private val request: HttpServletRequest,
     private val authFeignClient: AuthFeignClient,
-    @Qualifier("customTemplateEngine")
     private val templateEngine: TemplateEngine,
     private val resourceLoader: ResourceLoader
 ) {
@@ -93,6 +90,30 @@ class MailController(
         val response = MailPort.MailResponse("Verification mail sent successfully")
         return ResponseEntity(response, HttpStatus.OK)
 //        throw ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Mail service is overloaded")
+    }
+
+    @PostMapping("/disable-account-confirmation")
+    fun sendDisableAccountConfirmationEmail(
+        @RequestBody data: AuthPort.VerifyEmailReq
+    ): ResponseEntity<MailPort.MailResponse> {
+
+        val token = unwrap(authFeignClient.generateTokenFromEmail(data))
+
+        val context = Context()
+        context.setVariable(
+            "confirmationLink",
+            "http://localhost:4006/api/v1/auth/disable-account?token=$token"
+        )
+
+        mailService.sendMail(
+            data.email,
+            "Shoppe Corporation - Disable account confirmation",
+            "disableAccountConfirmation",
+            context
+        )
+
+        val response = MailPort.MailResponse("Disable account confirmation mail sent successfully")
+        return ResponseEntity(response, HttpStatus.OK)
     }
 
     @GetMapping("/static-mail")

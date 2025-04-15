@@ -64,7 +64,7 @@ class User(
 
     @OneToOne
     @JoinColumn(name = "user_settings_id", referencedColumnName = "id")
-    var userSettings: UserSettings? = null,
+    var userSettings: UserSettings = UserSettings(),
 
     ) : BaseEntity(), UserDetails {
 

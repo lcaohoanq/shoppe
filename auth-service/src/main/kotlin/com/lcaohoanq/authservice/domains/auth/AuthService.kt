@@ -32,6 +32,7 @@ import mu.KotlinLogging
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -64,6 +65,9 @@ class AuthService(
         // Step 1: Retrieve the user by email
         val existUser = userRepository.findByEmail(email)
             ?: throw BadCredentialsException("Wrong email or password")
+
+        if (existUser.status == UserEnum.Status.DISABLED)
+            throw DisabledException("Your account has been disabled.")
 
         // Check if user has verified their account
         if (existUser.status == UserEnum.Status.UNVERIFIED) {
@@ -237,6 +241,30 @@ class AuthService(
         tokenService.deleteToken(token, user)
 
         mailFeignClient.doSendStaticMail(user.email, "verifiedAccountSuccess")
+
+    }
+
+    override fun disableAccount(token: String) {
+
+        if (jwtTokenUtils.isTokenExpired(token)) {
+            throw ExpiredTokenException("Token is expired")
+        }
+
+        val email = jwtTokenUtils.extractEmail(token)
+        val user = userRepository.findByEmail(email)
+            ?: throw DataNotFoundException("User not found")
+
+        if (user.userSettings.requestDisableAccount) {
+            throw MalformBehaviourException("User already requested to disable account")
+        }
+
+        user.userSettings.requestDisableAccount = true
+        user.status = UserEnum.Status.DISABLED
+        userRepository.save(user)
+
+        tokenService.deleteToken(token, user)
+
+        mailFeignClient.doSendStaticMail(user.email, "disableAccountSuccess")
 
     }
 

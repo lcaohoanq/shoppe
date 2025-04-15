@@ -169,6 +169,20 @@ class AuthController(
         )
     }
 
+    @GetMapping("/disable-account")
+    @Operation(
+        summary = "Disable account",
+        description = "This link will sent via email, user press to disable account",
+    )
+    fun disableAccount(@RequestParam token: String): ResponseEntity<MyApiResponse<Unit>> {
+        authService.disableAccount(token)
+        return ResponseEntity.ok(
+            MyApiResponse(
+                message = "Disable account successfully",
+            )
+        )
+    }
+
     private val secret = createRandomSecret()
 //    private val secretEncoded = Base64.getEncoder().encodeToString(secret)
 

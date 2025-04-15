@@ -14,4 +14,5 @@ interface IUserService {
     fun findByEmail(email: String): User?
     fun getUserDetailsFromAccessToken(at: String): User
     fun getUserDetailsFromRefreshToken(rf: String): User
+    fun doDisableUser(id: Long)
 }

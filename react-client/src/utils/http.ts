@@ -15,24 +15,22 @@ import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 import { ErrorResponse } from 'src/types/utils.type'
 
-// Purchase: 1 - 3
-// Me: 2 - 5
-// Refresh Token cho purchase: 3 -  4
-// Gọi lại Purchase: 4 - 6
-// Refresh Token mới cho me: 5 - 6
-// Gọi lại Me: 6
-
 export class Http {
   instance: AxiosInstance
   private accessToken: string
   private refreshToken: string
   private refreshTokenRequest: Promise<string> | null
-  constructor() {
+
+  constructor(baseURL?: string) {
     this.accessToken = getAccessTokenFromLS()
     this.refreshToken = getRefreshTokenFromLS()
     this.refreshTokenRequest = null
+
+    // Use provided baseURL or default from config
+    const serviceBaseURL = baseURL || config.baseUrl
+
     this.instance = axios.create({
-      baseURL: config.baseUrl,
+      baseURL: serviceBaseURL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -42,6 +40,7 @@ export class Http {
       },
       withCredentials: true
     })
+
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
@@ -54,7 +53,7 @@ export class Http {
         return Promise.reject(error)
       }
     )
-    // Add a response interceptor
+
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
@@ -125,24 +124,31 @@ export class Http {
       }
     )
   }
-  private handleRefreshToken() {
-    return this.instance
+
+  private async handleRefreshToken() {
+    try {
+      const res = await this.instance
       .post<RefreshTokenReponse>(URL_REFRESH_TOKEN, {
         refresh_token: this.refreshToken
       })
-      .then((res) => {
-        const { access_token } = res.data.data
-        setAccessTokenToLS(access_token)
-        this.accessToken = access_token
-        return access_token
-      })
-      .catch((error) => {
-        clearLS()
-        this.accessToken = ''
-        this.refreshToken = ''
-        throw error
-      })
+      const {access_token} = res.data.data
+      setAccessTokenToLS(access_token)
+      this.accessToken = access_token
+      return access_token
+    } catch (error) {
+      clearLS()
+      this.accessToken = ''
+      this.refreshToken = ''
+      throw error
+    }
   }
 }
+
+// Create a factory to generate HTTP clients for different services
+export const createHttpClient = (baseURL?: string) => {
+  return new Http(baseURL).instance
+}
+
+// Default HTTP client
 const http = new Http().instance
 export default http
