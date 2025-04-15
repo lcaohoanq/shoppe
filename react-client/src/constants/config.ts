@@ -15,7 +15,9 @@ const config = {
     notifications: import.meta.env.VITE_REACT_APP_NOTIFICATION_SERVICE_URL || 'http://localhost:4005/api',
     products: import.meta.env.VITE_REACT_APP_PRODUCT_SERVICE_URL || 'http://localhost:4003/api',
     // Add other services as needed
-  }
+  },
+
+  maxSizeUploadAvatar: 1048576 // bytes
 }
 
 export default config
