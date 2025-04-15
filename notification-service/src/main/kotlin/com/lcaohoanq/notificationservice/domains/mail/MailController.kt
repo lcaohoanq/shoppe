@@ -8,11 +8,16 @@ import com.lcaohoanq.commonspring.utils.unwrap
 import com.lcaohoanq.notificationservice.clients.AuthFeignClient
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.core.io.ResourceLoader
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
+import java.io.FileNotFoundException
 
 @RequestMapping(path = ["\${api.prefix}/mail"])
 @RestController
@@ -20,6 +25,9 @@ class MailController(
     private val mailService: IMailService,
     private val request: HttpServletRequest,
     private val authFeignClient: AuthFeignClient,
+    @Qualifier("customTemplateEngine")
+    private val templateEngine: TemplateEngine,
+    private val resourceLoader: ResourceLoader
 ) {
 
     //api: /otp/send?type=email&recipient=abc@gmail
@@ -106,6 +114,44 @@ class MailController(
             MailPort.MailResponse("Static mail sent successfully")
         )
 
+    }
+
+    @GetMapping("/email-templates/{templateName}")
+    fun getEmailTemplate(
+        @PathVariable templateName: String,
+        @RequestParam(required = false) includeThymeleaf: Boolean = false
+    ): ResponseEntity<String> {
+        return try {
+            val context = Context().apply {
+                // Provide dummy data if needed
+                setVariable("username", "Demo User")
+                setVariable("code", "123456")
+            }
+
+            val html = if (includeThymeleaf) {
+                try {
+                    templateEngine.process(templateName, context)
+                } catch (ex: Exception) {
+                    // Fallback to raw file if Thymeleaf processing fails
+                    loadRawHtml(templateName)
+                }
+            } else {
+                loadRawHtml(templateName)
+            }
+
+            ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(html)
+
+        } catch (ex: Exception) {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Template not found: $templateName")
+        }
+    }
+
+    private fun loadRawHtml(templateName: String): String {
+        val resource = resourceLoader.getResource("classpath:emails/$templateName.html")
+        if (!resource.exists()) throw FileNotFoundException("File not found")
+        return resource.inputStream.bufferedReader().use { it.readText() }
     }
 
 
