@@ -178,6 +178,7 @@ class JwtTokenFilter(
             path == "$apiPrefix/auth/register" ||
             path == "$apiPrefix/forgot-password" ||
             path.contains("experiments") ||
+            path.contains("h2-console") ||
             path == "/error"
         ) {
             log.debug("Matched basic public endpoint")

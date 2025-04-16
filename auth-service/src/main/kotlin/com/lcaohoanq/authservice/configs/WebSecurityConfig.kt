@@ -34,7 +34,7 @@ class WebSecurityConfig(
     companion object {
         private val PUBLIC_ENDPOINTS = arrayOf(
             "/actuator/**",
-            "/h2-console/**",
+            "/api/v1/h2-console/**",
             "/graphiql",
             "/graphql",
             "/error",
