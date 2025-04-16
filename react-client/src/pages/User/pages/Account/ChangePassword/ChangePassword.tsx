@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 import omit from 'lodash/omit'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -11,7 +12,7 @@ import { userSchema, UserSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { ObjectSchema } from 'yup'
 
-type FormData = NoUndefinedField<Pick<UserSchema, 'password' | 'new_password' | 'confirm_password'>>
+type FormData = NoUndefinedField<Pick<UserSchema, 'email' | 'password' | 'new_password' | 'confirm_password'>>
 const passwordSchema = userSchema.pick(['password', 'new_password', 'confirm_password'])
 
 export default function ChangePassword() {
@@ -23,6 +24,7 @@ export default function ChangePassword() {
     reset
   } = useForm<FormData>({
     defaultValues: {
+      email: 'string', //default email value for test only
       password: '',
       confirm_password: '',
       new_password: ''
@@ -33,8 +35,19 @@ export default function ChangePassword() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const res = await updateProfileMutation.mutateAsync(omit(data, ['confirm_password']))
-      toast.success(res.data.message)
+      // const res = await updateProfileMutation.mutateAsync(omit(data, ['confirm_password']))
+
+      const res = await axios.patch(
+        'http://localhost:4006/api/v1/auth/change-password',
+        omit(data, ['confirm_password'])
+      )
+      if (res.status === 200) {
+        toast.success('Đổi mật khẩu thành công')
+      } else {
+        toast.error(res.data.reason)
+        alert('Đổi mật khẩu thất bại')
+      }
+
       reset()
     } catch (error) {
       if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {

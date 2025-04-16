@@ -102,6 +102,7 @@ export const schema = yup.object({
 
 export const userSchema = yup.object({
   username: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
+  email: yup.string().email('Email không đúng định dạng').max(160, 'Độ dài tối đa là 160 ký tự'),
   name: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),
   phone: yup.string().max(20, 'Độ dài tối đa là 20 ký tự'),
   address: yup.string().max(160, 'Độ dài tối đa là 160 ký tự'),

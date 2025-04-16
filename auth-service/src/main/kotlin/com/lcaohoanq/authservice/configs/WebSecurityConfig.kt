@@ -1,6 +1,6 @@
 package com.lcaohoanq.authservice.configs
 
-import com.lcaohoanq.authservice.filters.JwtTokenFilter
+//import com.lcaohoanq.authservice.filters.JwtTokenFilter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,7 +25,7 @@ class WebSecurityConfig(
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
     private val oAuth2LoginHandler: OAuth2LoginHandler,
-    private val jwtTokenFilter: JwtTokenFilter
+//    private val jwtTokenFilter: JwtTokenFilter
 ) {
     @Value("\${api.prefix}")
     private lateinit var apiPrefix: String

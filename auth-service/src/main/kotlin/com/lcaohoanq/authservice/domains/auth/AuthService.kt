@@ -226,7 +226,7 @@ class AuthService(
     override fun changePassword(req: AuthPort.ChangePasswordReq) {
         val existUser = userRepository.findByEmail(req.email)
             ?: throw DataNotFoundException("User not found")
-        if (!passwordEncoder.matches(req.oldPassword, existUser.password)) {
+        if (!passwordEncoder.matches(req.password, existUser.password)) {
             throw BadCredentialsException("Wrong email or password")
         }
         existUser.hashedPassword = passwordEncoder.encode(req.newPassword)

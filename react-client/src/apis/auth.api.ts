@@ -1,6 +1,6 @@
+import axios from 'axios'
 import { AuthResponse } from 'src/types/auth.type'
 import http from 'src/utils/http'
-import axios from "axios";
 
 export const URL_LOGIN = 'auth/login'
 export const URL_REGISTER = 'auth/register'

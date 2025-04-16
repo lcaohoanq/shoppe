@@ -131,6 +131,7 @@ class AuthController(
         return ok("Generate token successfully", response)
     }
 
+    @PreAuthorize("permitAll()")
     @PatchMapping("/change-password")
     @Operation(
         summary = "Change password",

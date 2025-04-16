@@ -35,8 +35,9 @@ interface AuthPort {
 
     data class ChangePasswordReq(
         val email: String,
-        val oldPassword: String,
-        val newPassword: String
+        val password: String,
+
+       @JsonProperty("new_password") val newPassword: String
     )
 
 }
