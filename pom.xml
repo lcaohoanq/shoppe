@@ -32,12 +32,14 @@
     <module>notification-service</module>
 
     <module>api-throttling</module>
+
+    <module>keycloak-service</module>
   </modules>
 
   <properties>
     <spring-boot.version>3.4.4</spring-boot.version>
     <java.version>17</java.version>
-    <kotlin.version>1.9.25</kotlin.version>
+    <kotlin.version>2.1.20</kotlin.version>
     <springdoc.version>2.7.0</springdoc.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <jwt.version>0.11.5</jwt.version>
