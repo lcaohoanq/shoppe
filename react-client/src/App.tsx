@@ -27,9 +27,9 @@ function App() {
   const { reset } = useContext(AppContext)
 
   const keycloak = new Keycloak({
-    url: `${config.url.KEYCLOAK_BASE_URL}`,
-    realm: "company-services",
-    clientId: "movies-app"
+    url: `${config.kc.KEYCLOAK_BASE_URL}`,
+    realm: `${config.kc.REALM_NAME}`,
+    clientId: `${config.kc.CLIENT_ID}`,
   })
   const initOptions = {pkceMethod: 'S256'}
 

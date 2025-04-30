@@ -1,11 +1,10 @@
 import { useKeycloak } from '@react-keycloak/web'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
-import { getAvatarUrl } from 'src/utils/utils'
 import Popover from '../Popover'
 import { useTranslation } from 'react-i18next'
 import { locales } from 'src/i18n/i18n'
-import { isAdmin } from './Helpers'
+import {getAvatarUrl, isAdmin} from './Helpers'
 
 export default function NavHeaderV2() {
   const { i18n } = useTranslation()
