@@ -42,13 +42,13 @@ class OpenAPIConfig {
                     .description("API Documentation")
                     .url("https://your-docs-url.com")
             )
-            .addSecurityItem(SecurityRequirement().addList("JavaInUseSecurityScheme"))
+            .addSecurityItem(SecurityRequirement().addList(BEARER_KEY_SECURITY_SCHEME))
             .components(
                 Components()
                     .addSecuritySchemes(
-                        "JavaInUseSecurityScheme",
+                        BEARER_KEY_SECURITY_SCHEME,
                         SecurityScheme()
-                            .name("JavaInUseSecurityScheme")
+                            .name("BEARER_KEY_SECURITY_SCHEME")
                             .type(SecurityScheme.Type.HTTP)
                             .scheme("bearer")
                             .bearerFormat("JWT")
@@ -108,4 +108,9 @@ class OpenAPIConfig {
             .pathsToMatch("/**") // Ensure you're matching the correct paths
             .build()
     }
+
+    companion object {
+        const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
+    }
+
 }

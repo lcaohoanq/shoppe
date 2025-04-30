@@ -1,34 +1,22 @@
 package com.lcaohoanq.authservice.configs
 
-//import com.lcaohoanq.authservice.filters.JwtTokenFilter
+import com.lcaohoanq.authservice.security.JwtAuthConverter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.access.AccessDeniedHandler
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 
-@ConditionalOnProperty(name = ["spring.application.security-config-version"], havingValue = "v1")
+@ConditionalOnProperty(name = ["spring.application.security-config-version"], havingValue = "v2", matchIfMissing = true)
 @Configuration
-@EnableMethodSecurity
-@EnableWebSecurity
-@EnableWebMvc
-@Deprecated("Use WebSecurityConfigV2 instead")
-class WebSecurityConfig(
-    private val authenticationEntryPoint: AuthenticationEntryPoint,
-    private val accessDeniedHandler: AccessDeniedHandler,
-    private val oAuth2LoginHandler: OAuth2LoginHandler,
-//    private val jwtTokenFilter: JwtTokenFilter
+class WebSecurityConfigV2(
+    private val jwtAuthConverter: JwtAuthConverter,
+    @Value("\${app.cors.allowed-origins}") private val listAllowedOrigins: List<String>
 ) {
     @Value("\${api.prefix}")
     private lateinit var apiPrefix: String
@@ -51,12 +39,9 @@ class WebSecurityConfig(
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
+        return http
             .cors { cors ->
                 cors.configurationSource(corsConfigurationSource())
-            }
-            .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Stateless session
             }
             // .addFilter(jwtTokenFilter)
             // We remove the JWT filter since it's handled by the Gateway now
@@ -73,6 +58,7 @@ class WebSecurityConfig(
                     "$apiPrefix/oauth2/**",
                     "$apiPrefix/ip/**",
                     "$apiPrefix/user-settings/**",
+                    "$apiPrefix/keycloak/**",
                 ).permitAll()
 
                 // Swagger and public documentation endpoints
@@ -86,38 +72,31 @@ class WebSecurityConfig(
                 // All other endpoints require authentication
                 auth.anyRequest().authenticated()
             }
-            .oauth2Login { oauth2 ->
-                oauth2.loginPage("http://localhost:4000/login")
-                oauth2.successHandler(oAuth2LoginHandler)
-                oauth2.failureUrl("http://localhost:4000/login?error=true")
-//                oauth2.userInfoEndpoint { userInfo ->
-//                    userInfo.userService(oAuth2LoginHandler)
-//                }
-                oauth2.authorizationEndpoint { endpoint ->
-                    endpoint.baseUri("/api/v1/oauth2/authorize")
+            .oauth2ResourceServer {
+                it.jwt { jwt ->
+                    jwt.jwtAuthenticationConverter(jwtAuthConverter)
                 }
             }
-            .csrf { it.disable() }
-            .exceptionHandling { ex ->
-                ex.authenticationEntryPoint(authenticationEntryPoint)
-                ex.accessDeniedHandler(accessDeniedHandler)
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-
-        return http.build()
+            .csrf { it.disable() }
+            .build()
     }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-        configuration.allowedOrigins = mutableListOf("http://localhost:4000")
-        configuration.allowedMethods =
-            mutableListOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
-        configuration.addAllowedHeader("*")
-        configuration.allowCredentials = true
-        configuration.maxAge = 3600
 
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
+        val configuration = CorsConfiguration().apply {
+            allowCredentials = true
+            this.allowedOrigins = listAllowedOrigins
+            addAllowedMethod("*")
+            addAllowedHeader("*")
+            maxAge = 3600
+        }
+
+        return UrlBasedCorsConfigurationSource().apply {
+            registerCorsConfiguration("/**", configuration)
+        }
     }
 }

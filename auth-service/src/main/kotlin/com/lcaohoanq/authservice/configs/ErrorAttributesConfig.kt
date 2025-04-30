@@ -1,4 +1,4 @@
-package com.lcaohoanq.keycloak.config
+package com.lcaohoanq.authservice.configs
 
 import org.springframework.boot.web.error.ErrorAttributeOptions
 import org.springframework.boot.web.error.ErrorAttributeOptions.Include.*

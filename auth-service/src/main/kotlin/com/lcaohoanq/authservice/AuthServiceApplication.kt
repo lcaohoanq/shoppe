@@ -18,8 +18,13 @@ import java.util.*
 class AuthServiceApplication
 
 fun main(args: Array<String>) {
-    runApplication<AuthServiceApplication>(*args)
-    openHomePage("http://localhost:4006/swagger-ui/index.html")
+    val context = runApplication<AuthServiceApplication>(*args)
+    val env = context.environment
+    val activeProfiles = env.activeProfiles
+
+    if (!activeProfiles.contains("docker")) {
+        openHomePage("http://localhost:4006/swagger-ui/index.html")
+    }
 }
 
 fun openHomePage(urls: Any) {
@@ -38,9 +43,13 @@ fun openHomePage(urls: Any) {
                 desktop.browse(URI.create(url))
             } else {
                 when {
-                    os.contains("win") -> Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler $url")
+                    os.contains("win") -> Runtime.getRuntime()
+                        .exec("rundll32 url.dll,FileProtocolHandler $url")
+
                     os.contains("mac") -> Runtime.getRuntime().exec("open $url")
-                    os.contains("nix") || os.contains("nux") -> Runtime.getRuntime().exec("xdg-open $url")
+                    os.contains("nix") || os.contains("nux") -> Runtime.getRuntime()
+                        .exec("xdg-open $url")
+
                     else -> println("Unsupported operating system: $os")
                 }
             }

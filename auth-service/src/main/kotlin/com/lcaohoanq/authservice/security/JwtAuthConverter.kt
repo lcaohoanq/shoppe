@@ -1,4 +1,4 @@
-package com.lcaohoanq.keycloak.security
+package com.lcaohoanq.authservice.security
 
 import jakarta.validation.constraints.NotBlank
 import org.springframework.boot.context.properties.ConfigurationProperties

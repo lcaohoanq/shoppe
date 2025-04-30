@@ -12,6 +12,7 @@ import com.lcaohoanq.authservice.repositories.UserRepository
 import com.lcaohoanq.authservice.repositories.UserSettingsRepository
 import com.lcaohoanq.common.apis.PageResponse
 import com.lcaohoanq.common.dto.AuthPort
+import com.lcaohoanq.common.exceptions.UserNotFoundException
 import com.lcaohoanq.common.exceptions.base.DataNotFoundException
 import com.lcaohoanq.common.metadata.PaginationMeta
 import com.lcaohoanq.common.metadata.QueryCriteria
@@ -23,6 +24,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class UserService(
@@ -152,4 +154,14 @@ class UserService(
             log.error("Error sending disable account confirmation email: ${e.message}")
         }
     }
+
+    override fun validateAndGetUserExtra(username: String): User = getUserExtra(username).orElseThrow {
+        UserNotFoundException(
+            username
+        )
+    }
+
+    override fun getUserExtra(username: String): Optional<User> = userRepository.findByUserName(username)
+
+    override fun saveUserExtra(user: User): User = userRepository.save(user)
 }
