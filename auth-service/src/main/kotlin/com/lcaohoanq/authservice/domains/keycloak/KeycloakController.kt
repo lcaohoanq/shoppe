@@ -1,5 +1,6 @@
-package com.lcaohoanq.keycloak.auth
+package com.lcaohoanq.authservice.domains.keycloak
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -13,16 +14,50 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
+/**
+ * Data class for Keycloak login requests.
+ * Explicitly annotate properties to ensure proper Jackson deserialization.
+ */
+data class KeycloakLoginRequest(
+    @field:JsonProperty("username")
+    @field:Schema(description = "Username for authentication", example = "user", required = true)
+    val username: String,
+
+    @field:JsonProperty("password")
+    @field:Schema(description = "Password for authentication", example = "user", required = true)
+    val password: String
+)
+
+/**
+ * Data class for Keycloak token responses.
+ */
+data class KeycloakTokenResponse(
+    @field:JsonProperty("access_token")
+    val accessToken: String,
+
+    @field:JsonProperty("expires_in")
+    val expiresIn: Long,
+
+    @field:JsonProperty("refresh_token")
+    val refreshToken: String,
+
+    @field:JsonProperty("refresh_expires_in")
+    val refreshExpiresIn: Long,
+
+    @field:JsonProperty("token_type")
+    val tokenType: String
+)
+
 @RestController
-@RequestMapping("/api/auth")
-@Tag(name = "Auth", description = "Auth API")
-class AuthController(
+@RequestMapping("/api/v1/keycloak")
+@Tag(name = "Keycloak", description = "Keycloak API")
+class KeycloakController(
     private val webClientBuilder: WebClient.Builder
 ) {
-
     @Value("\${keycloak.url}")
     private lateinit var keycloakUrl: String
-    private val clientId = "movies-app"
+
+    private val clientId = "react-app"
 
     /**
      * Get a token from Keycloak using the password grant type.
@@ -33,9 +68,9 @@ class AuthController(
     @Operation(
         summary = "Get token",
         description = "Get a token from Keycloak using the password grant type.",
-        tags = ["Auth"]
+        tags = ["Keycloak"]
     )
-    @PostMapping("/token")
+    @PostMapping("/token", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getToken(@RequestBody request: KeycloakLoginRequest): Mono<ResponseEntity<KeycloakTokenResponse>> {
         val formData = mapOf(
             "grant_type" to "password",
@@ -54,16 +89,3 @@ class AuthController(
             .map { ResponseEntity.ok(it) }
     }
 }
-
-data class KeycloakLoginRequest(
-    @Schema(defaultValue = "user") val username: String,
-    @Schema(defaultValue = "user") val password: String
-)
-
-data class KeycloakTokenResponse(
-    val access_token: String,
-    val expires_in: Long,
-    val refresh_token: String,
-    val refresh_expires_in: Long,
-    val token_type: String
-)

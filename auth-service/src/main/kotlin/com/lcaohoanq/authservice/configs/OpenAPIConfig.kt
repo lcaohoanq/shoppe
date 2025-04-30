@@ -108,4 +108,8 @@ class OpenAPIConfig {
             .pathsToMatch("/**") // Ensure you're matching the correct paths
             .build()
     }
+
+    companion object {
+        const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
+    }
 }

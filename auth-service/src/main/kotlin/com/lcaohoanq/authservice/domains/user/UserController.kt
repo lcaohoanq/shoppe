@@ -1,6 +1,7 @@
 package com.lcaohoanq.authservice.domains.user
 
 import com.lcaohoanq.authservice.bases.BaseController
+import com.lcaohoanq.authservice.configs.OpenAPIConfig
 import com.lcaohoanq.authservice.domains.auth.IAuthService
 import com.lcaohoanq.authservice.extension.toUserResponse
 import com.lcaohoanq.common.apis.MyApiResponse
@@ -9,11 +10,14 @@ import com.lcaohoanq.common.metadata.QueryCriteria
 import com.lcaohoanq.common.utils.SortOrder
 import com.lcaohoanq.common.utils.Sortable
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 
 @RestController
 @RequestMapping("\${api.prefix}/users")
@@ -91,6 +95,28 @@ class UserController(
         userService.doDisableUser(id)
         return ok("Disable account successfully")
     }
+
+    @Operation(
+        summary = "Get user extra information for the authenticated user",
+        security = [SecurityRequirement(name = OpenAPIConfig.BEARER_KEY_SECURITY_SCHEME)])
+    @GetMapping("/me")
+    fun getUserExtra(principal: Principal): User {
+        return userService.validateAndGetUserExtra(principal.name)
+    }
+
+//    @Operation(
+//        summary = "Update user extra information for the authenticated user",
+//        security = [SecurityRequirement(name = OpenAPIConfig.BEARER_KEY_SECURITY_SCHEME)])
+//    @PostMapping("/me")
+//    fun saveUserExtra(
+//        @RequestBody updateUserExtraRequest: @Valid UserExtraDTO.UserExtraRequest,
+//        principal: Principal
+//    ): User {
+//        val userExtraOptional = userService.getUserExtra(principal.name)
+//        val userExtra = userExtraOptional.orElseGet { UserExtra(principal.name) }
+//        userExtra.avatar = updateUserExtraRequest.avatar
+//        return userService.saveUserExtra(userExtra)
+//    }
 
 
 }

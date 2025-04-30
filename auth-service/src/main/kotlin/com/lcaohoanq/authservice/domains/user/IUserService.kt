@@ -1,9 +1,11 @@
 package com.lcaohoanq.authservice.domains.user
 
 import com.lcaohoanq.common.apis.PageResponse
+import com.lcaohoanq.common.exceptions.UserNotFoundException
 import com.lcaohoanq.common.metadata.QueryCriteria
 import com.lcaohoanq.common.utils.Sortable
 import org.springframework.data.domain.Pageable
+import java.util.*
 
 interface IUserService {
 
@@ -15,4 +17,9 @@ interface IUserService {
     fun getUserDetailsFromAccessToken(at: String): User
     fun getUserDetailsFromRefreshToken(rf: String): User
     fun doDisableUser(id: Long)
+
+    fun validateAndGetUserExtra(username: String): User
+    fun getUserExtra(username: String): Optional<User>
+    fun saveUserExtra(user: User): User
+
 }
