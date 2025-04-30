@@ -44,4 +44,10 @@ allure-results/
 *.txt
 
 
-.env.*
+secrets/
+
+application-*
+
+docker-compose-production.yml
+
+*storybook.log
