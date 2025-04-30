@@ -18,24 +18,6 @@
   <name>server</name>
   <description>Shoppe Parent Project</description>
 
-  <modules>
-    <module>libs/common-lib</module>
-    <module>libs/common-spring</module>
-
-    <module>asset-service</module>
-    <module>chat-service</module>
-    <module>gateway-service</module>
-    <module>eureka-service</module>
-    <module>product-service</module>
-    <module>auth-service</module>
-    <module>inventory-service</module>
-    <module>notification-service</module>
-
-    <module>api-throttling</module>
-
-    <module>keycloak-service</module>
-  </modules>
-
   <properties>
     <spring-boot.version>3.4.4</spring-boot.version>
     <java.version>17</java.version>
@@ -252,4 +234,19 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <modules>
+    <module>libs/common-lib</module>
+    <module>libs/common-spring</module>
+    <module>asset-service</module>
+    <module>chat-service</module>
+    <module>gateway-service</module>
+    <module>eureka-service</module>
+    <module>product-service</module>
+    <module>auth-service</module>
+    <module>inventory-service</module>
+    <module>notification-service</module>
+    <module>api-throttling</module>
+    <module>keycloak-service</module>
+  </modules>
 </project>
