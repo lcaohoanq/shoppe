@@ -109,7 +109,28 @@ class OpenAPIConfig {
             .build()
     }
 
-    companion object {
-        const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
-    }
+// auth-service/src/main/kotlin/com/lcaohoanq/authservice/configs/OpenAPIConfig.kt
+
+@Bean
+fun api(): OpenAPI {
+    return OpenAPI()
+        // use the constant instead of the hard-coded scheme name
+        .addSecurityItem(SecurityRequirement().addList(BEARER_KEY_SECURITY_SCHEME))
+        .components(
+            Components()
+                .addSecuritySchemes(
+                    // again, refer to the constant here
+                    BEARER_KEY_SECURITY_SCHEME,
+                    SecurityScheme()
+                        .name("Authorization")
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("bearer")
+                        .bearerFormat("JWT")
+                )
+        )
+        .info(info())
+}
+
+companion object {
+    const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
 }
