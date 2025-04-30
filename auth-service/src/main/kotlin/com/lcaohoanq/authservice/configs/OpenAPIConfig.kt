@@ -42,13 +42,13 @@ class OpenAPIConfig {
                     .description("API Documentation")
                     .url("https://your-docs-url.com")
             )
-            .addSecurityItem(SecurityRequirement().addList("JavaInUseSecurityScheme"))
+            .addSecurityItem(SecurityRequirement().addList(BEARER_KEY_SECURITY_SCHEME))
             .components(
                 Components()
                     .addSecuritySchemes(
-                        "JavaInUseSecurityScheme",
+                        BEARER_KEY_SECURITY_SCHEME,
                         SecurityScheme()
-                            .name("JavaInUseSecurityScheme")
+                            .name("BEARER_KEY_SECURITY_SCHEME")
                             .type(SecurityScheme.Type.HTTP)
                             .scheme("bearer")
                             .bearerFormat("JWT")
@@ -109,28 +109,8 @@ class OpenAPIConfig {
             .build()
     }
 
-// auth-service/src/main/kotlin/com/lcaohoanq/authservice/configs/OpenAPIConfig.kt
+    companion object {
+        const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
+    }
 
-@Bean
-fun api(): OpenAPI {
-    return OpenAPI()
-        // use the constant instead of the hard-coded scheme name
-        .addSecurityItem(SecurityRequirement().addList(BEARER_KEY_SECURITY_SCHEME))
-        .components(
-            Components()
-                .addSecuritySchemes(
-                    // again, refer to the constant here
-                    BEARER_KEY_SECURITY_SCHEME,
-                    SecurityScheme()
-                        .name("Authorization")
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme("bearer")
-                        .bearerFormat("JWT")
-                )
-        )
-        .info(info())
-}
-
-companion object {
-    const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
 }

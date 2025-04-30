@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.constraints.NotBlank
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -21,10 +22,12 @@ import reactor.core.publisher.Mono
 data class KeycloakLoginRequest(
     @field:JsonProperty("username")
     @field:Schema(description = "Username for authentication", example = "user", required = true)
+    @field:NotBlank(message = "Username is required")
     val username: String,
 
     @field:JsonProperty("password")
     @field:Schema(description = "Password for authentication", example = "user", required = true)
+    @field:NotBlank(message = "Password is required")
     val password: String
 )
 
@@ -57,7 +60,8 @@ class KeycloakController(
     @Value("\${keycloak.url}")
     private lateinit var keycloakUrl: String
 
-    private val clientId = "react-app"
+    @Value("\${keycloak.client-id}")
+    private lateinit var clientId: String
 
     /**
      * Get a token from Keycloak using the password grant type.

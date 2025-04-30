@@ -253,6 +253,5 @@
     <module>inventory-service</module>
     <module>notification-service</module>
     <module>api-throttling</module>
-    <module>keycloak-service</module>
   </modules>
 </project>
