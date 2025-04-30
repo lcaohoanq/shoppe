@@ -6,7 +6,7 @@ class UserNotFoundException : RuntimeException {
 
     constructor(id: Long) : super("Could not find user $id")
 
-    constructor(email_phone: String) : super("Could not find user$email_phone") {
+    constructor(email_phone: String) : super("Could not find user with: $email_phone") {
         this.email_phone = email_phone
     }
 }
