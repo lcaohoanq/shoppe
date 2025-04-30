@@ -10,6 +10,7 @@ import noproduct from 'src/assets/images/no-product.png'
 import { formatCurrency } from 'src/utils/utils'
 import NavHeader from '../NavHeader'
 import useSearchProducts from 'src/hooks/useSearchProducts'
+import NavHeaderV2 from "../NavHeaderV2";
 
 const MAX_PURCHASES = 5
 export default function Header() {
@@ -32,7 +33,7 @@ export default function Header() {
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-1 pt-2 text-white'>
       <div className='container'>
-        <NavHeader />
+        <NavHeaderV2 />
         <div className='mt-4 grid grid-cols-12 items-center gap-4'>
           <Link to='/home' className='col-span-2 mb-3'>
             <svg viewBox='0 0 192 65' className='h-12 w-full fill-white'>
