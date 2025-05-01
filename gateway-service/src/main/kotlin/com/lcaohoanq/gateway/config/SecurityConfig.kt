@@ -29,6 +29,10 @@ class SecurityConfig(
             "/v3/api-docs.yaml",
             "/swagger-ui/**",
             "/swagger-ui.html",
+            "/api/v1/swagger-ui.html",
+            "/webjars/**",
+            "/configuration/**",
+            "/swagger-resources/**"
         )
         const val SHOPPE_MEMBER = "SHOPPE_MEMBER"
         const val SHOPPE_STAFF = "SHOPPE_STAFF"
