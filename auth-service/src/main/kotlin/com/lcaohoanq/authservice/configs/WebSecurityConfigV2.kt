@@ -3,6 +3,7 @@ package com.lcaohoanq.authservice.configs
 import com.lcaohoanq.authservice.security.JwtAuthConverter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -12,11 +13,15 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
-@ConditionalOnProperty(name = ["spring.application.security-config-version"], havingValue = "v2", matchIfMissing = true)
+@ConditionalOnProperty(
+    name = ["spring.application.security-config-version"],
+    havingValue = "v2",
+    matchIfMissing = true
+)
 @Configuration
 class WebSecurityConfigV2(
     private val jwtAuthConverter: JwtAuthConverter,
-    @Value("\${app.cors.allowed-origins}") private val listAllowedOrigins: List<String>
+    private val applicationProperties: ApplicationProperties
 ) {
     @Value("\${api.prefix}")
     private lateinit var apiPrefix: String
@@ -34,6 +39,9 @@ class WebSecurityConfigV2(
             "/swagger-ui/**",
             "/swagger-ui.html"
         )
+        const val SHOPPE_MEMBER = "SHOPPE_MEMBER"
+        const val SHOPPE_STAFF = "SHOPPE_STAFF"
+        const val SHOPPE_ADMIN = "SHOPPE_ADMIN"
     }
 
     @Bean
@@ -49,7 +57,7 @@ class WebSecurityConfigV2(
                 // Public authentication endpoints
                 auth.requestMatchers(
                     "$apiPrefix/auth/**",
-                    "$apiPrefix/users/**",
+//                    "$apiPrefix/users/**",
                     "$apiPrefix/students/**",
                     "$apiPrefix/categories/**",
                     "$apiPrefix/experiments/**",
@@ -60,6 +68,11 @@ class WebSecurityConfigV2(
                     "$apiPrefix/user-settings/**",
                     "$apiPrefix/keycloak/**",
                 ).permitAll()
+
+                auth.requestMatchers("$apiPrefix/users/all")
+                    .hasAnyRole(SHOPPE_MEMBER, SHOPPE_STAFF, SHOPPE_ADMIN)
+                auth.requestMatchers("$apiPrefix/users/details")
+                    .hasAnyRole(SHOPPE_MEMBER, SHOPPE_STAFF, SHOPPE_ADMIN)
 
                 // Swagger and public documentation endpoints
                 auth.requestMatchers(*PUBLIC_ENDPOINTS).permitAll()
@@ -89,7 +102,7 @@ class WebSecurityConfigV2(
 
         val configuration = CorsConfiguration().apply {
             allowCredentials = true
-            this.allowedOrigins = listAllowedOrigins
+            this.allowedOrigins = applicationProperties.cors.allowedOrigins
             addAllowedMethod("*")
             addAllowedHeader("*")
             maxAge = 3600
@@ -98,5 +111,15 @@ class WebSecurityConfigV2(
         return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**", configuration)
         }
+    }
+}
+
+@Configuration
+@ConfigurationProperties(prefix = "app.cors")
+class ApplicationProperties {
+    var cors: CorsProperties = CorsProperties()
+
+    class CorsProperties {
+        var allowedOrigins: List<String> = listOf()
     }
 }

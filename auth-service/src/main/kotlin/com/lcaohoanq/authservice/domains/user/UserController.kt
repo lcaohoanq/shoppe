@@ -12,7 +12,6 @@ import com.lcaohoanq.common.utils.Sortable
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.validation.Valid
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -29,7 +28,6 @@ class UserController(
 ) : BaseController() {
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
     fun getAllUsers(): ResponseEntity<MyApiResponse<List<UserPort.UserResponse>>> {
         val endpoint = "/users/all"
 
@@ -80,8 +78,8 @@ class UserController(
         summary = "Get user details from token",
         description = "Provide access token to get user details on the Header"
     )
+    @Deprecated("Use /me instead")
     @PatchMapping("/details")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER', 'ROLE_STAFF')")
     fun takeUserDetailsFromToken(): ResponseEntity<MyApiResponse<UserPort.UserResponse>> =
         ok(
             "Get user details successfully",
@@ -102,6 +100,15 @@ class UserController(
     @GetMapping("/me")
     fun getUserExtra(principal: Principal): User {
         return userService.validateAndGetUserExtra(principal.name)
+    }
+
+    @Operation(
+        summary = "Get user extra information for the authenticated user",
+        security = [SecurityRequirement(name = OpenAPIConfig.BEARER_KEY_SECURITY_SCHEME)]
+    )
+    @GetMapping("/me-v2")
+    fun getUserExtraV2(@RequestHeader("X-User-Id") userId: String): User {
+        return userService.validateAndGetUserExtra(userId)
     }
 
 //    @Operation(
