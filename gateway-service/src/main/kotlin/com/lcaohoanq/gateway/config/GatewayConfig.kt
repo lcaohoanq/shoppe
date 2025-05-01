@@ -1,35 +1,31 @@
 package com.lcaohoanq.gateway.config
 
-import com.lcaohoanq.gateway.jwt.JwtTokenProvider
+import com.lcaohoanq.gateway.provider.JwtTokenProvider
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cloud.gateway.route.RouteLocator
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder
 import org.springframework.cloud.gateway.support.ipresolver.RemoteAddressResolver
 import org.springframework.cloud.gateway.support.ipresolver.XForwardedRemoteAddressResolver
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpStatus
 
+@ConditionalOnProperty(name = ["spring.application.gw-config-version"], havingValue = "v1", matchIfMissing = true)
+@Deprecated(message = "Use GatewayConfigV2 instead")
 @Configuration
 class GatewayConfig {
 
-    // Config
-    private val API_PREFIX_V1 = "/api/v1"
+    companion object {
+        const val API_PREFIX_V1 = "/api/v1"
 
-    // Service URLs
-    private val JV_SERVICE = "http://localhost:8080"
-    private val KT_SERVICE = "http://localhost:4000"
+        // Eureka service instances
+        const val AUTH_EUREKA = "lb://auth-service"
+        const val CATEGORY_EUREKA = "lb://category-service"
+        const val NOTIFICATION_EUREKA = "lb://notification-service"
 
-    // Endpoints
-    private val USERS = "/users"
-    private val CATEGORIES = "/categories"
-    private val AUTH_LOGIN = "/auth/login"
-
-    // Eureka service instance
-    private val JV_EUREKA = "lb://jv-service"
-    private val KT_EUREKA = "lb://kt-service"
-    private val CATEGORY_EUREKA = "lb://category-service"
-    private val AUTH_EUREKA = "lb://auth-service"
-    private val NOTIFICATION_EUREKA = "lb://notification-service"
+        // Local development fallbacks
+        const val KT_SERVICE = "http://localhost:4000"
+        const val JV_SERVICE = "http://localhost:8080"
+    }
 
     /**
      * Configures the routes for the Spring Cloud Gateway.
@@ -82,7 +78,7 @@ class GatewayConfig {
             }
 
             // Route for /api/v1/users, which should go to the User Service on localhost:4000
-            
+
             // Route for /api/v1/categories, which should go to the Category Service on localhost:8080
             .route("category_service_route") { r ->
                 r.path("${API_PREFIX_V1}/categories/**") // Match any requests that start with /api/v1/categories

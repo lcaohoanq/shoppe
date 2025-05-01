@@ -1,4 +1,4 @@
-package com.lcaohoanq.gateway.jwt
+package com.lcaohoanq.gateway.provider
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component
 import java.security.Key
 
 @Component
+@Deprecated("Use KeycloakTokenProvider instead")
 class JwtTokenProvider {
 
     @Value("\${jwt.secretKey}")
