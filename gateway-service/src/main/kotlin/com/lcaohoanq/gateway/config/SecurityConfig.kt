@@ -5,15 +5,15 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
-import org.springframework.security.web.AuthenticationEntryPoint
-import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint
+import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler
 
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfig(
-    private val authenticationEntryPoint: AuthenticationEntryPoint,
-    private val accessDeniedHandler: AccessDeniedHandler,
+    private val serverAuthenticationEntryPoint: ServerAuthenticationEntryPoint,
+    private val serverAccessDeniedHandler: ServerAccessDeniedHandler,
     private val jwtAuthConverter: JwtAuthConverter
 ) {
 
@@ -52,10 +52,10 @@ class SecurityConfig(
                     jwt.jwtAuthenticationConverter(jwtAuthConverter)
                 }
             }
-//            .exceptionHandling { ex ->
-//                ex.authenticationEntryPoint(authenticationEntryPoint)
-//                ex.accessDeniedHandler(accessDeniedHandler)
-//            }
+            .exceptionHandling { ex ->
+                ex.authenticationEntryPoint(serverAuthenticationEntryPoint)
+                ex.accessDeniedHandler(serverAccessDeniedHandler)
+            }
             .csrf { it.disable() }
             .build()
     }
