@@ -62,8 +62,13 @@ class KeycloakGatewayController(private val webClient: WebClient.Builder) {
             }
     }
 
-    @GetMapping("/test")
-    fun test(): ResponseEntity<String> {
-        return ResponseEntity.ok("Keycloak Gateway is working!")
+    @GetMapping("/test-member")
+    fun testM(): ResponseEntity<String> {
+        return ResponseEntity.ok("Keycloak Gateway member is working!")
+    }
+
+    @GetMapping("/test-admin")
+    fun testA(): ResponseEntity<String> {
+        return ResponseEntity.ok("Keycloak Gateway admin is working!")
     }
 }

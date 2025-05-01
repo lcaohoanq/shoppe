@@ -43,8 +43,8 @@ class SecurityConfig(
                     .pathMatchers(*PUBLIC_ENDPOINTS).permitAll()
 
                     .pathMatchers("/keycloak/token").permitAll()
-                    .pathMatchers("/keycloak/test").hasAnyRole(SHOPPE_MEMBER, SHOPPE_STAFF, SHOPPE_ADMIN)
-
+                    .pathMatchers("/keycloak/test-member").hasAnyRole(SHOPPE_MEMBER)
+                    .pathMatchers("/keycloak/test-admin").hasAnyRole(SHOPPE_ADMIN)
                     .anyExchange().authenticated()
             }
             .oauth2ResourceServer {
