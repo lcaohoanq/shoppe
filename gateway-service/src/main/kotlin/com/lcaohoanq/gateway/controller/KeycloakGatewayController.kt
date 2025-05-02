@@ -1,5 +1,8 @@
 package com.lcaohoanq.gateway.controller
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,8 +14,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
+import org.springframework.validation.BindingResult
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 
+@Tag(name = "Keycloak", description = "Keycloak API")
 @RestController
 @RequestMapping("/keycloak")
 class KeycloakGatewayController(private val webClient: WebClient.Builder) {
@@ -32,16 +38,21 @@ class KeycloakGatewayController(private val webClient: WebClient.Builder) {
     )
 
     data class TokenResponse(
-        val access_token: String,
-        val expires_in: Long,
-        val refresh_token: String,
-        val refresh_expires_in: Long,
-        val token_type: String
+        @JsonProperty("access_token") val accessToken: String,
+        @JsonProperty("expires_in") val expiresIn: Long,
+        @JsonProperty("refresh_token") val refreshToken: String,
+        @JsonProperty("refresh_expires_in") val refreshExpiresIn: Long,
+        @JsonProperty("token_type") val tokenType: String
     )
 
+    @Operation(
+        summary = "Get Keycloak token",
+        description = "Authenticate user and return Keycloak token",
+    )
     @PostMapping("/token", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun getToken(@Valid @RequestBody request: LoginRequest): Mono<ResponseEntity<TokenResponse>> {
-
+    fun getToken(
+        @Validated @RequestBody request: LoginRequest
+    ): Mono<ResponseEntity<TokenResponse>> {
         val formData = mapOf(
             "grant_type" to "password",
             "client_id" to clientId,

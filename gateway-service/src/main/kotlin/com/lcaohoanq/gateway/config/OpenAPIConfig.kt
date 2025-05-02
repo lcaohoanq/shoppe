@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.info.License
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
 import io.swagger.v3.oas.models.servers.Server
-import org.springdoc.core.models.GroupedOpenApi
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -38,7 +37,11 @@ class OpenAPIConfig {
                     .description("API Documentation")
                     .url("https://your-docs-url.com")
             )
-            .addSecurityItem(SecurityRequirement().addList(BEARER_KEY_SECURITY_SCHEME))
+            .addSecurityItem(
+                SecurityRequirement().addList(
+                    BEARER_KEY_SECURITY_SCHEME
+                )
+            )
             .components(
                 Components()
                     .addSecuritySchemes(
@@ -54,16 +57,7 @@ class OpenAPIConfig {
             .addServersItem(Server().url("/").description("Local server"))
     }
 
-    @Bean
-    fun publicApi(): GroupedOpenApi {
-        return GroupedOpenApi.builder()
-            .group("public")
-            .pathsToMatch("/**") // Ensure you're matching the correct paths
-            .build()
-    }
-
     companion object {
-        const val BEARER_KEY_SECURITY_SCHEME = "bearer-key"
+        const val BEARER_KEY_SECURITY_SCHEME: String = "bearer-key"
     }
-
 }
