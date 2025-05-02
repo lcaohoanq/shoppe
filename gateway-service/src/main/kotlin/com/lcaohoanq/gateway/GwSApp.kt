@@ -16,9 +16,9 @@ fun main(args: Array<String>) {
     val env = context.environment
     val activeProfiles = env.activeProfiles
 
-//    if (!activeProfiles.contains("docker")) {
-//        openHomePage("http://localhost:4003/swagger-ui/index.html")
-//    }
+    if (!activeProfiles.contains("docker")) {
+        openHomePage("http://localhost:4003/swagger-ui.html")
+    }
 }
 
 fun openHomePage(urls: Any) {

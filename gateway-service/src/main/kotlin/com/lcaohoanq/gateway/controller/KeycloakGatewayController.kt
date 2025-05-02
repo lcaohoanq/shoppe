@@ -2,6 +2,7 @@ package com.lcaohoanq.gateway.controller
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -14,8 +15,10 @@ import reactor.core.publisher.Mono
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.BindingResult
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 
+@Tag(name = "Keycloak", description = "Keycloak API")
 @RestController
 @RequestMapping("/keycloak")
 class KeycloakGatewayController(private val webClient: WebClient.Builder) {
@@ -48,13 +51,8 @@ class KeycloakGatewayController(private val webClient: WebClient.Builder) {
     )
     @PostMapping("/token", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun getToken(
-        @Valid @RequestBody request: LoginRequest,
-        result: BindingResult
+        @Validated @RequestBody request: LoginRequest
     ): Mono<ResponseEntity<TokenResponse>> {
-
-        if (result.hasErrors())
-            return Mono.just(ResponseEntity.badRequest().build())
-
         val formData = mapOf(
             "grant_type" to "password",
             "client_id" to clientId,

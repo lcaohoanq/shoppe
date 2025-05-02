@@ -6,7 +6,10 @@ import org.springframework.core.annotation.Order
 import org.springframework.core.io.buffer.DataBufferFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.MethodArgumentNotValidException
+import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
@@ -36,5 +39,11 @@ class GlobalErrorHandler(private val objectMapper: ObjectMapper) : ErrorWebExcep
         val dataBuffer = dataBufferFactory.wrap(objectMapper.writeValueAsBytes(errorBody))
 
         return response.writeWith(Mono.just(dataBuffer))
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleValidationException(ex: MethodArgumentNotValidException): Mono<ResponseEntity<String>> {
+        val errorMessages = ex.bindingResult.allErrors.joinToString(", ") { it.defaultMessage ?: "Unknown error" }
+        return Mono.just(ResponseEntity.badRequest().body("Validation failed: $errorMessages"))
     }
 }
