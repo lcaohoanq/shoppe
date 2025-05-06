@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Container, Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { memo } from 'react'
@@ -37,8 +37,8 @@ const CategoryGridSlider = () => {
     : []
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 3 }}>
-      <Typography variant='h5' sx={{ mb: 1 }}>
+    <Container sx={{ backgroundColor: '#F5F5F5', display: 'flex', flexDirection: 'column', gap: 3, marginBottom: 3 }}>
+      <Typography variant='h5' sx={{ p: 3 }}>
         Danh Mục
       </Typography>
       <Swiper
@@ -49,7 +49,7 @@ const CategoryGridSlider = () => {
         pagination={{ clickable: true }}
         loop={false}
         style={{ width: '100%' }} // Add padding for pagination bullets
-        className='custom-swiper'
+        // className='custom-swiper'
       >
         {categoryChunks.map((chunk, index) => (
           <SwiperSlide key={index}>
@@ -71,6 +71,7 @@ const CategoryGridSlider = () => {
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
+                      backgroundColor: 'white',
                       p: 1,
                       transition: 'transform 0.3s',
                       '&:hover': {
@@ -84,9 +85,10 @@ const CategoryGridSlider = () => {
                         height: 60,
                         width: 60,
                         objectFit: 'contain',
-                        mb: 1
+                        mb: 1,
+                        backgroundColor: 'white'
                       }}
-                      src='/img/vn-11134258-7ra0g-m7hndl5ii6pi79_xhdpi.jpg'
+                      src='/categories/camera.webp'
                       alt={category.name}
                     />
                     <Typography
@@ -110,7 +112,7 @@ const CategoryGridSlider = () => {
           </SwiperSlide>
         ))}
       </Swiper>
-    </Box>
+    </Container>
   )
 }
 

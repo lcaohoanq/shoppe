@@ -4,11 +4,11 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import React, { memo } from 'react'
-import './Swiper.css'
+import { homeAssets } from 'src/assets/home'
 
 const HomeSliderInner: React.FC = () => {
   return (
-    <div style={{ position: 'relative', width: '70%', height: 'auto', marginTop: '2rem' }}>
+    <div style={{ position: 'relative', width: '70%', height: 'auto' }}>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -18,17 +18,9 @@ const HomeSliderInner: React.FC = () => {
         centeredSlides={true}
         autoplay={{ delay: 10000 }}
         loop={true}
-        className='custom-swiper'
+        // className='custom-swiper'
       >
-        {[
-          'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215x365.png',
-          'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_4_.jpg',
-          'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/2400wx720h.jpg',
-          'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/anh-khong-dau-banner.jpg',
-          'https://cdn.galaxycine.vn/media/2025/2/24/interstellar-3_1740390337969.jpg',
-          'https://cdn.galaxycine.vn/media/2025/2/28/2048x682-1_1740711284334.jpg',
-          'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_1_.jpg'
-        ].map((slide, index) => (
+        {homeAssets.top.bannerSlider.map((slide, index) => (
           <SwiperSlide key={index}>
             <img
               src={slide}

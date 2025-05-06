@@ -7,47 +7,7 @@ import useProducts from 'src/hooks/useProducts'
 import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import { styles } from './style'
-
-const images = [
-  {
-    title: 'Hàng Chọn Giá Hời',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Mã Giảm Giá',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Miễn Hết Phí Ship Cho Mọi Đơn',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Shoppe Style Voucher 30%',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Voucher Giảm đến 1 Triệu',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Hàng Quốc Tế',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  },
-  {
-    title: 'Nạp Thẻ, Dịch Vụ & Hóa Đơn',
-    icon: 'https://down-vn.img.susercontent.com/file/vn-11134258-7ras8-m20rc1wk8926cf'
-  }
-]
-
-export const bannerslider = [
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215x365.png',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_4_.jpg',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/2400wx720h.jpg',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/anh-khong-dau-banner.jpg',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/MAIN_2_ADL_1215x365.png',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/love-lies.jpg',
-  'https://api-website.cinestar.com.vn/media/MageINIC/bannerslider/1215wx365h_1_.jpg'
-]
+import { homeAssets } from 'src/assets/home'
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(true)
@@ -55,7 +15,7 @@ export default function Home() {
   const { data: products, error, isLoading } = useProducts()
 
   useEffect(() => {
-    setRandomBanner(bannerslider[Math.floor(Math.random() * bannerslider.length)])
+    setRandomBanner(homeAssets.top.bannerSlider[Math.floor(Math.random() * homeAssets.top.bannerSlider.length)])
   }, [])
 
   const handleCloseModal = () => {
@@ -66,7 +26,7 @@ export default function Home() {
   if (error) return <div>Error loading products...</div>
 
   return (
-    <Container>
+    <div>
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -89,111 +49,138 @@ export default function Home() {
         </Box>
       </Modal>
 
-      <div>
-        <div className='flex justify-between gap-2'>
-          <HomeSlider />
-          <div className='mt-[2rem]'>
-            <Box
-              component='img'
-              sx={{
-                height: 233,
-                width: 350,
-                maxHeight: { xs: 233, md: 167 },
-                maxWidth: { xs: 350, md: 250 }
-              }}
-              src='/img/vn-11134258-7ra0g-m7hncaye3xo341_xhdpi.jpg'
-            />
-            <Box
-              component='img'
-              sx={{
-                height: 233,
-                width: 350,
-                maxHeight: { xs: 233, md: 167 },
-                maxWidth: { xs: 350, md: 250 }
-              }}
-              src='/img/vn-11134258-7ra0g-m7hndl5ii6pi79_xhdpi.jpg'
-            />
-          </div>
-        </div>
-
-        <div className='flex justify-center items-center gap-2 mt-[2rem]'>
-          {images.map((src, index) => (
-            <div className='flex flex-col justify-center items-center gap-2' key={index}>
+      <Box>
+        <Container>
+          <div className='flex justify-between gap-2 mt-7'>
+            <HomeSlider />
+            <div className='flex flex-col gap-1 '>
               <Box
-                key={index}
                 component='img'
                 sx={{
-                  height: 50,
-                  width: 50,
-                  maxHeight: { xs: 233, md: 167 },
-                  maxWidth: { xs: 350, md: 250 }
+                  height: 120,
+                  width: 350,
+                  borderRadius: '3px'
+                  // maxHeight: { xs: 233, md: 167 },
+                  // maxWidth: { xs: 350, md: 250 }
                 }}
-                src={src.icon}
-                alt={`Image ${index + 1}`}
+                src={homeAssets.top.rightSlider[0]}
               />
-              <Typography>{src.title}</Typography>
+              <Box
+                component='img'
+                sx={{
+                  height: 120,
+                  width: 350,
+                  borderRadius: '3px'
+                  // maxHeight: { xs: 233, md: 167 },
+                  // maxWidth: { xs: 350, md: 250 }
+                }}
+                src={homeAssets.top.rightSlider[1]}
+              />
             </div>
-          ))}
-        </div>
-      </div>
-      <Divider />
+          </div>
 
-      <HomeCategorySlider />
-
-      <HomeShoppeMall />
-
-      <Box className='bg-[#808080]'>
-        <p className='text text-center text-3xl mb-3 text-[#FFA500]'>Goi y hom nay</p>
-        <Divider />
-      </Box>
-      {products ? (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(6, 1fr)',
-            gap: 2,
-            marginTop: 3,
-            backgroundColor: '#f5f5f5'
-          }}
-        >
-          {products.data.map((product) => (
-            <Card
-              sx={{
-                ':hover': {
-                  border: '1px solid #f53d2d'
-                }
-              }}
-              key={product.id}
-            >
-              <CardContent>
+          <div className='flex justify-between items-center gap-2 mt-[2rem] mb-5'>
+            {homeAssets.top.section_banner.map((src, index) => (
+              <div className='flex flex-col justify-center items-center gap-2' key={index}>
                 <Box
+                  key={index}
                   component='img'
                   sx={{
-                    height: 233,
-                    width: 350,
+                    height: 50,
+                    width: 50,
                     maxHeight: { xs: 233, md: 167 },
                     maxWidth: { xs: 350, md: 250 }
                   }}
-                  alt={product.name}
-                  src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
+                  src={src.icon}
+                  alt={`Image ${index + 1}`}
                 />
-                <Typography variant='h5' component='div'>
-                  {product.name}
+                <Typography
+                  sx={{
+                    fontSize: '0.8rem'
+                  }}
+                >
+                  {src.title}
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {product.description}
+              </div>
+            ))}
+          </div>
+        </Container>
+
+        <Box sx={{ backgroundColor: '#f5f5f5', width: '100%' }}>
+          <Divider />
+
+          <HomeCategorySlider />
+
+          <HomeShoppeMall />
+
+          <Box className='bg-[#808080]'>
+            <p className='text text-center text-3xl mb-3 text-[#FFA500]'>Goi y hom nay</p>
+            <Divider />
+          </Box>
+          {products ? (
+            <Box sx={{ backgroundColor: '#f5f5f5', py: 5 }}>
+              <Container
+                maxWidth='lg'
+                sx={{
+                  backgroundColor: '#fff',
+                  borderRadius: 2,
+                  boxShadow: 1,
+                  padding: 3
+                }}
+              >
+                <Typography variant='h5' align='center' sx={{ color: '#f53d2d', mb: 3 }}>
+                  Gợi ý hôm nay
                 </Typography>
-                <Typography variant='body1'>Price: ${product.price_before_discount}</Typography>
-                <Typography variant='body1'>Sold: {product.sold ? 'Yes' : 'No'}</Typography>
-                <Typography variant='body1'>Rating: {product.rating}</Typography>
-              </CardContent>
-              <CardActions>{/* Add actions here if needed */}</CardActions>
-            </Card>
-          ))}
+                <Divider sx={{ mb: 3 }} />
+
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                    gap: 2
+                  }}
+                >
+                  {products.data.map((product) => (
+                    <Card
+                      sx={{
+                        ':hover': {
+                          border: '1px solid #f53d2d'
+                        }
+                      }}
+                      key={product.id}
+                    >
+                      <CardContent>
+                        <Box
+                          component='img'
+                          sx={{
+                            height: 180,
+                            width: '100%',
+                            objectFit: 'cover',
+                            borderRadius: 1
+                          }}
+                          alt={product.name}
+                          src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
+                        />
+                        <Typography variant='h6' noWrap>
+                          {product.name}
+                        </Typography>
+                        <Typography variant='body2' color='text.secondary' noWrap>
+                          {product.description}
+                        </Typography>
+                        <Typography variant='body1'>${product.price_before_discount}</Typography>
+                        <Typography variant='caption'>Đã bán: {product.sold ? '✔' : '✖'}</Typography>
+                        <Typography variant='caption'>Đánh giá: {product.rating}</Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
+              </Container>
+            </Box>
+          ) : (
+            <Loading />
+          )}
         </Box>
-      ) : (
-        <Loading />
-      )}
-    </Container>
+      </Box>
+    </div>
   )
 }
