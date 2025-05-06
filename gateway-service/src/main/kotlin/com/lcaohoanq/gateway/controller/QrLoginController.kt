@@ -37,7 +37,7 @@ class QrLoginController {
         summary = "Create a new QR login session",
         description = "This endpoint creates a new QR login session and returns the session ID."
     )
-    @CrossOrigin(origins = ["http://localhost:5173"]) // Allow cross-origin requests for development
+    @CrossOrigin(origins = ["http://localhost:4000"]) // Allow cross-origin requests for development
     fun createSession(): ResponseEntity<String> {
         val sessionId = UUID.randomUUID().toString()
         qrSessions[sessionId] = QrLoginSession(sessionId)
@@ -50,7 +50,7 @@ class QrLoginController {
         summary = "Get session status",
         description = "This endpoint retrieves the status of a QR login session by its ID."
     )
-    @CrossOrigin(origins = ["http://localhost:5173"]) // Allow cross-origin requests for development
+    @CrossOrigin(origins = ["http://localhost:4000"]) // Allow cross-origin requests for development
     fun getSessionStatus(@PathVariable sessionId: String): ResponseEntity<QrLoginSession> {
         val session = qrSessions[sessionId] ?: return ResponseEntity.notFound().build()
 

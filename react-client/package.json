@@ -38,6 +38,7 @@
     "keycloak-js": "^26.1.5",
     "lodash": "^4.17.21",
     "million": "^2.4.9",
+    "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^1.3.0",

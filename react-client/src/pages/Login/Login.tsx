@@ -1,32 +1,48 @@
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { schema, Schema } from 'src/utils/rules'
-import { useMutation } from '@tanstack/react-query'
+import {useForm} from 'react-hook-form'
+import {Link, useNavigate} from 'react-router-dom'
+import {yupResolver} from '@hookform/resolvers/yup'
+import {schema, Schema} from 'src/utils/rules'
+import {useMutation} from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
-import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
-import { ErrorResponse } from 'src/types/utils.type'
+import {isAxiosUnprocessableEntityError} from 'src/utils/utils'
+import {ErrorResponse} from 'src/types/utils.type'
 import Input from 'src/components/Input'
-import { useContext } from 'react'
-import { AppContext } from 'src/contexts/app.context'
+import {useContext, useState} from 'react'
+import {AppContext} from 'src/contexts/app.context'
 import Button from 'src/components/Button'
-import { Helmet } from 'react-helmet-async'
-import { Divider } from '@mui/material'
+import {Helmet} from 'react-helmet-async'
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Typography
+} from '@mui/material'
+import LoginQR from "../../components/LoginQR/LoginQR";
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import CloseIcon from '@mui/icons-material/Close';
 
 type FormData = Pick<Schema, 'email' | 'password'>
 const loginSchema = schema.pick(['email', 'password'])
 
 export default function Login() {
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const {setIsAuthenticated, setProfile} = useContext(AppContext)
   const navigate = useNavigate()
   const {
     register,
     setError,
     handleSubmit,
-    formState: { errors }
+    formState: {errors}
   } = useForm<FormData>({
     resolver: yupResolver(loginSchema)
   })
+
+  const [openQR, setOpenQR] = useState(false)
+
+  const handleOpenQR = () => setOpenQR(true)
+  const handleCloseQR = () => setOpenQR(false)
 
   const loginMutation = useMutation({
     mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.loginMock(body)
@@ -58,16 +74,43 @@ export default function Login() {
     <div className='bg-orange'>
       <Helmet>
         <title>Đăng nhập | Shopee Clone</title>
-        <meta name='description' content='Đăng nhập vào dự án Shopee Clone' />
+        <meta name='description' content='Đăng nhập vào dự án Shopee Clone'/>
       </Helmet>
       <div className='container'>
         <div className='grid grid-cols-1 py-12 lg:grid-cols-6 lg:py-12 lg:pr-10'>
           <div className='lg:col-span-4 hidden lg:block'>
-            <img src={'/img/login_bg.png'} className='w-full h-full object-contain' alt='Shopee Login Background' />
+            <img src={'/img/login_bg.png'} className='w-full h-full object-contain'
+                 alt='Shopee Login Background'/>
           </div>
           <div className='lg:col-span-2'>
             <form className='rounded bg-white p-10 shadow-sm' onSubmit={onSubmit} noValidate>
-              <div className='text-2xl'>Đăng nhập</div>
+              <div className="flex justify-between items-center">
+                <div className='text-2xl'>Đăng nhập</div>
+
+                <Box
+                  onClick={handleOpenQR}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 2,
+                    py: 1,
+                    backgroundColor: '#FFF9E6',
+                    border: '2px solid #FFA500',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      boxShadow: '0 0 0 2px #FFCF66'
+                    }
+                  }}
+                >
+                  <Typography variant='body2' sx={{color: '#FFA500', fontWeight: 500, mr: 1}}>
+                    Log in with QR
+                  </Typography>
+                  <QrCodeIcon sx={{color: '#FF5722'}}/>
+                </Box>
+              </div>
+
               <Input
                 name='email'
                 register={register}
@@ -114,6 +157,20 @@ export default function Login() {
                   HOẶC
                 </Divider>
               </div>
+
+              <Dialog open={openQR} onClose={handleCloseQR} maxWidth="sm" fullWidth>
+                <DialogTitle>
+                  Quét mã QR để đăng nhập
+                  <IconButton onClick={handleCloseQR} sx={{position: 'absolute', right: 8, top: 8}}>
+                    <CloseIcon/>
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                  <LoginQR/>
+                </DialogContent>
+              </Dialog>
+
+
               <div className='flex gap-3'>
                 <Button
                   type='submit'

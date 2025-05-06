@@ -1,7 +1,7 @@
-import { lazy, Suspense, useContext } from 'react'
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import {lazy, Suspense, useContext} from 'react'
+import {Navigate, Outlet, useRoutes} from 'react-router-dom'
 import path from 'src/constants/path'
-import { AppContext } from './contexts/app.context'
+import {AppContext} from './contexts/app.context'
 import MainLayout from './layouts/MainLayout'
 import RegisterLayout from './layouts/RegisterLayout'
 // import Login from './pages/Login'
@@ -13,6 +13,7 @@ import RegisterLayout from './layouts/RegisterLayout'
 import CartLayout from './layouts/CartLayout'
 import MainLayoutCompact from './layouts/MainLayoutCompact'
 import UserLayout from './pages/User/layouts/UserLayout'
+import LoginQR from "./components/LoginQR/LoginQR";
 // import ChangePassword from './pages/User/pages/ChangePassword'
 // import HistoryPurchase from './pages/User/pages/HistoryPurchase'
 // import NotFound from './pages/NotFound'
@@ -73,31 +74,31 @@ const UserVoucher = lazy(() => import('./pages/User/pages/Voucher'))
 // </RegisterLayout>
 
 function ProtectedRoute() {
-  const { isAuthenticated } = useContext(AppContext)
-  return isAuthenticated ? <Outlet /> : <Navigate to='/login' />
+  const {isAuthenticated} = useContext(AppContext)
+  return isAuthenticated ? <Outlet/> : <Navigate to='/login'/>
 }
 
 function RejectedRoute() {
-  const { isAuthenticated } = useContext(AppContext)
+  const {isAuthenticated} = useContext(AppContext)
 
-  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+  return !isAuthenticated ? <Outlet/> : <Navigate to='/'/>
 }
 
 export default function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: '',
-      element: <RejectedRoute />,
+      element: <RejectedRoute/>,
       children: [
         {
           path: '',
-          element: <RegisterLayout />,
+          element: <RegisterLayout/>,
           children: [
             {
               path: path.login,
               element: (
                 <Suspense>
-                  <Login />
+                  <Login/>
                 </Suspense>
               )
             },
@@ -105,7 +106,15 @@ export default function useRouteElements() {
               path: path.register,
               element: (
                 <Suspense>
-                  <Register />
+                  <Register/>
+                </Suspense>
+              )
+            },
+            {
+              path: "/loginqr",
+              element: (
+                <Suspense>
+                  <LoginQR/>
                 </Suspense>
               )
             }
@@ -126,24 +135,24 @@ export default function useRouteElements() {
           element: (
             <CartLayout>
               <Suspense>
-                <Cart />
+                <Cart/>
               </Suspense>
             </CartLayout>
           )
         },
         {
           path: path.user,
-          element: <MainLayoutCompact />,
+          element: <MainLayoutCompact/>,
           children: [
             {
               path: '',
-              element: <UserLayout />,
+              element: <UserLayout/>,
               children: [
                 {
                   path: path.profile,
                   element: (
                     <Suspense>
-                      <Profile />
+                      <Profile/>
                     </Suspense>
                   )
                 },
@@ -151,7 +160,7 @@ export default function useRouteElements() {
                   path: path.user_detail.shopee_xu,
                   element: (
                     <Suspense>
-                      <UserCoin />
+                      <UserCoin/>
                     </Suspense>
                   )
                 },
@@ -159,7 +168,7 @@ export default function useRouteElements() {
                   path: path.user_detail.voucher,
                   element: (
                     <Suspense>
-                      <UserVoucher />
+                      <UserVoucher/>
                     </Suspense>
                   )
                 },
@@ -167,7 +176,7 @@ export default function useRouteElements() {
                   path: path.user_detail.notify.order,
                   element: (
                     <Suspense>
-                      <UserNotificationOrder />
+                      <UserNotificationOrder/>
                     </Suspense>
                   )
                 },
@@ -175,7 +184,7 @@ export default function useRouteElements() {
                   path: path.user_detail.notify.promotion,
                   element: (
                     <Suspense>
-                      <UserNotificationPromotion />
+                      <UserNotificationPromotion/>
                     </Suspense>
                   )
                 },
@@ -183,7 +192,7 @@ export default function useRouteElements() {
                   path: path.user_detail.notify.wallet,
                   element: (
                     <Suspense>
-                      <UserNotificationWallet />
+                      <UserNotificationWallet/>
                     </Suspense>
                   )
                 },
@@ -191,7 +200,7 @@ export default function useRouteElements() {
                   path: path.user_detail.notify.shopee,
                   element: (
                     <Suspense>
-                      <UserNotificationShopeeUpdate />
+                      <UserNotificationShopeeUpdate/>
                     </Suspense>
                   )
                 },
@@ -200,7 +209,7 @@ export default function useRouteElements() {
                   path: path.user_detail.account.address,
                   element: (
                     <Suspense>
-                      <UserAddress />
+                      <UserAddress/>
                     </Suspense>
                   )
                 },
@@ -209,7 +218,7 @@ export default function useRouteElements() {
                   path: path.user_detail.account.bank,
                   element: (
                     <Suspense>
-                      <UserBank />
+                      <UserBank/>
                     </Suspense>
                   )
                 },
@@ -218,7 +227,7 @@ export default function useRouteElements() {
                   path: path.user_detail.account.settings_notify,
                   element: (
                     <Suspense>
-                      <UserSettingNotify />
+                      <UserSettingNotify/>
                     </Suspense>
                   )
                 },
@@ -227,7 +236,7 @@ export default function useRouteElements() {
                   path: path.user_detail.account.privacy,
                   element: (
                     <Suspense>
-                      <UserPrivacySetting />
+                      <UserPrivacySetting/>
                     </Suspense>
                   )
                 },
@@ -236,7 +245,7 @@ export default function useRouteElements() {
                   path: path.changePassword,
                   element: (
                     <Suspense>
-                      <ChangePassword />
+                      <ChangePassword/>
                     </Suspense>
                   )
                 },
@@ -244,7 +253,7 @@ export default function useRouteElements() {
                   path: path.historyPurchase,
                   element: (
                     <Suspense>
-                      <HistoryPurchase />
+                      <HistoryPurchase/>
                     </Suspense>
                   )
                 }
@@ -256,13 +265,13 @@ export default function useRouteElements() {
     },
     {
       path: '',
-      element: <MainLayout />,
+      element: <MainLayout/>,
       children: [
         {
           path: 'home',
           element: (
             <Suspense>
-              <Home />
+              <Home/>
             </Suspense>
           )
         },
@@ -270,7 +279,7 @@ export default function useRouteElements() {
           path: path.productDetail,
           element: (
             <Suspense>
-              <ProductDetail />
+              <ProductDetail/>
             </Suspense>
           )
         },
@@ -279,7 +288,7 @@ export default function useRouteElements() {
           index: true,
           element: (
             <Suspense>
-              <ProductList />
+              <ProductList/>
             </Suspense>
           )
         },
@@ -287,7 +296,7 @@ export default function useRouteElements() {
           path: '*',
           element: (
             <Suspense>
-              <NotFound />
+              <NotFound/>
             </Suspense>
           )
         }
