@@ -47,7 +47,7 @@ class SecurityConfig(
                 exchanges
                     .pathMatchers(*PUBLIC_ENDPOINTS).permitAll()
 
-                    .pathMatchers("/keycloak/token").permitAll()
+                    .pathMatchers("/keycloak/**").permitAll()
                     .pathMatchers("/keycloak/test-member").hasAnyRole(SHOPPE_MEMBER)
                     .pathMatchers("/keycloak/test-admin").hasAnyRole(SHOPPE_ADMIN)
 
