@@ -45,6 +45,11 @@ class JwtAuthConverter(
             .toSet()
     }
 
+    private fun extractUserId(jwt: Jwt): String {
+        val userIdClaim = properties.principalAttribute ?: JwtClaimNames.SUB
+        return jwt.getClaim(userIdClaim)
+    }
+
     companion object {
         private val jwtGrantedAuthoritiesConverter = JwtGrantedAuthoritiesConverter()
     }

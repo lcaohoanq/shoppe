@@ -3,6 +3,7 @@ package com.lcaohoanq.gateway.config
 import com.lcaohoanq.gateway.security.JwtAuthConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
@@ -49,6 +50,10 @@ class SecurityConfig(
                     .pathMatchers("/keycloak/token").permitAll()
                     .pathMatchers("/keycloak/test-member").hasAnyRole(SHOPPE_MEMBER)
                     .pathMatchers("/keycloak/test-admin").hasAnyRole(SHOPPE_ADMIN)
+
+                    .pathMatchers(HttpMethod.POST, "/qr-login").permitAll()
+                    .pathMatchers(HttpMethod.GET, "/qr-login/**").permitAll()
+
                     .anyExchange().authenticated()
             }
             .oauth2ResourceServer {

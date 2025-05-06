@@ -17,6 +17,7 @@ import jakarta.validation.constraints.NotBlank
 import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.reactive.function.BodyInserters
 
 @Tag(name = "Keycloak", description = "Keycloak API")
 @RestController
@@ -25,6 +26,9 @@ class KeycloakGatewayController(private val webClient: WebClient.Builder) {
 
     @Value("\${keycloak.url}")
     private lateinit var keycloakUrl: String
+
+    @Value("\${keycloak.realm}")
+    private lateinit var realm: String
 
     @Value("\${keycloak.client-id}")
     private lateinit var clientId: String
@@ -62,11 +66,24 @@ class KeycloakGatewayController(private val webClient: WebClient.Builder) {
 
         return webClient.build()
             .post()
-            .uri(keycloakUrl)
+            .uri("${keycloakUrl}/realms/${realm}/protocol/openid-connect/token")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .bodyValue(formData.entries.joinToString("&") { "${it.key}=${it.value}" })
+            .body(
+                BodyInserters.fromFormData("grant_type", "password")
+                    .with("client_id", clientId)
+                    .with("username", request.username)
+                    .with("password", request.password)
+            )
             .retrieve()
+            .onStatus({ it.isError }, { response ->
+                response.bodyToMono(String::class.java)
+                    .flatMap { body ->
+                        println("Keycloak error response: $body")
+                        Mono.error(RuntimeException("Keycloak error: $body"))
+                    }
+            })
             .bodyToMono(TokenResponse::class.java)
+
             .map { ResponseEntity.ok(it) }
             .onErrorResume {
                 Mono.just(ResponseEntity.status(401).build())
