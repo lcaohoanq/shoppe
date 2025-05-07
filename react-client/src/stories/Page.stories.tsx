@@ -1,27 +1,26 @@
-import React from 'react'
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { Page } from './Page'
-import { within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { within } from '@testing-library/react'
 
-export default {
+const meta = {
   title: 'Example/Page',
   component: Page,
   parameters: {
-    // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'fullscreen'
   }
-} as ComponentMeta<typeof Page>
+} satisfies Meta<typeof Page>
 
-const Template: ComponentStory<typeof Page> = (args) => <Page {...args} />
+export default meta
 
-export const LoggedOut = Template.bind({})
+type Story = StoryObj<typeof meta>
 
-export const LoggedIn = Template.bind({})
+export const LoggedOut: Story = {}
 
-// More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
-LoggedIn.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const loginButton = await canvas.getByRole('button', { name: /Log in/i })
-  await userEvent.click(loginButton)
+export const LoggedIn: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const loginButton = await canvas.getByRole('button', { name: /Log in/i })
+    await userEvent.click(loginButton)
+  }
 }

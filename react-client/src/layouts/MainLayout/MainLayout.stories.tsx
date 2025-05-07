@@ -1,31 +1,35 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import MainLayout from './MainLayout'
 import ProductDetail from 'src/pages/ProductDetail'
-export default {
+import { ReactKeycloakProvider } from '@react-keycloak/web'
+import { keycloakMock } from '../../../.storybook/keycloakMock'
+const meta = {
   title: 'Layouts/MainLayout',
   component: MainLayout,
-  argTypes: {
-    children: {
-      description: 'Body của layout',
-      table: { type: { summary: 'React.ReactNode' } }
-    }
-  }
-} as ComponentMeta<typeof MainLayout>
+  decorators: [
+    (Story) => (
+      <ReactKeycloakProvider authClient={keycloakMock}>
+        <Story />
+      </ReactKeycloakProvider>
+    )
+  ]
+} satisfies Meta<typeof MainLayout>
 
-const Template: ComponentStory<typeof MainLayout> = (props) => <MainLayout {...props} />
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Primary = Template.bind({})
-export const PageProductDetail = Template.bind({})
-
-PageProductDetail.args = {
-  children: <ProductDetail />
-}
-
-PageProductDetail.story = {
+export const PageProductDetail: Story = {
+  render: () => (
+    <MainLayout>
+      <ProductDetail />
+    </MainLayout>
+  ),
   parameters: {
     reactRouter: {
       routePath: '/:nameId',
-      routeParams: { nameId: 'Điện-thoại-OPPO-A12-3GB32GB--Hàng-chính-hãng-i-60afb2426ef5b902180aacb9' }
+      routeParams: {
+        nameId: 'Dien-thoai-OPPO-A12-3GB32GB--Hang-chinh-hang-i-60afb2426ef5b902180aacb9'
+      }
     }
   }
 }

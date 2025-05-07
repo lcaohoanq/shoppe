@@ -1,36 +1,34 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import Login from './Login'
 import path from 'src/constants/path'
 import RegisterLayout from 'src/layouts/RegisterLayout'
 
-export default {
+const meta = {
   title: 'pages/Login',
   component: Login
-} as ComponentMeta<typeof Login>
+} satisfies Meta<typeof Login>
 
-const Template: ComponentStory<typeof Login> = () => {
-  return <Login />
-}
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Primary = Template.bind({})
-
-Primary.story = {
+export const Primary: Story = {
   parameters: {
     reactRouter: {
       routePath: path.login
     }
-  }
+  },
+  render: () => <Login />
 }
 
-export const LoginPage: ComponentStory<typeof Login> = () => (
-  <RegisterLayout>
-    <Login />
-  </RegisterLayout>
-)
-LoginPage.story = {
+export const LoginPage: Story = {
   parameters: {
     reactRouter: {
       routePath: path.login
     }
-  }
+  },
+  render: () => (
+    <RegisterLayout>
+      <Login />
+    </RegisterLayout>
+  )
 }

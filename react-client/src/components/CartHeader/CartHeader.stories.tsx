@@ -1,15 +1,14 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 import CartHeader from './CartHeader'
 
-export default {
+const meta = {
   title: 'Components/CartHeader',
   component: CartHeader
-} as ComponentMeta<typeof CartHeader>
+} satisfies Meta<typeof CartHeader>
 
-const Template: ComponentStory<typeof CartHeader> = () => <CartHeader />
+export default meta
+type Story = StoryObj<typeof meta>
 
-export const Primary = Template.bind({})
-
-// Primary.args = {
-
-// }
+export const Primary: Story = {
+  render: () => <CartHeader />
+}
