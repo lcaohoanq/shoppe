@@ -1,7 +1,8 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import { within, userEvent } from '@storybook/testing-library'
 import { Page } from './Page'
+import { within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 export default {
   title: 'Example/Page',
