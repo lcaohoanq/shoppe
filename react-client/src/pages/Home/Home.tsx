@@ -8,6 +8,8 @@ import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import { styles } from './style'
 import { homeAssets } from 'src/assets/home'
+import CardOverflow from '@mui/joy/CardOverflow'
+import AspectRatio from '@mui/joy/AspectRatio'
 
 export default function Home() {
   const [openModal, setOpenModal] = useState(true)
@@ -113,69 +115,65 @@ export default function Home() {
 
           <HomeShoppeMall />
 
-          <Box className='bg-[#808080]'>
-            <p className='text text-center text-3xl mb-3 text-[#FFA500]'>Goi y hom nay</p>
-            <Divider />
-          </Box>
           {products ? (
-            <Box sx={{ backgroundColor: '#f5f5f5', py: 5 }}>
-              <Container
-                maxWidth='lg'
-                sx={{
-                  backgroundColor: '#fff',
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  padding: 3
-                }}
-              >
-                <Typography variant='h5' align='center' sx={{ color: '#f53d2d', mb: 3 }}>
+            <Container sx={{ backgroundColor: '#f5f5f5', py: 5 }}>
+              <Box sx={{ backgroundColor: 'white', pt: 2 }}>
+                <Typography variant='body1' align='center' sx={{ color: '#f53d2d', mb: 2, textTransform: 'uppercase' }}>
                   Gợi ý hôm nay
                 </Typography>
-                <Divider sx={{ mb: 3 }} />
+                <Divider sx={{ backgroundColor: '#f53d2d', borderBottomWidth: 5 }} />
+              </Box>
 
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-                    gap: 2
-                  }}
-                >
-                  {products.data.map((product) => (
-                    <Card
+              <Box
+                sx={{
+                  mt: 3,
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                  gap: 1.5,
+                  backgroundColor: '#f5f5f5'
+                }}
+              >
+                {products.data.map((product) => (
+                  <Card
+                    sx={{
+                      ':hover': {
+                        border: '1px solid #f53d2d'
+                      },
+                      p: 0, // Xóa padding mặc định nếu muốn ảnh chiếm toàn bộ card
+                      borderRadius: 0
+                    }}
+                    key={product.id}
+                  >
+                    <Box
+                      component='img'
                       sx={{
-                        ':hover': {
-                          border: '1px solid #f53d2d'
-                        }
+                        width: '100%',
+                        height: 180,
+                        objectFit: 'cover',
+                        display: 'block',
+                        borderTopLeftRadius: 'inherit',
+                        borderTopRightRadius: 'inherit'
                       }}
-                      key={product.id}
-                    >
-                      <CardContent>
-                        <Box
-                          component='img'
-                          sx={{
-                            height: 180,
-                            width: '100%',
-                            objectFit: 'cover',
-                            borderRadius: 1
-                          }}
-                          alt={product.name}
-                          src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
-                        />
-                        <Typography variant='h6' noWrap>
-                          {product.name}
-                        </Typography>
-                        <Typography variant='body2' color='text.secondary' noWrap>
-                          {product.description}
-                        </Typography>
+                      alt={product.name}
+                      src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2'
+                    />
+
+                    <CardContent sx={{ padding: 1 }}>
+                      <Typography variant='body2' noWrap>
+                        {product.name}
+                      </Typography>
+                      <Typography variant='body2' color='text.secondary' noWrap>
+                        {product.description}
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant='body1'>${product.price_before_discount}</Typography>
                         <Typography variant='caption'>Đã bán: {product.sold ? '✔' : '✖'}</Typography>
-                        <Typography variant='caption'>Đánh giá: {product.rating}</Typography>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </Box>
-              </Container>
-            </Box>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                ))}
+              </Box>
+            </Container>
           ) : (
             <Loading />
           )}
