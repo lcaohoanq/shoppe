@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import Login from './Login'
 import path from 'src/constants/path'
 import RegisterLayout from 'src/layouts/RegisterLayout'
+import Login from './Login'
 
 const meta = {
   title: 'pages/Login',
@@ -21,6 +21,15 @@ export const Primary: Story = {
 }
 
 export const LoginPage: Story = {
+  parameters: {
+    reactRouter: {
+      routePath: path.login
+    }
+  },
+  render: () => <Login />
+}
+
+export const LoginPageWithLayout: Story = {
   parameters: {
     reactRouter: {
       routePath: path.login
