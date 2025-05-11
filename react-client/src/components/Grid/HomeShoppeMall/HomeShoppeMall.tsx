@@ -121,9 +121,9 @@ const HomeShoppeMall = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
+                  justifyContent: 'flex-start',
                   textAlign: 'center',
-                  p: 2,
-                  borderRadius: 2
+                  p: 2
                 }}
               >
                 <Box

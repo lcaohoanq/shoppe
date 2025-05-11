@@ -6,7 +6,7 @@ function CategoryList() {
   const { data, isLoading, error } = useCategories()
 
   if (isLoading) return <Loading />
-  if (error) return <div>Something went wrong</div>
+  if (error) return <div>Category List Not Found</div>
 
   return (
     <div>

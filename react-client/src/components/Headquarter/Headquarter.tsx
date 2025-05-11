@@ -1,14 +1,13 @@
-import React from "react";
-import {Link} from "@mui/material";
-import useHeadquarters from "../../hooks/useHeadquarters";
-import Loading from "../Loading";
+import React from 'react'
+import { Link } from '@mui/material'
+import useHeadquarters from '../../hooks/useHeadquarters'
+import Loading from '../Loading'
 
-const Headquarter : React.FC = () => {
-
+const Headquarter: React.FC = () => {
   const { data, isLoading, error } = useHeadquarters()
 
   if (isLoading) return <Loading />
-  if (error) return <div>Something went wrong</div>
+  if (error) return <div>Headquarter Not Found</div>
 
   return (
     <div className='lg:col-span-2'>
@@ -25,4 +24,4 @@ const Headquarter : React.FC = () => {
   )
 }
 
-export default Headquarter;
+export default Headquarter

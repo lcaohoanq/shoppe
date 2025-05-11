@@ -8,6 +8,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 24,
       name: 'Thời Trang Nam',
+      img: '/categories/men_fashion.webp',
       subcategories: [
         {
           id: 153,
@@ -140,6 +141,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 25,
       name: 'Thời Trang Nữ',
+      img: '/categories/women_fashion.webp',
       subcategories: [
         {
           id: 132,
@@ -272,6 +274,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 26,
       name: 'Điện Thoại & Phụ Kiện',
+      img: '/categories/phone_accessories.webp',
       subcategories: [
         {
           id: 121,
@@ -344,6 +347,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 27,
       name: 'Mẹ & Bé',
+      img: '/categories/mom_child.webp',
       subcategories: [
         {
           id: 95,
@@ -440,6 +444,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 28,
       name: 'Thiết Bị Điện Tử',
+      img: '/categories/electronic_devices.webp',
       subcategories: [
         {
           id: 110,
@@ -512,6 +517,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 29,
       name: 'Nhà Cửa & Đời Sống',
+      img: '/categories/home_lifestyle.webp',
       subcategories: [
         {
           id: 174,
@@ -602,6 +608,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 30,
       name: 'Máy Tính & Laptop',
+      img: '/categories/laptop.webp',
       subcategories: [
         {
           id: 188,
@@ -668,6 +675,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 31,
       name: 'Sắc Đẹp',
+      img: '/categories/beauty.webp',
       subcategories: [
         {
           id: 198,
@@ -740,6 +748,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 32,
       name: 'Máy Ảnh & Máy Quay Phim',
+      img: '/categories/camera.webp',
       subcategories: [
         {
           id: 215,
@@ -782,6 +791,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 33,
       name: 'Sức Khỏe',
+      img: '/categories/health.webp',
       subcategories: [
         {
           id: 221,
@@ -836,6 +846,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 34,
       name: 'Đồng Hồ',
+      img: '/categories/watch.webp',
       subcategories: [
         {
           id: 209,
@@ -878,6 +889,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 35,
       name: 'Giày Dép Nữ',
+      img: '/categories/women_shoes.webp',
       subcategories: [
         {
           id: 237,
@@ -932,6 +944,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 36,
       name: 'Giày Dép Nam',
+      img: '/categories/men_shoes.webp',
       subcategories: [
         {
           id: 229,
@@ -986,6 +999,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 37,
       name: 'Túi Ví Nữ',
+      img: '/categories/women_bag.webp',
       subcategories: [
         {
           id: 253,
@@ -1052,6 +1066,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 38,
       name: 'Thiết Bị Điện Gia Dụng',
+      img: '/categories/household_electrical_appliances.webp',
       subcategories: [
         {
           id: 245,
@@ -1106,6 +1121,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 39,
       name: 'Phụ Kiện & Trang Sức Nữ',
+      img: '/categories/women_accessories.webp',
       subcategories: [
         {
           id: 263,
@@ -1220,6 +1236,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 40,
       name: 'Thể Thao & Du Lịch',
+      img: '/categories/sport_travel.webp',
       subcategories: [
         {
           id: 281,
@@ -1274,6 +1291,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 41,
       name: 'Bách Hóa Online',
+      img: '/categories/online_store.webp',
       subcategories: [
         {
           id: 289,
@@ -1358,6 +1376,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 42,
       name: 'Ô Tô & Xe Máy & Xe Đạp',
+      img: '/categories/vehicle.webp',
       subcategories: [
         {
           id: 308,
@@ -1442,6 +1461,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 43,
       name: 'Nhà Sách Online',
+      img: '/categories/online_bookstore.webp',
       subcategories: [
         {
           id: 330,
@@ -1502,6 +1522,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 44,
       name: 'Balo & Túi Ví Nam',
+      img: '/categories/men_bag.webp',
       subcategories: [
         {
           id: 359,
@@ -1574,6 +1595,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 45,
       name: 'Thời Trang Trẻ Em',
+      img: '/categories/kid_fashion.webp',
       subcategories: [
         {
           id: 351,
@@ -1628,6 +1650,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 46,
       name: 'Đồ Chơi',
+      img: '/categories/toys.webp',
       subcategories: [
         {
           id: 302,
@@ -1670,6 +1693,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 47,
       name: 'Giặt Giũ & Chăm Sóc Nhà Cửa',
+      img: '/categories/laundry.webp',
       subcategories: [
         {
           id: 321,
@@ -1730,6 +1754,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 48,
       name: 'Chăm Sóc Thú Cưng',
+      img: '/categories/pet_care.webp',
       subcategories: [
         {
           id: 339,
@@ -1778,6 +1803,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 49,
       name: 'Voucher & Dịch Vụ',
+      img: '/categories/voucher.webp',
       subcategories: [
         {
           id: 370,
@@ -1850,6 +1876,7 @@ const categoriesRes: ApiResponse<CategoryResponse[]> = {
     {
       id: 50,
       name: 'Dụng cụ và thiết bị tiện ích',
+      img: '/categories/utilities.webp',
       subcategories: [
         {
           id: 346,

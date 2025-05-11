@@ -1,13 +1,12 @@
 import CategoryList from './CategoryList'
-import Headquarter from "../Headquarter";
+import Headquarter from '../Headquarter'
 
 interface Props {
-  categoryList?: Element,
+  categoryList?: Element
   headquarter?: Element
 }
 
-export default function Footer({categoryList, headquarter}: Props) {
-
+export default function Footer({ categoryList, headquarter }: Props) {
   return (
     <footer className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -16,7 +15,7 @@ export default function Footer({categoryList, headquarter}: Props) {
           <div className='lg:col-span-1'>
             <div>© 2022 Shopee. Tất cả các quyền được bảo lưu.</div>
           </div>
-          <Headquarter/>
+          <Headquarter />
         </div>
         <div className='mt-10 text-center text-sm'>
           <div>Công ty TNHH Shopee</div>

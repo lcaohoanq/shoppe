@@ -13,7 +13,12 @@ const fetchCategoriesList = async () => {
 }
 
 const useCategories = () => {
-  return useQuery<CategoryResponse[]>({ queryKey: ['categories'], queryFn: fetchCategoriesList })
+  return useQuery<CategoryResponse[]>({
+    queryKey: ['categories'],
+    queryFn: fetchCategoriesList,
+    retry: 3, // thử lại tối đa 3 lần nếu lỗi
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 3000) // exponential backoff
+  })
 }
 
 export default useCategories

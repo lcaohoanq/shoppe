@@ -12,7 +12,7 @@
   </parent>
 
   <artifactId>product-service</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>product-service</name>
   <description>product-service</description>
 
@@ -97,17 +97,6 @@
     <dependency>
       <groupId>com.lcaohoanq</groupId>
       <artifactId>common-lib</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.lcaohoanq</groupId>
-      <artifactId>common-spring</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-security</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>

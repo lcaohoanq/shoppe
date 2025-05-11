@@ -1,203 +1,85 @@
 import { Box, Container, Grid, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import axios from 'axios'
 import { memo, useMemo } from 'react'
-import { API_URL } from 'src/env/env.config'
-import { CategoryEntity, CategoryResponse } from 'src/types/category.type'
+import { CategoryEntity } from 'src/types/category.type'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import '../HomeSlider/Swiper.css'
+import useCategories from 'src/hooks/useCategories'
 
-const categoryImageData = [
-  {
-    id: 1,
-    name: 'Thời Trang Nam',
-    img: '/categories/men_fashion.webp'
-  },
-  {
-    id: 2,
-    name: 'Thời Trang Nữ',
-    img: '/categories/women_fashion.webp'
-  },
-  {
-    id: 3,
-    name: 'Điện thoại & Phụ kiện',
-    img: '/categories/phone_accessories.webp'
-  },
-  {
-    id: 4,
-    name: 'Mẹ & Bé',
-    img: '/categories/mom_child.webp'
-  },
-  {
-    id: 5,
-    name: 'Thiết Bị Điện Tử',
-    img: '/categories/electronic_devices.webp'
-  },
-  {
-    id: 6,
-    name: 'Nhà Cửa & Đời Sống',
-    img: '/categories/home_lifestyle.webp'
-  },
-  {
-    id: 7,
-    name: 'Máy Tính & Laptop',
-    img: '/categories/laptop.webp'
-  },
-  {
-    id: 8,
-    name: 'Sắc Đẹp',
-    img: '/categories/beauty.webp'
-  },
-  {
-    id: 9,
-    name: 'Máy Ảnh & Máy Quay Phim',
-    img: '/categories/camera.webp'
-  },
-  {
-    id: 10,
-    name: 'Sức Khỏe',
-    img: '/categories/health.webp'
-  },
-  {
-    id: 11,
-    name: 'Đồng Hồ',
-    img: '/categories/watch.webp'
-  },
-  {
-    id: 12,
-    name: 'Giày Dép Nữ',
-    img: '/categories/women_shoes.webp'
-  },
-  {
-    id: 13,
-    name: 'Giày Dép Nam',
-    img: '/categories/men_shoes.webp'
-  },
-  {
-    id: 14,
-    name: 'Túi ví Nữ',
-    img: '/categories/women_bag.webp'
-  },
-  {
-    id: 15,
-    name: 'Thiết Bị Điện Gia Dụng',
-    img: '/categories/household_electrical_appliances.webp'
-  },
-  {
-    id: 16,
-    name: 'Phụ Kiện & Trang Sức Nữ',
-    img: '/categories/women_accessories.webp'
-  },
-  {
-    id: 17,
-    name: 'Thể Thao & Du Lịch',
-    img: '/categories/sport_travel.webp'
-  },
-  {
-    id: 18,
-    name: 'Bách Hóa Online',
-    img: '/categories/online_store.webp'
-  },
-  {
-    id: 19,
-    name: 'Ô Tô & Xe Máy & Xe Đạp',
-    img: '/categories/vehicle.webp'
-  },
-  {
-    id: 20,
-    name: 'Nhà Sách Online',
-    img: '/categories/online_bookstore.webp'
-  },
-  {
-    id: 21,
-    name: 'Balo & Túi Ví Nam',
-    img: '/categories/men_bag.webp'
-  },
-  {
-    id: 22,
-    name: 'Thời Trang Trẻ Em',
-    img: '/categories/kid_fashion.webp'
-  },
-  {
-    id: 23,
-    name: 'Đồ Chơi',
-    img: '/categories/toys.webp'
-  },
-  {
-    id: 24,
-    name: 'Giặt Giũ & Chăm Sóc Nhà Cửa',
-    img: '/categories/laundry.webp'
-  },
-  {
-    id: 25,
-    name: 'Chăm Sóc Thú Cưng',
-    img: '/categories/pet_care.webp'
-  },
-  {
-    id: 26,
-    name: 'Voucher & Dịch Vụ',
-    img: '/categories/voucher.webp'
-  },
-  {
-    id: 27,
-    name: 'Dụng cụ và thiết bị tiện ích',
-    img: '/categories/utilities.webp'
+// Create a utility function to generate image paths based on category name
+const getCategoryImage = (categoryName: string): string => {
+  // Convert category name to slug format for image mapping
+  const slug = categoryName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[đĐ]/g, 'd')
+    .replace(/\s+/g, '_')
+    .replace(/[&]/g, 'and')
+
+  // Map of common category keywords to image names
+  const keywordMap: Record<string, string> = {
+    thoi_trang_nam: 'men_fashion',
+    thoi_trang_nu: 'women_fashion',
+    dien_thoai: 'phone_accessories',
+    phu_kien: 'phone_accessories',
+    me_be: 'mom_child',
+    thiet_bi_dien_tu: 'electronic_devices',
+    nha_cua: 'home_lifestyle',
+    doi_song: 'home_lifestyle',
+    may_tinh: 'laptop',
+    laptop: 'laptop',
+    sac_dep: 'beauty',
+    my_pham: 'beauty',
+    may_anh: 'camera',
+    may_quay: 'camera',
+    suc_khoe: 'health',
+    dong_ho: 'watch',
+    giay_nu: 'women_shoes',
+    giay_nam: 'men_shoes',
+    tui_nu: 'women_bag',
+    vi_nu: 'women_bag',
+    thiet_bi_dien: 'household_electrical_appliances',
+    gia_dung: 'household_electrical_appliances',
+    phu_kien_nu: 'women_accessories',
+    trang_suc: 'women_accessories',
+    the_thao: 'sport_travel',
+    du_lich: 'sport_travel',
+    bach_hoa: 'online_store',
+    o_to: 'vehicle',
+    xe_may: 'vehicle',
+    xe_dap: 'vehicle',
+    sach: 'online_bookstore',
+    balo: 'men_bag',
+    tui_nam: 'men_bag',
+    vi_nam: 'men_bag',
+    tre_em: 'kid_fashion',
+    do_choi: 'toys',
+    giat_giu: 'laundry',
+    cham_soc_nha: 'laundry',
+    thu_cung: 'pet_care',
+    voucher: 'voucher',
+    dich_vu: 'voucher',
+    dung_cu: 'utilities',
+    thiet_bi_tien_ich: 'utilities'
   }
-]
+
+  // Try to match category with known keywords
+  for (const [keyword, imageName] of Object.entries(keywordMap)) {
+    if (slug.includes(keyword)) {
+      return `/categories/${imageName}.webp`
+    }
+  }
+
+  // Default fallback image
+  return '/categories/utilities.webp'
+}
 
 const CategoryGridSlider = () => {
-  const { data: categories } = useQuery<CategoryResponse[]>(['categories'], async () => {
-    const response = await axios.get(`${API_URL}/categories`)
-    return response.data.data
-  })
-
-  // Create a normalized map of category names to image paths for case-insensitive lookup
-  const categoryImageMap = useMemo(() => {
-    const map = new Map()
-    categoryImageData.forEach((item) => {
-      // Store both original name and lowercase version
-      map.set(item.name.toLowerCase(), item.img)
-    })
-    return map
-  }, [])
-
-  // Function to find the image path for a category
-  const getCategoryImage = (categoryName: string) => {
-    const normalizedName = categoryName.toLowerCase()
-
-    // Try to find an exact match first (case-insensitive)
-    if (categoryImageMap.has(normalizedName)) {
-      return categoryImageMap.get(normalizedName)
-    }
-
-    // Check for case-insensitive partial matches by comparing normalized strings
-    // First, check if any map key contains the category name
-    for (const [name, img] of categoryImageMap.entries()) {
-      // For example, "Thời Trang Nam" from API should match "thời trang nam" in our data
-      if (name.includes(normalizedName) || normalizedName.includes(name)) {
-        return img
-      }
-    }
-
-    // Try word-by-word matching for multi-word categories
-    const categoryWords = normalizedName.split(' ').filter((word) => word.length > 2)
-    if (categoryWords.length > 0) {
-      for (const [name, img] of categoryImageMap.entries()) {
-        for (const word of categoryWords) {
-          if (name.includes(word)) {
-            return img
-          }
-        }
-      }
-    }
-
-    // Default fallback image if no match found
-    return '/categories/utilities.webp'
-  }
+  const { data: categories, isLoading, error } = useCategories()
 
   // Split categories into chunks of 20 for each SwiperSlide
   const chunkSize = 20
