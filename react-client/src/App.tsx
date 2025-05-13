@@ -1,18 +1,18 @@
-import useRouteElements from './useRouteElements'
-import {ToastContainer} from 'react-toastify'
+import { AuthClientError } from '@react-keycloak/core'
+import { ReactKeycloakProvider } from '@react-keycloak/web'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { useContext, useEffect } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import {useContext, useEffect} from 'react'
-import {LocalStorageEventTarget} from './utils/auth'
-import {AppContext} from './contexts/app.context'
-import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
 import ErrorBoundary from './components/ErrorBoundary'
-import {HelmetProvider} from 'react-helmet-async'
-import {LanguageProvider} from "./contexts/LanguageContext";
-import {config} from "./env/env.config";
-import {ReactKeycloakProvider} from "@react-keycloak/web";
-import Loader from "./components/LoadingV2/LoadingScreen";
-import {AuthClientError} from '@react-keycloak/core';
-import Keycloak from 'keycloak-js'
+import KeycloakLoading from './components/KeycloakLoading'
+import { AppContext } from './contexts/app.context'
+import { LanguageProvider } from './contexts/LanguageContext'
+import keycloak from './core/keycloak'
+import useRouteElements from './useRouteElements'
+import { LocalStorageEventTarget } from './utils/auth'
+import KeycloakProviderWithInit from './core/keycloak/KeycloakProviderWithInit'
 
 /**
  * Khi url thay đổi thì các component nào dùng các hook như
@@ -25,13 +25,7 @@ import Keycloak from 'keycloak-js'
 function App() {
   const routeElements = useRouteElements()
   const { reset } = useContext(AppContext)
-
-  const keycloak = new Keycloak({
-    url: `${config.kc.KEYCLOAK_BASE_URL}`,
-    realm: `${config.kc.REALM_NAME}`,
-    clientId: `${config.kc.CLIENT_ID}`,
-  })
-  const initOptions = {pkceMethod: 'S256'}
+  const initOptions = { pkceMethod: 'S256' }
 
   const handleOnEvent = async (event: string, error: AuthClientError | undefined) => {
     try {
@@ -46,11 +40,11 @@ function App() {
           // }
           // keycloak['avatar'] = response.data.avatar
 
-          console.log("User authenticated successfully")
+          console.log('User authenticated successfully')
         }
       }
     } catch {
-      console.error("Error during authentication", error)
+      console.error('Error during authentication', error)
     }
   }
 
@@ -65,15 +59,10 @@ function App() {
     <HelmetProvider>
       <ErrorBoundary>
         <LanguageProvider>
-          <ReactKeycloakProvider
-            authClient={keycloak}
-            initOptions={initOptions}
-            LoadingComponent={<Loader/>}
-            onEvent={(event, error) => handleOnEvent(event, error)}
-          >
-          {routeElements}
-          <ToastContainer />
-          </ReactKeycloakProvider>
+          <KeycloakProviderWithInit onEvent={handleOnEvent}>
+            {routeElements}
+            <ToastContainer />
+          </KeycloakProviderWithInit>
         </LanguageProvider>
       </ErrorBoundary>
       <ReactQueryDevtools initialIsOpen={false} />
