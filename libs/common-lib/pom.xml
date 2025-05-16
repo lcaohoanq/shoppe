@@ -42,6 +42,12 @@
       <version>6.0.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.github.lcaohoanq</groupId>
+      <artifactId>kotlin-browser-launcher</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
   </dependencies>
 
   <properties>
