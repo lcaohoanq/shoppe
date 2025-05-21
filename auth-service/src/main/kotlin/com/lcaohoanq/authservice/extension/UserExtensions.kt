@@ -41,4 +41,3 @@ fun User.toUserResponse(
         updatedAt = updatedAt
     )
 }
-

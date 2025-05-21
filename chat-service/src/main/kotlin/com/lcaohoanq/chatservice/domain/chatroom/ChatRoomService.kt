@@ -24,7 +24,7 @@ class ChatRoomService(
             null
         }
     }
-    
+
     override fun createChatId(senderId: String, recipientId: String): String {
         val chatId = String.format("%s_%s", senderId, recipientId)
 
@@ -35,7 +35,7 @@ class ChatRoomService(
                 recipientId = recipientId
             )
         )
-        
+
         chatRoomRepository.save(
             ChatRoom(
                 chatId = chatId,

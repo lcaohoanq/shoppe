@@ -20,4 +20,3 @@ class ChatRoom(
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id: Long = 0
 }
-

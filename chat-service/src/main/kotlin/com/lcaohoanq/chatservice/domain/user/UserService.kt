@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service
 class UserService(
     private val repository: UserRepository
 ) : IUserService {
-    
+
     override fun saveUser(user: User) {
         with(user){
             status = User.ActivityStatus.ONLINE
         }
-        
+
         repository.save(user)
     }
 

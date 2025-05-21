@@ -5,4 +5,4 @@ data class ChatNotification(
     val senderId: String,
     val recipientId: String,
     val content: String
-) 
+)

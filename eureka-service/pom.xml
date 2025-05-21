@@ -46,6 +46,12 @@
       <artifactId>kotlin-test-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.lcaohoanq</groupId>
+      <artifactId>common-lib</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>

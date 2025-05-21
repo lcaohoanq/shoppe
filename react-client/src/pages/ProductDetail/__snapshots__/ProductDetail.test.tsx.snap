@@ -571,7 +571,7 @@ exports[`ProductDetail > Render UI ProductDetail 1`] = `
                     class="ml-6 text-sm text-gray-500"
                   >
                     73
-                     
+
                     Sản phẩm có sẵn
                   </div>
                 </div>
@@ -834,7 +834,7 @@ exports[`ProductDetail > Render UI ProductDetail 1`] = `
                     Bộ sản phẩm bao gồm: Hộp, Sạc, Sách hướng dẫn, Cáp, Cây lấy sim, Ốp lưng
                   </p>
                   <p>
-                    Thông tin bảo hành: 
+                    Thông tin bảo hành:
                     <br />
                     Sản phẩm được bảo hành 12 tháng tại các trung tâm bảo hành OPPO
                     <br />

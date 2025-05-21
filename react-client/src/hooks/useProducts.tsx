@@ -9,7 +9,7 @@ const url = `${API_URL}/products`
 
 const fetchProducts_GRAPHQL = async () => {
   const response = await axios.post<{ data: { products: ProductResponse[] } }>(`${GRAPHQL_URL}`, {
-    query: ` 
+    query: `
         query {
           products {
             id

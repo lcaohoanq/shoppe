@@ -40,7 +40,7 @@ services:
       - redis_data:/data # Mount a volume for Redis data persistence
     networks:
       - chat_network
-  
+
 #  authelia:
 #    image: authelia/authelia
 #    container_name: authelia

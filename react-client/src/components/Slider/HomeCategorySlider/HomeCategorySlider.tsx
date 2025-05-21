@@ -125,9 +125,9 @@ const CategoryGridSlider = () => {
       >
         {categoryChunks.map((chunk, index) => (
           <SwiperSlide key={index}>
-            <Grid container spacing={0} sx={{ mx: 0 }}>
+            <Grid container spacing={0}>
               {chunk.map((category) => (
-                <Grid item xs={2.4} sm={2} md={1.5} lg={1.2} key={category.id}>
+                <Grid key={category.id}>
                   <Box
                     sx={{
                       border: '1px solid #f1f1f1',

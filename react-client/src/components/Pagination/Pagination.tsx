@@ -12,7 +12,7 @@ interface Props {
 Với range = 2 áp dụng cho khoảng cách đầu, cuối và xung quanh current_page
 
 [1] 2 3 ... 19 20
-1 [2] 3 4 ... 19 20 
+1 [2] 3 4 ... 19 20
 1 2 [3] 4 5 ... 19 20
 1 2 3 [4] 5 6 ... 19 20
 1 2 3 4 [5] 6 7 ... 19 20

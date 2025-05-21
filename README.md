@@ -338,11 +338,11 @@ Request Flow:
 1. JwtTokenFilter (Authentication)
    ├── No token/Invalid token -> AuthenticationEntryPoint (401)
    └── Valid token -> Continue
-   
+
 2. Security Filter (Authorization)
    ├── Insufficient role -> AccessDeniedHandler (403)
    └── Sufficient role -> Continue to Controller
-   
+
 ```
 
 - Example scenario
