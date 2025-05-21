@@ -22,4 +22,3 @@ data class ZaloNotificationSettingsDto(
     val masterEnabled: Boolean,
     val promo: Boolean,
 )
-

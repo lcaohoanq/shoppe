@@ -1,6 +1,7 @@
-import { Box, Container, Grid, Typography } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import { experimentalStyled as styled } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -115,7 +116,7 @@ const HomeShoppeMall = () => {
           }}
         >
           {mallItems.map((item, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid key={index}>
               <Box
                 sx={{
                   display: 'flex',

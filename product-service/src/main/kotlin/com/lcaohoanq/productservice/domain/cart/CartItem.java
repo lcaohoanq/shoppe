@@ -42,10 +42,10 @@ public class CartItem {
     private Cart cart;
 
     private Long productId;
-    
+
     @Column(name = "quantity")
     private int quantity;
-    
+
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status", nullable = false)
     private CartItemStatus status;
@@ -64,6 +64,6 @@ public class CartItem {
         public int toValue() {
             return ordinal();
         }
-        
+
     }
 }

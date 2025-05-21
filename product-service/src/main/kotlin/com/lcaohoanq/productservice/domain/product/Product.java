@@ -49,7 +49,7 @@ public class Product {
     private int sold;
     private int view;
     private double rating;
-    
+
     private ProductEnum.Status status;
 
     @Column(name = "is_active")

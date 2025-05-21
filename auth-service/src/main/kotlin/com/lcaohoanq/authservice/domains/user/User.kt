@@ -1,16 +1,13 @@
 package com.lcaohoanq.authservice.domains.user
 
 import BaseEntity
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.lcaohoanq.authservice.domains.loginhistory.LoginHistory
 import com.lcaohoanq.authservice.domains.settings.UserSettings
 import com.lcaohoanq.common.enums.UserEnum
 import jakarta.persistence.*
-import jakarta.validation.constraints.Email
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")

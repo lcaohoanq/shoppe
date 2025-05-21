@@ -33,28 +33,28 @@ public class OrderShipping {
     @Column(name="id", unique=true, nullable=false)
     @JsonProperty("id")
     private Long id;
-    
+
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-    
+
     @ManyToOne
     @JoinColumn(name = "shipping_carrier_id", nullable = false)
     private ShippingCarrier shippingCarrier;
-    
+
     @Column(name = "tracking_number")
     private String trackingNumber;
-    
+
     @Column(name = "shipping_fee")
     private Float shippingFee;
-    
+
     @Column(name = "shipping_status")
     private String shippingStatus;
-    
+
     @Column(name = "shipping_date")
     private Date shippingDate;
-    
+
     @Column(name = "estimated_delivery")
     private Date estimatedDelivery;
-    
+
 }

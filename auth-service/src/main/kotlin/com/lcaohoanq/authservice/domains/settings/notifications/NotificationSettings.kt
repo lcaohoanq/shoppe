@@ -15,4 +15,3 @@ class NotificationSettings(
     @Embedded
     var zalo: ZaloNotificationSettings = ZaloNotificationSettings(),
 )
-

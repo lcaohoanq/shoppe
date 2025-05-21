@@ -65,7 +65,7 @@ public class Payment {
 
     @Column(name = "bank_name")
     private String bankName;
-    
+
     // Track refunds related to this payment
 //    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
 //    private List<Refund> refunds;
@@ -83,4 +83,3 @@ public class Payment {
 //    }
 
 }
-
