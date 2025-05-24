@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 export const config = {
   kc: {
-    KEYCLOAK_BASE_URL: 'http://zimacube:9080',
+    KEYCLOAK_BASE_URL: isDev ? 'http://zimacube:9080' : 'https://kc.lch.id.vn',
     REALM_NAME: 'shoppe',
     CLIENT_ID: 'react-app'
   },
