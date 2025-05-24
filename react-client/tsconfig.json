@@ -17,8 +17,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": []
   },
-  "include": ["src", "vitest.d.ts"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
