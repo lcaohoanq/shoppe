@@ -16,8 +16,9 @@
     "strictNullChecks": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src"],
+  "include": ["src", "vitest.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

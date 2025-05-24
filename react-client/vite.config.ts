@@ -9,7 +9,8 @@ export default defineConfig({
   plugins: [react(), visualizer()] as any,
   test: {
     environment: 'jsdom',
-    setupFiles: path.resolve(__dirname, './vitest.setup.js')
+    setupFiles: path.resolve(__dirname, './vitest.setup.ts'),
+    globals: true
   },
   server: {
     host: true,

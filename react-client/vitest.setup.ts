@@ -4,6 +4,8 @@ import authRequests from './src/msw/auth.msw'
 import productRequests from './src/msw/product.msw'
 import userRequests from './src/msw/user.msw'
 import matchers from '@testing-library/jest-dom/matchers'
+
+// Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers)
 
 const server = setupServer(...authRequests, ...productRequests, ...userRequests)
