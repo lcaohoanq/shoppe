@@ -47,6 +47,9 @@ importers:
       '@tanstack/react-query-devtools':
         specifier: ^4.29.19
         version: 4.36.1(@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@testing-library/jest-dom':
+        specifier: ^5.17.0
+        version: 5.17.0
       axios:
         specifier: ^1.8.2
         version: 1.9.0
@@ -162,9 +165,6 @@ importers:
       '@testing-library/dom':
         specifier: ^10.4.0
         version: 10.4.0
-      '@testing-library/jest-dom':
-        specifier: ^5.17.0
-        version: 5.17.0
       '@testing-library/react':
         specifier: ^14.0.0
         version: 14.3.1(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
