@@ -1,18 +1,17 @@
 import { AuthClientError } from '@react-keycloak/core'
-import { ReactKeycloakProvider } from '@react-keycloak/web'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useContext, useEffect } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import ErrorBoundary from './components/ErrorBoundary'
-import KeycloakLoading from './components/KeycloakLoading'
 import { AppContext } from './contexts/app.context'
 import { LanguageProvider } from './contexts/LanguageContext'
 import keycloak from './core/keycloak'
+import KeycloakProviderWithInit from './core/keycloak/KeycloakProviderWithInit'
+import { KeycloakAuthenticatedData } from './types/keycloak.type'
 import useRouteElements from './useRouteElements'
 import { LocalStorageEventTarget } from './utils/auth'
-import KeycloakProviderWithInit from './core/keycloak/KeycloakProviderWithInit'
 
 /**
  * Khi url thay đổi thì các component nào dùng các hook như
@@ -25,20 +24,33 @@ import KeycloakProviderWithInit from './core/keycloak/KeycloakProviderWithInit'
 function App() {
   const routeElements = useRouteElements()
   const { reset } = useContext(AppContext)
-  const initOptions = { pkceMethod: 'S256' }
+  const { setKeycloakAuth, setIsAuthenticated } = useContext(AppContext)
 
   const handleOnEvent = async (event: string, error: AuthClientError | undefined) => {
     try {
-      if (event === 'onAuthSuccess') {
+      if (event === 'onAuthSuccess' && keycloak.authenticated && keycloak.tokenParsed) {
         if (keycloak.authenticated) {
-          // let response = await moviesApi.getUserExtrasMe(keycloak.token)
-          // if (response.status === 404) {
-          //   const username = keycloak.tokenParsed.preferred_username
-          //   const userExtra = { avatar: username }
-          //   response = await moviesApi.saveUserExtrasMe(keycloak.token, userExtra)
-          //   console.log('UserExtra created for ' + username)
-          // }
-          // keycloak['avatar'] = response.data.avatar
+          // console.log(`Keycloak authenticated data: ${JSON.stringify(keycloak.tokenParsed, null, 2)}`)
+          const tokenParsed = keycloak.tokenParsed
+
+          const authData: KeycloakAuthenticatedData = {
+            isAuthenticated: keycloak.authenticated ?? false,
+            token: keycloak.token ?? '',
+            refreshToken: keycloak.refreshToken ?? '',
+            userInfo: {
+              id: tokenParsed?.sub ?? '',
+              username: tokenParsed?.preferred_username ?? '',
+              fullName: tokenParsed?.name ?? '',
+              email: tokenParsed?.email ?? '',
+              emailVerified: tokenParsed?.email_verified ?? false,
+              roles: [
+                ...(tokenParsed?.realm_access?.roles || []),
+                ...(tokenParsed?.resource_access?.['react-app']?.roles || [])
+              ]
+            }
+          }
+          setKeycloakAuth(authData)
+          setIsAuthenticated(true)
 
           console.log('User authenticated successfully')
         }
