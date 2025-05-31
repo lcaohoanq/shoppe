@@ -33,6 +33,8 @@ function App() {
           // console.log(`Keycloak authenticated data: ${JSON.stringify(keycloak.tokenParsed, null, 2)}`)
           const tokenParsed = keycloak.tokenParsed
 
+          console.log(`Keycloak token parsed: ${JSON.stringify(tokenParsed, null, 2)}`)
+
           const authData: KeycloakAuthenticatedData = {
             isAuthenticated: keycloak.authenticated ?? false,
             token: keycloak.token ?? '',

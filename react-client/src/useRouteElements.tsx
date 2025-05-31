@@ -31,7 +31,8 @@ const Home = lazy(() => import('./pages/Home'))
 //UserPage
 /** Account */
 const ChangePassword = lazy(() => import('./pages/User/pages/Account/ChangePassword'))
-const Profile = lazy(() => import('./pages/User/pages/Account/Profile'))
+// const Profile = lazy(() => import('./pages/User/pages/Account/Profile'))
+const Profile = lazy(() => import('./pages/User/pages/Account/ProfileKeycloak'))
 const UserAddress = lazy(() => import('./pages/User/pages/Account/Address/UserAddress'))
 const UserBank = lazy(() => import('./pages/User/pages/Account/Bank/UserAccountBank'))
 const UserSettingNotify = lazy(() => import('./pages/User/pages/Account/SettingNotify/UserSettingNotify'))

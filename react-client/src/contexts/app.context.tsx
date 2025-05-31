@@ -50,6 +50,7 @@ export const AppProvider = ({
   const reset = () => {
     setIsAuthenticated(false)
     setExtendedPurchases([])
+    setKeycloakAuth(null)
     setProfile(null)
   }
 
