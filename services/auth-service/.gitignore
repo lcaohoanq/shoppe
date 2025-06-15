@@ -31,9 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-logs/
-.env
-**/src/main/resources/application-dev.yml
-**/src/main/resources/application-prod.yml
-**/src/main/resources/application-test.yaml
-**/src/test/resources/application-test.yaml
+
+src/main/resources/application-dev.yml
+src/main/resources/application-prod.yml

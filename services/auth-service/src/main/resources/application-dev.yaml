@@ -1,0 +1,148 @@
+server:
+  port: 4006
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+api:
+  prefix: /api/v1
+
+spring:
+  application:
+    name: auth-service
+    security-config-version: v2
+    cors:
+      allowed-origins:
+        - http://localhost:4000
+        - http://localhost:4003
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost} # Default to 'localhost' if not provided
+      port: ${REDIS_PORT:6380}      # Default to 6379 if not provided
+
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+
+  cloud:
+    discovery:
+      enabled: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9099/realms/shoppe-dev
+#          jwk-set-uri: http://localhost:9099/realms/shoppe-dev/protocol/openid-connect/certs
+
+      client:
+        registration:
+          google:
+            clientId: 57725428107-3ppj4bcq83ls8b7jlojbka02glmhn4ed.apps.googleusercontent.com
+            clientSecret: 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
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}" #baseUrl = http://localhost:4006
+            scope:
+             - email
+             - profile
+          github:
+            clientId: Ov23ct8O84y482bV5Cjr
+            clientSecret: 7f1cfd8c2afcea44c2a9d1486fe128df8fc9b668
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}" #baseUrl = http://localhost:4006
+            scope:
+             - user:email
+             - read:user
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 10000
+        retryer: com.lcaohoanq.commonspring.configs.CustomRetryer
+
+keycloak:
+  url: http://localhost:9099/realms/shoppe-dev/protocol/openid-connect/token
+  client-id: react-app
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+
+  api-docs:
+    enabled: true
+
+jwt:
+  auth:
+    converter:
+      resource-id: react-app
+      principal-attribute: preferred_username
+  expiration: ${JWT_EXPIRATION:2592000}
+  expiration-refresh-token: ${JWT_EXPIRATION_REFRESH_TOKEN:5184000}
+  secretKey: ${JWT_SECRET_KEY:TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=}
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:4000
+      - http://localhost:4003
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework: DEBUG
+    springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.data.redis: DEBUG
+    javax.management: off
+    sun.rmi: off
+    sun.rmi.transport.tcp: off
+    sun.rmi.loader: off
+
+#health check
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      access: unrestricted
+    prometheus:
+      access: unrestricted

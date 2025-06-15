@@ -244,14 +244,15 @@
   <modules>
     <module>libs/common-lib</module>
     <module>libs/common-spring</module>
-    <module>asset-service</module>
-    <module>chat-service</module>
-    <module>gateway-service</module>
-    <module>eureka-service</module>
-    <module>product-service</module>
-    <module>auth-service</module>
-    <module>inventory-service</module>
-    <module>notification-service</module>
-    <module>api-throttling</module>
+    <module>services/asset-service</module>
+    <module>services/chat-service</module>
+    <module>services/gateway-service</module>
+    <module>services/eureka-service</module>
+    <module>services/product-service</module>
+    <module>services/auth-service</module>
+    <module>services/inventory-service</module>
+    <module>services/notification-service</module>
+    <module>services/wallet-service</module>
+    <module>services/api-throttling</module>
   </modules>
 </project>
